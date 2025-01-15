@@ -9,3 +9,9 @@ export type RootStackParamList = {
   // Member: undefined;
   // Login: undefined;
 };
+
+export type LoginStackParamList = {
+  Welcome: undefined;
+  Survey: undefined;
+  Login: undefined;
+};

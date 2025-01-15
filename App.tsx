@@ -57,6 +57,7 @@ import AnswerScreen from './src/screens/AnswerScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import ResultScreen from './src/screens/ResultScreen';
 import TabNavigator from './src/components/Bottom';
+import LoginStack from './src/screens/stacks/LoginStack';
 
 const Stack = createNativeStackNavigator();
 
@@ -91,11 +92,19 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        {/* 1) 로그인 & 설문을 처리하는 LoginStack */}
+        <Stack.Screen
+          name="LoginStack"
+          component={LoginStack}
+          options={{headerShown: false}}
+        />
+        {/* 2) 로그인 후 보여줄 메인 탭 */}
         <Stack.Screen
           name="MainTabs"
           component={TabNavigator}
           options={{headerShown: false}}
         />
+        {/* 3) 예시로 필요한 ResultScreen */}
         <Stack.Screen
           name="Result"
           component={ResultScreen}

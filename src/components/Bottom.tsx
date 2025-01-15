@@ -27,6 +27,7 @@ export default function TabNavigator() {
         component={ProfileScreen}
         options={{
           title: '프로필',
+          headerShown: false, // Tab Navigator에서 자체 헤더는 숨기기
           tabBarIcon: (
             {color, size}, // 여기서 tabBarIcon을 사용합니다.
           ) => <ProfileIcon fill={color} width={size} height={size} />,

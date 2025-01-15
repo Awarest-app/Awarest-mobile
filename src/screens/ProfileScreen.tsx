@@ -7,6 +7,9 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
+import {Header} from '../components/Header';
+import LinearGradient from 'react-native-linear-gradient';
+import colors from '../styles/colors';
 
 // 샘플용 임시 프로필 이미지(회색 원을 Image 대신 View로 표현할 수도 있음)
 const ProfilePlaceholder = () => (
@@ -25,68 +28,60 @@ export default function ProfileScreen() {
   const totalAnswers = 12;
   const achievements = 2;
 
-  const handleHomePress = () => {
-    console.log('Home pressed');
-  };
-
-  const handleProfilePress = () => {
-    console.log('Profile pressed');
-  };
-
   return (
-    <SafeAreaView style={styles.safeArea}>
-      {/* 상단 상태 표시 영역 */}
+    <LinearGradient
+      colors={[colors.green_gradientStart, colors.green_gradientEnd]} // 그라디언트 색상 설정
+      start={{x: 0, y: 0}} // 그라디언트 시작점
+      end={{x: 1, y: 1}} // 그라디언트 종료점
+      style={styles.gradientBackground} // 전체 배경 적용
+    >
+      <SafeAreaView style={styles.safeArea}>
+        {/* 상단 상태 표시 영역 */}
 
-      {/* 브랜드 로고 / 타이틀 */}
-      <Text style={styles.brandTitle}>Coura</Text>
+        {/* 브랜드 로고 / 타이틀 */}
+        <Header />
+        <Text style={styles.brandTitle}>Coura</Text>
 
-      {/* 메인 프로필 박스(파란색 외곽선) */}
-      <View style={styles.outerCardContainer}>
-        {/* 내부 dotted 박스 */}
-        <View style={styles.innerCardContainer}>
-          {/* 프로필 섹션 */}
-          <ProfilePlaceholder />
-          <Text style={styles.userName}>{userName}</Text>
-          <Text style={styles.userMemberSince}>Member since {memberSince}</Text>
+        {/* 메인 프로필 박스(파란색 외곽선) */}
+        <View style={styles.outerCardContainer}>
+          {/* 내부 dotted 박스 */}
+          <View style={styles.innerCardContainer}>
+            {/* 프로필 섹션 */}
+            <ProfilePlaceholder />
+            <Text style={styles.userName}>{userName}</Text>
+            <Text style={styles.userMemberSince}>
+              Member since {memberSince}
+            </Text>
 
-          {/* 간단한 통계(7 Day Streak, 2450 XP) */}
-          <View style={styles.statsRow}>
-            <View style={styles.statBox}>
-              <Text style={styles.statNumber}>{dayStreak}</Text>
-              <Text style={styles.statLabel}>Day Streak</Text>
+            {/* 간단한 통계(7 Day Streak, 2450 XP) */}
+            <View style={styles.statsRow}>
+              <View style={styles.statBox}>
+                <Text style={styles.statNumber}>{dayStreak}</Text>
+                <Text style={styles.statLabel}>Day Streak</Text>
+              </View>
+              <View style={styles.statBox}>
+                <Text style={styles.statNumber}>{totalXP}</Text>
+                <Text style={styles.statLabel}>Total XP</Text>
+              </View>
             </View>
-            <View style={styles.statBox}>
-              <Text style={styles.statNumber}>{totalXP}</Text>
-              <Text style={styles.statLabel}>Total XP</Text>
-            </View>
-          </View>
 
-          {/* 상세 정보 목록 */}
-          <View style={styles.infoBox}>
-            <Text style={styles.infoItemTitle}>Level</Text>
-            <Text style={styles.infoItemValue}>{level}</Text>
-          </View>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoItemTitle}>Total Answers</Text>
-            <Text style={styles.infoItemValue}>{totalAnswers}</Text>
-          </View>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoItemTitle}>Achievements</Text>
-            <Text style={styles.infoItemValue}>{achievements}</Text>
+            {/* 상세 정보 목록 */}
+            <View style={styles.infoBox}>
+              <Text style={styles.infoItemTitle}>Level</Text>
+              <Text style={styles.infoItemValue}>{level}</Text>
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoItemTitle}>Total Answers</Text>
+              <Text style={styles.infoItemValue}>{totalAnswers}</Text>
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoItemTitle}>Achievements</Text>
+              <Text style={styles.infoItemValue}>{achievements}</Text>
+            </View>
           </View>
         </View>
-      </View>
-
-      {/* 하단 탭바 */}
-      {/* <View style={styles.tabBar}>
-        <TouchableOpacity style={styles.tabItem} onPress={handleHomePress}>
-          <Text style={styles.tabText}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tabItem} onPress={handleProfilePress}>
-          <Text style={styles.tabText}>Profile</Text>
-        </TouchableOpacity>
-      </View> */}
-    </SafeAreaView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
@@ -94,9 +89,12 @@ const BORDER_BLUE = '#2979FF';
 const BRAND_GREEN = '#2e856e';
 
 const styles = StyleSheet.create({
+  gradientBackground: {
+    flex: 1, // 화면 전체를 채우기 위해 flex: 1 설정
+  },
   safeArea: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: 'transparent', // 배경 투명 설정
   },
   /* -------------------------
      상단 상태 표시 영역
