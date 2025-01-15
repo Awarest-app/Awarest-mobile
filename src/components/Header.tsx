@@ -1,10 +1,11 @@
-// src/components/Header.tsx
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-
 import {useSafeAreaInsets} from 'react-native-safe-area-context'; // 추가
 import {RootStackParamList} from '../type/route.type';
+
+import FireIcon from '../assets/svg/fire-blue-icon.svg';
+import StarIcon from '../assets/svg/star-icon.svg';
 
 export function Header() {
   // Safe Area insets
@@ -13,24 +14,24 @@ export function Header() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
-    // paddingTop: insets.top을 줘서 상태 표시줄과 겹치지 않게
-    <View
-      style={[
-        styles.headerContainer,
-        {paddingTop: insets.top}, // 추가
-      ]}>
+    <View style={[styles.headerContainer, {paddingTop: insets.top}]}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+        <TouchableOpacity
+          style={styles.iconButton} // 스타일 추가
+          onPress={() => navigation.navigate('Home')}>
+          <FireIcon width={16} height={16} />
           <Text style={styles.headerTitle}>7 Days</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Anwser')}>
+        <TouchableOpacity
+          style={styles.iconButton} // 스타일 추가
+          onPress={() => navigation.navigate('Anwser')}>
+          <StarIcon width={16} height={16} />
           <Text style={styles.headerTitle}>answer</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-          <Text style={styles.headerTitle}>profile</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Result')}>
-          <Text style={styles.headerTitle}>Result</Text>
+        <TouchableOpacity
+          style={styles.iconButton} // 스타일 추가
+          onPress={() => navigation.navigate('Profile')}>
+          <Text style={styles.headerTitle}>level 1</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -39,28 +40,31 @@ export function Header() {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    // 기존에 height: 56이라면, insets.top을 추가해줄 수도 있습니다.
-    // 예: height: 56 + insets.top (동적으로 적용하고 싶다면 inline 스타일에서 처리)
-    // 여기서는 height는 빼고 paddingTop만 주는 방식도 괜찮습니다.
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    // marginVertical: 20
+    marginBottom: 40,
+    backgroundColor: 'transparent', // 투명 배경
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    paddingVertical: 12,
-    backgroundColor: '#fff',
+    // paddingVertical: 12,
+    backgroundColor: 'transparent', // 투명 배경
     elevation: 3,
     width: '100%',
+  },
+  iconButton: {
+    flexDirection: 'row', // 가로 정렬 설정
+    alignItems: 'center', // 아이콘과 텍스트 수직 중앙 정렬
+    gap: 8, // 아이콘과 텍스트 간격
   },
   headerTitle: {
     fontSize: 16,
     fontWeight: 'bold',
+    marginLeft: 8, // 아이콘과 텍스트 사이 여백
   },
 });
