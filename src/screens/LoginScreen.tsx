@@ -6,9 +6,9 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Image,
 } from 'react-native';
 import {RootStackParamList} from '../type/route.type';
+import {fonts} from '../styles/fonts';
 
 export default function LoginScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logo: {
+    fontFamily: fonts.logo_font, // 로고 폰트
     fontSize: 32,
     fontWeight: 'bold',
     color: '#417C76', // 로고 색상 (예시)

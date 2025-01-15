@@ -11,6 +11,7 @@ import {
 // 아래 import는 react-native 프로젝트 환경에 따라 교체 가능
 import LinearGradient from 'react-native-linear-gradient';
 import {LoginStackParamList} from '../type/route.type';
+import {fonts} from '../styles/fonts';
 // import { LinearGradient } from 'expo-linear-gradient'; // Expo 사용 시
 
 // 화면 높이/너비 구하기 (스타일에 사용)
@@ -69,6 +70,7 @@ const styles = StyleSheet.create({
   },
   logoText: {
     fontSize: 36,
+    fontFamily: fonts.logo_font, // 로고 폰트
     fontWeight: 'bold',
     color: '#046655',
     marginBottom: 4,
