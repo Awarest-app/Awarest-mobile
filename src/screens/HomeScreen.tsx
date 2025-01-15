@@ -52,11 +52,11 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       {/* 상단 헤더 */}
-      <View style={styles.header}>
+      {/* <View style={styles.header}>
         <Text style={styles.headerTitle}>7 Days</Text>
         <Text style={styles.headerTitle}>⭐ 2300</Text>
         <Text style={styles.headerTitle}>Level 1</Text>
-      </View>
+      </View> */}
 
       <ScrollView contentContainerStyle={styles.contentContainer}>
         {/* 오늘의 질문 섹션 */}
