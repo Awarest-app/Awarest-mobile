@@ -6,6 +6,10 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import colors from '../styles/colors';
+import {globalStyle} from '../styles/global';
+import {Header} from '../components/Header';
 
 export default function ResultScreen() {
   // 시간, XP 등의 데이터를 실제 로직에 맞게 받아오거나 계산해서 표시할 수 있습니다.
@@ -18,48 +22,46 @@ export default function ResultScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      {/* 상단 상태 표시 영역 */}
+    <LinearGradient
+      colors={[colors.green_gradientStart, colors.green_gradientEnd]} // 그라디언트 색상 설정
+      start={{x: 0, y: 0.4}} // 그라디언트 시작점
+      end={{x: 0, y: 1}} // 그라디언트 종료점
+      style={globalStyle.gradientContainer} // 전체 배경 적용
+    >
+      <SafeAreaView style={styles.safeArea}>
+        {/* 상단 상태 표시 영역 */}
+        <Header />
 
-      {/* 가운데 메인 카드(파란색 테두리 박스) */}
-      <View style={styles.cardContainer}>
-        <Text style={styles.cardTitle}>Response Complete!</Text>
+        {/* 가운데 메인 카드(파란색 테두리 박스) */}
+        <View style={styles.cardContainer}>
+          <Text style={styles.cardTitle}>Response Complete!</Text>
 
-        {/* 체크 아이콘 예시(단순 텍스트 이모지 사용) */}
-        <View style={styles.checkIconWrapper}>
-          <Text style={styles.checkIcon}>✓</Text>
+          {/* 체크 아이콘 예시(단순 텍스트 이모지 사용) */}
+          <View style={styles.checkIconWrapper}>
+            <Text style={styles.checkIcon}>✓</Text>
+          </View>
+
+          <Text style={styles.mainMessage}>Great Reflection!</Text>
+          <Text style={styles.subMessage}>You’ve earned</Text>
+          <Text style={styles.xpText}>+ {xpEarned} XP</Text>
+          <Text style={styles.subMessage}>Time spent: {timeSpent}</Text>
+
+          {/* Continue 버튼 */}
+          <TouchableOpacity
+            style={styles.continueButton}
+            onPress={handleContinue}>
+            <Text style={styles.continueButtonText}>Continue</Text>
+          </TouchableOpacity>
         </View>
-
-        <Text style={styles.mainMessage}>Great Reflection!</Text>
-        <Text style={styles.subMessage}>You’ve earned</Text>
-        <Text style={styles.xpText}>+ {xpEarned} XP</Text>
-        <Text style={styles.subMessage}>Time spent: {timeSpent}</Text>
-
-        {/* Continue 버튼 */}
-        <TouchableOpacity
-          style={styles.continueButton}
-          onPress={handleContinue}>
-          <Text style={styles.continueButtonText}>Continue</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* 하단 탭바 */}
-      <View style={styles.tabBar}>
-        <TouchableOpacity style={styles.tabItem}>
-          <Text style={styles.tabText}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tabItem}>
-          <Text style={styles.tabText}>Profile</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    // backgroundColor: '#f8fafc',
   },
   /* -----------------------
      상단 상태 표시 영역 

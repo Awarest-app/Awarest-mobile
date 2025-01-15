@@ -13,6 +13,8 @@ import CustomInput from '../components/input/CustomInput';
 import LinearGradient from 'react-native-linear-gradient';
 import colors from '../styles/colors';
 import {globalStyle} from '../styles/global';
+import GoogleIcon from '../assets/svg/google-icon.svg';
+import AppleIcon from '../assets/svg/apple-icon.svg';
 
 export default function LoginScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -49,18 +51,16 @@ export default function LoginScreen() {
         />
 
         {/* 로그인 버튼 */}
-        <TouchableOpacity style={styles.signInButton}>
-          <Text
-            style={styles.signInButtonText}
-            onPress={() => {
-              // 로그인 완료 후 MainTabs로 이동
-              navigation.reset({
-                index: 0, // 네비게이션 스택을 리셋하여 이전 화면 제거
-                routes: [{name: 'MainTabs'}],
-              });
-            }}>
-            Sign in
-          </Text>
+        <TouchableOpacity
+          style={styles.signInButton}
+          onPress={() => {
+            // 로그인 완료 후 MainTabs로 이동
+            navigation.reset({
+              index: 0, // 네비게이션 스택을 리셋하여 이전 화면 제거
+              routes: [{name: 'MainTabs'}],
+            });
+          }}>
+          <Text style={styles.signInButtonText}>Sign in</Text>
         </TouchableOpacity>
 
         {/* 비밀번호 찾기 */}
@@ -77,20 +77,10 @@ export default function LoginScreen() {
         {/* 소셜 로그인(구글/애플) 버튼 영역 */}
         <View style={styles.socialContainer}>
           <TouchableOpacity style={styles.socialButton}>
-            {/* 구글 아이콘을 Image, 아이콘 라이브러리 등으로 대체 가능 */}
-            {/* <Image
-            style={styles.socialIcon}
-            source={require('./assets/google.png')}
-            // 예: 구글 아이콘을 직접 추가하시면 됩니다.
-          /> */}
+            <GoogleIcon />
           </TouchableOpacity>
           <TouchableOpacity style={styles.socialButton}>
-            {/* 애플 아이콘을 Image, 아이콘 라이브러리 등으로 대체 가능 */}
-            {/* <Image
-            style={styles.socialIcon}
-            source={require('./assets/apple.png')}
-            // 예: 애플 아이콘을 직접 추가하시면 됩니다.
-          /> */}
+            <AppleIcon />
           </TouchableOpacity>
         </View>
       </View>

@@ -10,6 +10,7 @@ import {
 import {Header} from '../components/Header';
 import LinearGradient from 'react-native-linear-gradient';
 import colors from '../styles/colors';
+import {globalStyle} from '../styles/global';
 
 // 샘플용 임시 프로필 이미지(회색 원을 Image 대신 View로 표현할 수도 있음)
 const ProfilePlaceholder = () => (
@@ -31,9 +32,9 @@ export default function ProfileScreen() {
   return (
     <LinearGradient
       colors={[colors.green_gradientStart, colors.green_gradientEnd]} // 그라디언트 색상 설정
-      start={{x: 0, y: 0}} // 그라디언트 시작점
-      end={{x: 1, y: 1}} // 그라디언트 종료점
-      style={styles.gradientBackground} // 전체 배경 적용
+      start={{x: 0, y: 0.4}} // 그라디언트 시작점
+      end={{x: 0, y: 1}} // 그라디언트 종료점
+      style={globalStyle.gradientContainer} // 전체 배경 적용
     >
       <SafeAreaView style={styles.safeArea}>
         {/* 상단 상태 표시 영역 */}

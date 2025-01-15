@@ -8,6 +8,12 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import colors from '../styles/colors';
+import {globalStyle} from '../styles/global';
+import LinearGradient from 'react-native-linear-gradient';
+import {Header} from '../components/Header';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../type/route.type';
 
 export default function AnswerScreen() {
   // 입력값을 저장하기 위한 state
@@ -25,84 +31,90 @@ export default function AnswerScreen() {
     console.log('Published:', {callParents, selfCare, studyFocus});
   };
 
+  // const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.container}>
-        {/* 메인 타이틀 */}
-        <Text style={styles.title}>What made you feel proud today?</Text>
+    <LinearGradient
+      colors={[colors.green_gradientStart, colors.green_gradientEnd]} // 그라디언트 색상 설정
+      start={{x: 0, y: 0.4}} // 그라디언트 시작점
+      end={{x: 0, y: 1}} // 그라디언트 종료점
+      style={globalStyle.gradientContainer} // 전체 배경 적용
+    >
+      <SafeAreaView style={styles.safeArea}>
+        <ScrollView contentContainerStyle={styles.container}>
+          <Header />
+          {/* 메인 타이틀 */}
+          <Text style={styles.title}>What made you feel proud today?</Text>
 
-        {/* 각 질문 + 입력 폼 */}
-        <View style={styles.inputBlock}>
-          <Text style={styles.inputLabel}>Did you call your parents?</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="start writing your thoughts..."
-            value={callParents}
-            onChangeText={setCallParents}
-            multiline
-          />
-        </View>
+          {/* 각 질문 + 입력 폼 */}
+          <View style={styles.inputBlock}>
+            <Text style={styles.inputLabel}>Did you call your parents?</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="start writing your thoughts..."
+              value={callParents}
+              onChangeText={setCallParents}
+              multiline
+            />
+          </View>
 
-        <View style={styles.inputBlock}>
-          <Text style={styles.inputLabel}>
-            Did you make time to take care of yourself?
-          </Text>
-          <TextInput
-            style={styles.input}
-            placeholder="start writing your thoughts..."
-            value={selfCare}
-            onChangeText={setSelfCare}
-            multiline
-          />
-        </View>
+          <View style={styles.inputBlock}>
+            <Text style={styles.inputLabel}>
+              Did you make time to take care of yourself?
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="start writing your thoughts..."
+              value={selfCare}
+              onChangeText={setSelfCare}
+              multiline
+            />
+          </View>
 
-        <View style={styles.inputBlock}>
-          <Text style={styles.inputLabel}>
-            Did you focus on your studying or working on a task?
-          </Text>
-          <TextInput
-            style={styles.input}
-            placeholder="start writing your thoughts..."
-            value={studyFocus}
-            onChangeText={setStudyFocus}
-            multiline
-          />
-        </View>
+          <View style={styles.inputBlock}>
+            <Text style={styles.inputLabel}>
+              Did you focus on your studying or working on a task?
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="start writing your thoughts..."
+              value={studyFocus}
+              onChangeText={setStudyFocus}
+              multiline
+            />
+          </View>
 
-        {/* 버튼 영역 */}
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.saveButton} onPress={handleSaveDraft}>
-            <Text style={styles.saveButtonText}>Save Draft</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.publishButton}
-            onPress={handlePublish}>
-            <Text style={styles.publishButtonText}>Publish</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+          {/* 버튼 영역 */}
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.saveButton}
+              onPress={handleSaveDraft}>
+              <Text style={styles.saveButtonText}>Save Draft</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.publishButton}
+              onPress={() => navigation.navigate('Result')}>
+              <Text style={styles.publishButtonText}>Publish</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
 
-      {/* 하단 탭바 예시 */}
-      {/* <View style={styles.tabBar}>
-        <TouchableOpacity style={styles.tabItem}>
-          <Text style={styles.tabText}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tabItem}>
-          <Text style={styles.tabText}>Profile</Text>
-        </TouchableOpacity>
-      </View> */}
-    </SafeAreaView>
+        {/* 하단 탭바 예시 */}
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    // backgroundColor: '#f8fafc',
   },
   container: {
+    flex: 1,
     paddingHorizontal: 16,
-    paddingVertical: 20,
+    // paddingVertical: 20,
   },
   // 메인 타이틀
   title: {
