@@ -78,14 +78,14 @@ export default function ProfileScreen() {
       </View>
 
       {/* 하단 탭바 */}
-      <View style={styles.tabBar}>
+      {/* <View style={styles.tabBar}>
         <TouchableOpacity style={styles.tabItem} onPress={handleHomePress}>
           <Text style={styles.tabText}>Home</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.tabItem} onPress={handleProfilePress}>
           <Text style={styles.tabText}>Profile</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </SafeAreaView>
   );
 }

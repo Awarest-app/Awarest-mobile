@@ -83,14 +83,14 @@ export default function AnswerScreen() {
       </ScrollView>
 
       {/* 하단 탭바 예시 */}
-      <View style={styles.tabBar}>
+      {/* <View style={styles.tabBar}>
         <TouchableOpacity style={styles.tabItem}>
           <Text style={styles.tabText}>Home</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.tabItem}>
           <Text style={styles.tabText}>Profile</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </SafeAreaView>
   );
 }

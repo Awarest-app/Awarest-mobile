@@ -1,3 +1,4 @@
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {
   View,
@@ -6,8 +7,10 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import {RootStackParamList} from '../type/route.type';
 
 const HomeScreen = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   // 예시로 하드코딩된 데이터
   const todayQuestions = [
     {id: 1, title: 'What made you feel proud today?'},
@@ -51,13 +54,6 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* 상단 헤더 */}
-      {/* <View style={styles.header}>
-        <Text style={styles.headerTitle}>7 Days</Text>
-        <Text style={styles.headerTitle}>⭐ 2300</Text>
-        <Text style={styles.headerTitle}>Level 1</Text>
-      </View> */}
-
       <ScrollView contentContainerStyle={styles.contentContainer}>
         {/* 오늘의 질문 섹션 */}
         <View style={styles.card}>
@@ -67,8 +63,7 @@ const HomeScreen = () => {
               key={question.id}
               style={styles.questionBox}
               onPress={() => {
-                // 질문 클릭 시 동작
-                console.log(`Tapped: ${question.title}`);
+                navigation.navigate('Anwser');
               }}>
               <Text style={styles.questionText}>{question.title}</Text>
               <Text style={styles.tapToReflect}>Tap to reflect</Text>
@@ -115,14 +110,14 @@ const HomeScreen = () => {
       </ScrollView>
 
       {/* 하단 탭 (예시) */}
-      <View style={styles.tabBar}>
+      {/* <View style={styles.tabBar}>
         <TouchableOpacity style={styles.tabItem}>
           <Text>Home</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.tabItem}>
           <Text>Profile</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 };
