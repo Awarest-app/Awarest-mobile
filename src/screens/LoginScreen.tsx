@@ -1,5 +1,5 @@
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -9,95 +9,102 @@ import {
 } from 'react-native';
 import {RootStackParamList} from '../type/route.type';
 import {fonts} from '../styles/fonts';
+import CustomInput from '../components/input/CustomInput';
+import LinearGradient from 'react-native-linear-gradient';
+import colors from '../styles/colors';
+import {globalStyle} from '../styles/global';
 
 export default function LoginScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   return (
-    <View style={styles.container}>
-      {/* 로고 영역 */}
-      <Text style={styles.logo}>Coura</Text>
-      <Text style={styles.subtitle}>Create your Own Aura</Text>
+    <LinearGradient
+      colors={[colors.green_gradientStart, colors.green_gradientEnd]} // 그라디언트 색상 설정
+      start={{x: 0, y: 0.4}} // 그라디언트 시작점
+      end={{x: 0, y: 1}} // 그라디언트 종료점
+      style={globalStyle.gradientContainer} // 전체 배경 적용
+    >
+      <View style={styles.container}>
+        {/* 로고 영역 */}
+        <Text style={globalStyle.logo}>Coura</Text>
+        <Text style={styles.subtitle}>Create your Own Aura</Text>
 
-      {/* 안내 문구 */}
-      <Text style={styles.enterDetails}>Enter your details</Text>
+        {/* 안내 문구 */}
+        <Text style={styles.enterDetails}>Enter your details</Text>
 
-      {/* 이메일 / 사용자명 입력란 */}
-      <TextInput
-        style={styles.input}
-        placeholder="Email, Username"
-        placeholderTextColor="#999"
-      />
+        <CustomInput
+          placeholder="Email, username"
+          onChangeText={text => setEmail(text)}
+          value={email}
+          containerStyle={{width: '80%'}}
+        />
 
-      {/* 패스워드 입력란 */}
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor="#999"
-        secureTextEntry
-      />
+        <CustomInput
+          placeholder="Password"
+          value={password}
+          onChangeText={() => setPassword(password)}
+          containerStyle={{width: '80%'}}
+        />
 
-      {/* 로그인 버튼 */}
-      <TouchableOpacity style={styles.signInButton}>
-        <Text
-          style={styles.signInButtonText}
-          onPress={() => {
-            // 로그인 완료 후 MainTabs로 이동
-            navigation.reset({
-              index: 0, // 네비게이션 스택을 리셋하여 이전 화면 제거
-              routes: [{name: 'MainTabs'}],
-            });
-          }}>
-          Sign in
-        </Text>
-      </TouchableOpacity>
+        {/* 로그인 버튼 */}
+        <TouchableOpacity style={styles.signInButton}>
+          <Text
+            style={styles.signInButtonText}
+            onPress={() => {
+              // 로그인 완료 후 MainTabs로 이동
+              navigation.reset({
+                index: 0, // 네비게이션 스택을 리셋하여 이전 화면 제거
+                routes: [{name: 'MainTabs'}],
+              });
+            }}>
+            Sign in
+          </Text>
+        </TouchableOpacity>
 
-      {/* 비밀번호 찾기 */}
-      <TouchableOpacity
-        style={styles.forgotButton}
-        // onPress={() => navigation.navigate('Home')}
-      >
-        <Text style={styles.forgotText}>Forgot Password?</Text>
-      </TouchableOpacity>
+        {/* 비밀번호 찾기 */}
+        <TouchableOpacity
+          style={styles.forgotButton}
+          // onPress={() => navigation.navigate('Home')}
+        >
+          <Text style={styles.forgotText}>Forgot Password?</Text>
+        </TouchableOpacity>
 
-      {/* 구분선 */}
-      <Text style={styles.orText}>or</Text>
+        {/* 구분선 */}
+        <Text style={styles.orText}>or</Text>
 
-      {/* 소셜 로그인(구글/애플) 버튼 영역 */}
-      <View style={styles.socialContainer}>
-        <TouchableOpacity style={styles.socialButton}>
-          {/* 구글 아이콘을 Image, 아이콘 라이브러리 등으로 대체 가능 */}
-          {/* <Image
+        {/* 소셜 로그인(구글/애플) 버튼 영역 */}
+        <View style={styles.socialContainer}>
+          <TouchableOpacity style={styles.socialButton}>
+            {/* 구글 아이콘을 Image, 아이콘 라이브러리 등으로 대체 가능 */}
+            {/* <Image
             style={styles.socialIcon}
             source={require('./assets/google.png')}
             // 예: 구글 아이콘을 직접 추가하시면 됩니다.
           /> */}
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.socialButton}>
-          {/* 애플 아이콘을 Image, 아이콘 라이브러리 등으로 대체 가능 */}
-          {/* <Image
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.socialButton}>
+            {/* 애플 아이콘을 Image, 아이콘 라이브러리 등으로 대체 가능 */}
+            {/* <Image
             style={styles.socialIcon}
             source={require('./assets/apple.png')}
             // 예: 애플 아이콘을 직접 추가하시면 됩니다.
           /> */}
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#C5E0D7', // 디자인과 유사한 연한 그린/민트 색
     alignItems: 'center',
     justifyContent: 'center',
   },
-  logo: {
-    fontFamily: fonts.logo_font, // 로고 폰트
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#417C76', // 로고 색상 (예시)
-  },
+
   subtitle: {
     fontSize: 14,
     color: '#666',

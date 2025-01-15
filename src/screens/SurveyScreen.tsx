@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import colors from '../styles/colors';
-import {GlobalStyle} from '../styles/global';
+import {globalStyle} from '../styles/global';
 
 export default function SurveyScreen() {
   const ageGroups = [
@@ -28,7 +28,7 @@ export default function SurveyScreen() {
       style={styles.gradientContainer}>
       <View style={styles.container}>
         {/* 상단 로고/타이틀 영역 */}
-        <Text style={GlobalStyle.logo}>Coura</Text>
+        <Text style={globalStyle.logo}>Coura</Text>
         <Text style={styles.subtitle}>Create your Own Aura</Text>
 
         {/* 질문 문구 */}
