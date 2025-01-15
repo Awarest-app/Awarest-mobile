@@ -12,6 +12,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import {LoginStackParamList} from '../type/route.type';
 import {fonts} from '../styles/fonts';
+import colors from '../styles/colors';
 // import { LinearGradient } from 'expo-linear-gradient'; // Expo 사용 시
 
 // 화면 높이/너비 구하기 (스타일에 사용)
@@ -22,9 +23,9 @@ export default function MainScreen() {
   // const navigation = useNavigation();
   return (
     <LinearGradient
-      colors={['#C3E9E6', '#3C9F92']} // 상단(밝은색) -> 하단(어두운색) 그라디언트
-      start={{x: 0.5, y: 0}}
-      end={{x: 0.5, y: 1}}
+      colors={[colors.green_gradientStart, colors.green_gradientEnd]} // 상단(밝은색) -> 하단(어두운색) 그라디언트
+      start={{x: 0, y: 0.4}} // 왼쪽 위
+      end={{x: 0, y: 1}} // 오른쪽
       style={styles.gradientContainer}>
       <View style={styles.container}>
         {/* 로고 영역 */}
