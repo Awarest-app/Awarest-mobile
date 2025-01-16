@@ -1,26 +1,52 @@
 // WelcomeScreen.tsx
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  Alert,
 } from 'react-native';
 // 아래 import는 react-native 프로젝트 환경에 따라 교체 가능
 import LinearGradient from 'react-native-linear-gradient';
 import {LoginStackParamList} from '../type/route.type';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
+import {supabase} from '../lib/supabase';
+import GoogleOauth from '../lib/googleOauth';
 // import { LinearGradient } from 'expo-linear-gradient'; // Expo 사용 시
 
 // 화면 높이/너비 구하기 (스타일에 사용)
 const {width, height} = Dimensions.get('window');
 
+interface Test {
+  id: number;
+  type: string;
+  content: string;
+}
+
 export default function MainScreen() {
   const navigation = useNavigation<NavigationProp<LoginStackParamList>>();
-  // const navigation = useNavigation();
+  const [test, setTest] = useState<Test>();
+
+  const getProducts = async () => {
+    try {
+      const {data, error} = await supabase.from('questions').select('*');
+      if (error) throw error;
+      if (data != null) {
+        setTest(data);
+      }
+    } catch (error) {
+      Alert.alert('예상치 못한 문제가 발생하였습니다. 다시 시도하여 주십시오.');
+    }
+  };
+
+  useEffect(() => {
+    console.log('test', test);
+  }, [test]);
+
   return (
     <LinearGradient
       colors={[colors.green_gradientStart, colors.green_gradientEnd]} // 상단(밝은색) -> 하단(어두운색) 그라디언트
@@ -37,7 +63,8 @@ export default function MainScreen() {
           <Text style={styles.questionText}>Already have an account?</Text>
           <TouchableOpacity
             style={styles.signInButton}
-            onPress={() => navigation.navigate('Login')}>
+            // onPress={() => navigation.navigate('Login')}>
+            onPress={() => getProducts()}>
             <Text style={styles.signInButtonText}>Sign in</Text>
           </TouchableOpacity>
         </View>
@@ -50,7 +77,9 @@ export default function MainScreen() {
           <Text style={styles.questionText}>New to Coura?</Text>
           <TouchableOpacity
             style={styles.getStartedButton}
-            onPress={() => navigation.navigate('Survey')}>
+            // onPress={() => navigation.navigate('Survey')}
+          >
+            <GoogleOauth />
             <Text style={styles.getStartedButtonText}>Get started</Text>
           </TouchableOpacity>
         </View>
