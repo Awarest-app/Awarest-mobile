@@ -7,16 +7,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  Alert,
 } from 'react-native';
 // 아래 import는 react-native 프로젝트 환경에 따라 교체 가능
 import LinearGradient from 'react-native-linear-gradient';
 import {LoginStackParamList} from '../type/route.type';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
-import {supabase} from '../lib/supabase';
 import GoogleOauth from '../lib/googleOauth';
-// import { LinearGradient } from 'expo-linear-gradient'; // Expo 사용 시
 
 // 화면 높이/너비 구하기 (스타일에 사용)
 const {width, height} = Dimensions.get('window');
@@ -29,23 +26,6 @@ interface Test {
 
 export default function MainScreen() {
   const navigation = useNavigation<NavigationProp<LoginStackParamList>>();
-  const [test, setTest] = useState<Test>();
-
-  const getProducts = async () => {
-    try {
-      const {data, error} = await supabase.from('questions').select('*');
-      if (error) throw error;
-      if (data != null) {
-        setTest(data);
-      }
-    } catch (error) {
-      Alert.alert('예상치 못한 문제가 발생하였습니다. 다시 시도하여 주십시오.');
-    }
-  };
-
-  useEffect(() => {
-    console.log('test', test);
-  }, [test]);
 
   return (
     <LinearGradient
@@ -63,8 +43,9 @@ export default function MainScreen() {
           <Text style={styles.questionText}>Already have an account?</Text>
           <TouchableOpacity
             style={styles.signInButton}
-            // onPress={() => navigation.navigate('Login')}>
-            onPress={() => getProducts()}>
+            onPress={() => navigation.navigate('Login')}
+            // onPress={() => getProducts()}
+          >
             <Text style={styles.signInButtonText}>Sign in</Text>
           </TouchableOpacity>
         </View>

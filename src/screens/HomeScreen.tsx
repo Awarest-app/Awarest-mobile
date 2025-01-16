@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -11,15 +11,25 @@ import {RootStackParamList} from '../type/route.type';
 import {Header} from '../components/Header';
 import LinearGradient from 'react-native-linear-gradient';
 import colors from '../styles/colors';
+import {getQuestions} from '../api/api';
+import {QuestionProps} from '../type/api.type';
+import {fonts} from '../styles/fonts';
+import {globalStyle} from '../styles/global';
 
 const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [todayQuestions, setTodayQuestion] = useState<QuestionProps>([]);
 
-  const todayQuestions = [
-    {id: 1, title: 'What made you feel proud today?'},
-    {id: 2, title: "What's one thing you learned?"},
-    {id: 3, title: 'How did you take care of yourself?'},
-  ];
+  const handleGetTodayQuestions = async () => {
+    try {
+      const res = await getQuestions();
+      // const data = await response.json();
+      console.log('res', res);
+      setTodayQuestion(res);
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
 
   const previousAnswers = [
     {
@@ -42,29 +52,34 @@ const HomeScreen = () => {
     },
   ];
 
+  useEffect(() => {
+    handleGetTodayQuestions();
+  }, []);
+
   return (
     <LinearGradient
       colors={[colors.green_gradientStart, colors.green_gradientEnd]} // 그라디언트 색상 설정
       start={{x: 0, y: 0.4}} // 그라디언트 시작점
       end={{x: 0, y: 1}} // 그라디언트 종료점
-      style={styles.gradientBackground} // 전체 배경 적용
+      style={globalStyle.gradientContainer} // 전체 배경 적용
     >
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.contentContainer}>
           <Header />
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Today's Questions</Text>
-            {todayQuestions.map(question => (
-              <TouchableOpacity
-                key={question.id}
-                style={styles.questionBox}
-                onPress={() => {
-                  navigation.navigate('Anwser');
-                }}>
-                <Text style={styles.questionText}>{question.title}</Text>
-                <Text style={styles.tapToReflect}>Tap to reflect</Text>
-              </TouchableOpacity>
-            ))}
+            {todayQuestions &&
+              todayQuestions.map(question => (
+                <TouchableOpacity
+                  key={question.id}
+                  style={styles.questionBox}
+                  onPress={() => {
+                    navigation.navigate('Anwser');
+                  }}>
+                  <Text style={styles.questionText}>{question.content}</Text>
+                  <Text style={styles.tapToReflect}>Tap to reflect</Text>
+                </TouchableOpacity>
+              ))}
           </View>
 
           <View style={styles.card}>
@@ -110,12 +125,9 @@ const HomeScreen = () => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  gradientBackground: {
-    flex: 1, // 화면 전체를 채우기 위해 flex: 1 설정
-  },
   container: {
     flex: 1,
-    backgroundColor: 'transparent', // 배경 투명 설정
+    backgroundColor: 'transparent',
   },
   contentContainer: {
     paddingVertical: 16,
@@ -127,24 +139,27 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     padding: 16,
     elevation: 2,
+    opacity: 0.9,
   },
   cardTitle: {
+    marginLeft: 8,
+    marginTop: 16,
+    marginBottom: 20,
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 12,
   },
   questionBox: {
     borderColor: '#ddd',
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderRadius: 6,
     padding: 10,
     marginBottom: 10,
-    backgroundColor: '#fafafa',
+    gap: 5,
+    // backgroundColor: '#fafafa',
   },
   questionText: {
     fontSize: 16,
     fontWeight: '600',
-    marginBottom: 5,
   },
   tapToReflect: {
     fontSize: 14,

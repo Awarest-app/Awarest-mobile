@@ -14,6 +14,12 @@ const colors = {
   primary: '#0D9488', //
   danger: '#D03030', // 경고 색상
 
+  //gray - button gray
+  gray_200: '#F3F4F6',
+
+  // border color
+  card_border: '#E5E7EB',
+
   warning: '#f39c12', // 주의 색상
   success: '#2ecc71', // 성공 색상
   textPrimary: '#333333', // 기본 텍스트 색상

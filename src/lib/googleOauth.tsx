@@ -21,12 +21,13 @@ export default function () {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      if (userInfo.idToken) {
+      console.log('userInfo', userInfo);
+      if (userInfo.data.idToken) {
         const {data, error} = await supabase.auth.signInWithIdToken({
           provider: 'google',
-          token: userInfo.idToken,
+          token: userInfo.data.idToken,
         });
-        console.log(error, data);
+        console.log('data');
       } else {
         throw new Error('no ID token present!');
       }

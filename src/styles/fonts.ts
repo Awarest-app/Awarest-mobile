@@ -6,4 +6,7 @@ export const fonts = {
 
   // 로고 폰트
   logo_font: 'Pacifico-Regular',
+
+  // title 폰트
+  // title_font: 'Roboto-SemiBold',
 };
