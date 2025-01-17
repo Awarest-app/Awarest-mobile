@@ -117,11 +117,12 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import {fonts} from '../styles/fonts'
 import colors from '../styles/colors';
 import {globalStyle} from '../styles/global';
-
 export default function SurveyScreen() {
   // 설문에 사용할 옵션들
   const ageGroups = [
@@ -132,6 +133,14 @@ export default function SurveyScreen() {
     '35 - 44',
     '45+',
   ];
+  const goalOptions = [
+    'Understand myself better',
+    'Find life direction',
+    'No specific purpose',
+    'Discover my purpose',
+    'Build strong habits',
+    'Other',
+  ];
   const heardFromOptions = [
     'Friends',
     'Google search',
@@ -141,11 +150,17 @@ export default function SurveyScreen() {
     'Other',
   ];
   const workWordsOptions = [
-    'Creative',
-    'Analytical',
-    'Teamwork',
-    'Leadership',
-    'Self-driven',
+    'Student',
+    'Retired',
+    'Engineer',
+    'Developer',
+    'Sales',
+    'Founder',
+    'Artist',
+    'Founder',
+    'Designer',
+    'Investor',
+    'Teacher',
     'Other',
   ];
 
@@ -156,22 +171,30 @@ export default function SurveyScreen() {
       options: ageGroups,
     },
     {
+      title: 'What is your goal?',
+      options: goalOptions,
+    },
+    {
+      title: 'What words can describe your work?',
+      options: workWordsOptions,
+    },
+    {
       title: 'How did you hear about us?',
       options: heardFromOptions,
     },
     {
-      title: 'Which word best describes your work style?',
-      options: workWordsOptions,
+      title: 'We need permisson for some features ',
+      options: heardFromOptions,
     },
   ];
 
   // 현재 어떤 질문을 보여줄지 인덱스로 관리
   const [questionIndex, setQuestionIndex] = useState(0);
   // 사용자가 선택한 답변들을 저장
-  const [userAnswers, setUserAnswers] = useState([]);
+  const [userAnswers, setUserAnswers] = useState<string[]>([]);
 
   // 옵션을 선택했을 때(답변했을 때) 호출되는 함수
-  const handleOptionSelect = option => {
+  const handleOptionSelect = (option: string) => {
     // 기존 답변 복사
     const updatedAnswers = [...userAnswers];
     // 현재 설문 인덱스 위치에 사용자 선택값 저장
@@ -195,44 +218,60 @@ export default function SurveyScreen() {
     }
   };
 
+  
   return (
     <LinearGradient
-      colors={[colors.green_gradientStart, colors.green_gradientEnd]}
-      start={{x: 0, y: 0.4}}
-      end={{x: 0, y: 1}}
-      style={styles.gradientContainer}>
+    colors={[colors.green_gradientStart, colors.green_gradientEnd]}
+    start={{x: 0, y: 0.4}}
+    end={{x: 0, y: 1}}
+    style={styles.gradientContainer}>
       <View style={styles.container}>
         {/* 상단 로고/타이틀 영역 */}
-        <Text style={globalStyle.logo}>Coura</Text>
-        <Text style={styles.subtitle}>Create your Own Aura</Text>
-
+       <View style={styles.logoSection}>
+          <Text style={styles.logoText}>Coura</Text>
+          <Text style={styles.subTitle}>Create your Own Aura</Text>
+        </View>
         {/* 현재 질문 표시 */}
-        <Text style={styles.question}>{questions[questionIndex].title}</Text>
+        <View style={styles.surveySection}>
+          <View style={styles.questionSection}>
+            <Text style={styles.questionOrder}>{questionIndex+1}/5</Text>
+            <Text style={styles.question}>{questions[questionIndex].title}</Text>
+          </View>
 
-        {/* 옵션 리스트 (스크롤 가능) */}
-        <ScrollView
-          style={styles.scrollContainer}
-          contentContainerStyle={{alignItems: 'center'}}
-          showsVerticalScrollIndicator={false}>
-          {questions[questionIndex].options.map((item, index) => (
-            <TouchableOpacity
+          {questionIndex < 4 ? (
+          <ScrollView
+            style={styles.scrollContainer}
+            showsVerticalScrollIndicator={false}>
+            {questions[questionIndex].options.map((item, index) => (
+              <TouchableOpacity
               key={index}
               style={styles.option}
               onPress={() => handleOptionSelect(item)}>
-              <Text style={styles.optionText}>{item}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-
+                <Text style={styles.optionText}>{item}</Text>
+              </TouchableOpacity>
+            ))}
+            <Text>{questionIndex}</Text>
+            </ScrollView>
+            ) : (
+              <View style={styles.permissonSection}>
+              <Text>Aasdaassdasddsllow</Text>
+            </View>
+          )}
+        </View>
         {/* 뒤로가기 버튼 (첫 번째 질문에서는 숨길 수도 있음) */}
         {questionIndex > 0 && (
           <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-            <Text style={styles.backButtonText}>Back</Text>
+            <Text style={styles.backButtonText}>Back to previous</Text>
           </TouchableOpacity>
         )}
       </View>
     </LinearGradient>
   );
+}
+
+const calculateDp = (px: number) => {
+  const {width, height} = Dimensions.get('window');
+  return ((px * width) / 320);
 }
 
 const styles = StyleSheet.create({
@@ -242,47 +281,86 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    paddingTop: 80,
   },
-  subtitle: {
-    fontSize: 14,
-    color: '#666',
-    marginTop: 4,
-    marginBottom: 36,
+  logoSection: {
+    alignItems: 'center',
+    marginTop: calculateDp(60),
+    marginBottom: calculateDp(20),
+  },
+  logoText: {
+    fontSize: calculateDp(34),
+    fontFamily: fonts.logo_font, // 로고 폰트
+    fontWeight: 'bold',
+    color: colors.primary,
+    marginBottom: -10,
+  },
+  subTitle: {
+    fontSize: calculateDp(12),
+    fontFamily: fonts.lato_regular,
+    color: colors.textSubtle,
+  },
+  surveySection: {
+    width: '80%',
+  },
+  questionSection: {
+    marginBottom: calculateDp(20),
+    gap: calculateDp(6),
+  },
+  questionOrder: {
+    fontFamily: fonts.roboto_medium,
+    fontSize: calculateDp(14),
+    color: colors.primary,
+    letterSpacing: 1,
   },
   question: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 24,
-    textAlign: 'center',
+    fontSize: calculateDp(18),
+    fontFamily: fonts.lato_regular,
+    color: '#000000',
   },
   scrollContainer: {
     width: '100%',
+    height: '48%',
   },
   option: {
-    width: '80%',
-    backgroundColor: '#E3F2EE',
-    paddingVertical: 16,
-    borderRadius: 12,
-    marginBottom: 12,
-    alignItems: 'center',
+    height: calculateDp(44),
+    backgroundColor: colors.button_color,
+    borderRadius: 8,
+    marginBottom: 10,
+    paddingHorizontal: 20,
     justifyContent: 'center',
+    boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)',
   },
   optionText: {
-    fontSize: 18,
-    color: '#333',
-    fontWeight: '500',
+    fontFamily: fonts.lato_regular,
+    fontSize: calculateDp(14),
+    color: '#000000',
+  },
+  permissonSection: {
+    height: '48%',
+    backgroundColor: 'red',
+    zIndex: 999,
+    borderRadius: 8,
+    marginBottom: 10,
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+    boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)',
   },
   backButton: {
-    marginTop: 20,
+    width: '80%',
+    height: calculateDp(38),
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    bottom: calculateDp(60),
     paddingHorizontal: 20,
     paddingVertical: 10,
-    backgroundColor: '#aaa',
+    backgroundColor: colors.primary,
+    boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)',
     borderRadius: 8,
   },
   backButtonText: {
-    color: '#fff',
-    fontSize: 16,
+    fontFamily: fonts.roboto_medium,
+    fontSize: calculateDp(16),
+    color: colors.green_button_text,
   },
 });

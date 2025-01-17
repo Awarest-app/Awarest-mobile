@@ -16,13 +16,14 @@ const colors = {
 
   //gray - button gray
   gray_200: '#F3F4F6',
-
+  green_button_text: '#F0F9F8',
   // border color
   card_border: '#E5E7EB',
-
+  button_color:'rgba(255,255,255,0.75)',
   warning: '#f39c12', // 주의 색상
   success: '#2ecc71', // 성공 색상
   textPrimary: '#333333', // 기본 텍스트 색상
+  textSubtle: '#8C919A',
   background: '#ffffff', // 배경색
   border: '#dddddd', // 테두리 색상
   transparent: 'rgba(0, 0, 0, 0)',

@@ -13,8 +13,8 @@ import CustomInput from '../components/input/CustomInput';
 import LinearGradient from 'react-native-linear-gradient';
 import colors from '../styles/colors';
 import {globalStyle} from '../styles/global';
-import GoogleIcon from '../assets/svg/google-icon.svg';
-import AppleIcon from '../assets/svg/apple-icon.svg';
+import GoogleIcon from '../assets/svg/google-circle.svg';
+import AppleIcon from '../assets/svg/apple-circle.svg';
 
 export default function LoginScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
