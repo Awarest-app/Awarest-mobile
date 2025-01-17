@@ -11,7 +11,7 @@ import {RootStackParamList} from '../type/route.type';
 import {Header} from '../components/Header';
 import LinearGradient from 'react-native-linear-gradient';
 import colors from '../styles/colors';
-import {getQuestions} from '../api/api';
+// import {getQuestions} from '../api/api';
 import {QuestionProps} from '../type/api.type';
 import {fonts} from '../styles/fonts';
 import {globalStyle} from '../styles/global';
@@ -20,16 +20,34 @@ const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [todayQuestions, setTodayQuestion] = useState<QuestionProps>([]);
 
-  const handleGetTodayQuestions = async () => {
-    try {
-      const res = await getQuestions();
-      // const data = await response.json();
-      console.log('res', res);
-      setTodayQuestion(res);
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
+  // const handleGetTodayQuestions = async () => {
+  //   try {
+  //     const res = await getQuestions();
+  //     // const data = await response.json();
+  //     console.log('res', res);
+  //     setTodayQuestion(res);
+  //   } catch (error) {
+  //     console.log('error', error);
+  //   }
+  // };
+  const dummyQuestions: QuestionProps[] = [
+    {
+      id: 1,
+      type: "multiple-choice",
+      content: "What is your favorite color?",
+    },
+    {
+      id: 2,
+      type: "open-ended",
+      content: "Describe your ideal vacation destination.",
+    },
+    {
+      id: 3,
+      type: "true-false",
+      content: "Do you enjoy working in teams?",
+    },
+  ];
+  
 
   const previousAnswers = [
     {
@@ -52,9 +70,9 @@ const HomeScreen = () => {
     },
   ];
 
-  useEffect(() => {
-    handleGetTodayQuestions();
-  }, []);
+  // useEffect(() => {
+  //   handleGetTodayQuestions();
+  // }, []);
 
   return (
     <LinearGradient
@@ -68,8 +86,8 @@ const HomeScreen = () => {
           <Header />
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Today's Questions</Text>
-            {todayQuestions &&
-              todayQuestions.map(question => (
+            {dummyQuestions &&
+              dummyQuestions.map(question => (
                 <TouchableOpacity
                   key={question.id}
                   style={styles.questionBox}

@@ -1,5 +1,5 @@
 #import "AppDelegate.h"
-#import "ReactNativeConfig.h"
+// #import "ReactNativeConfig.h"
 
 #import <React/RCTBundleURLProvider.h>
 

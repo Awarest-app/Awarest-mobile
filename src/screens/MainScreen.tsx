@@ -13,7 +13,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {LoginStackParamList} from '../type/route.type';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
-import GoogleOauth from '../lib/googleOauth';
+// import GoogleOauth from '../lib/googleOauth';
 
 // 화면 높이/너비 구하기 (스타일에 사용)
 const {width, height} = Dimensions.get('window');
@@ -60,7 +60,7 @@ export default function MainScreen() {
             style={styles.getStartedButton}
             // onPress={() => navigation.navigate('Survey')}
           >
-            <GoogleOauth />
+           
             <Text style={styles.getStartedButtonText}>Get started</Text>
           </TouchableOpacity>
         </View>
