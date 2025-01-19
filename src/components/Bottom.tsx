@@ -15,7 +15,7 @@ export default function TabNavigator() {
         name="HomeStack"
         component={HomeStack}
         options={{
-          title: '홈',
+          title: 'Home',
           headerShown: false, // Tab Navigator에서 자체 헤더는 숨기기
           tabBarIcon: (
             {color, size}, // 여기서 tabBarIcon을 사용합니다.
@@ -26,7 +26,7 @@ export default function TabNavigator() {
         name="Profile"
         component={ProfileScreen}
         options={{
-          title: '프로필',
+          title: 'Profile',
           headerShown: false, // Tab Navigator에서 자체 헤더는 숨기기
           tabBarIcon: (
             {color, size}, // 여기서 tabBarIcon을 사용합니다.
