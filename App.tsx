@@ -9,6 +9,7 @@ import TabNavigator from './src/components/Bottom';
 import LoginStack from './src/screens/stacks/LoginStack';
 import {Linking} from 'react-native';
 import SafariView from 'react-native-safari-view';
+import OAuthScreen from './src/screens/OauthScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,28 +42,34 @@ export function HomeStack() {
 
 function App() {
   useEffect(() => {
-    console.log('딥 링크 성공');
+    console.log('useEffect 내부');
     const handleDeepLink = (event: {url: string}) => {
+      console.log('handleDeepLink 내부');
       const url = event.url;
       // "coura://login?token=xxx" 형태
       console.log('딥 링크 url', url);
+      // const tokenMatch = url.match(/token=(.*)/);
       const tokenMatch = url.match(/token=(.*)/);
       if (tokenMatch && tokenMatch[1]) {
         const token = tokenMatch[1];
         console.log('딥 링크에서 토큰 수신:', token);
         // 토큰 저장, 로그인 처리 등
       }
-      // 필요시 SafariViewController 닫기
-      // (아래 예시에서 SFSafariViewController는 자동으로 닫히지 않으므로, dismiss 호출)
-      // SafariViewController 닫기
       SafariView.dismiss();
-      // SafariView.dismiss(); -> 하지만 dismiss는 사용자가 닫기 버튼 누르는 경우도 있으니, 로직에 따라 결정
     };
 
-    // 앱 실행 중(포그라운드)일 때
+    // Background → Foreground: 앱이 이미 background에 있다가, 딥 링크로 포그라운드 복귀하면
     const subscription = Linking.addEventListener('url', handleDeepLink);
 
-    // 앱이 꺼져 있다가 링크로 실행된 경우(첫 실행 시)
+    // Linking.canOpenURL('coura://login/token=').then(supported => {
+    //   if (supported) {
+    //     Linking.openURL('coura://login/');
+    //   } else {
+    //     console.log("Don't know how to open URI: coura://");
+    //   }
+    // });
+
+    // Cold Start: 앱이 완전히 종료된 상태에서 딥 링크로 실행
     Linking.getInitialURL().then(initialUrl => {
       if (initialUrl) handleDeepLink({url: initialUrl});
     });
@@ -76,6 +83,11 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator>
         {/* 1) 로그인 & 설문을 처리하는 LoginStack */}
+        {/* <Stack.Screen
+          name="OAuth"
+          component={OAuthScreen}
+          options={{headerShown: false}} // OAuth 화면에서는 헤더를 숨김
+        /> */}
         <Stack.Screen
           name="LoginStack"
           component={LoginStack}
@@ -87,6 +99,7 @@ function App() {
           component={TabNavigator}
           options={{headerShown: false}}
         />
+
         {/* 3) 예시로 필요한 ResultScreen */}
         <Stack.Screen
           name="Result"

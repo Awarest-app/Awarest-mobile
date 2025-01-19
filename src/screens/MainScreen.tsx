@@ -1,12 +1,13 @@
 // WelcomeScreen.tsx
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  Alert,
 } from 'react-native';
 // 아래 import는 react-native 프로젝트 환경에 따라 교체 가능
 import LinearGradient from 'react-native-linear-gradient';
@@ -23,6 +24,21 @@ interface Test {
   id: number;
   type: string;
   content: string;
+}
+
+function testServerConnection() {
+  fetch('http://localhost:3000/test', {
+    method: 'GET',
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log('서버 응답:', data);
+      Alert.alert('Success', `서버 응답: ${JSON.stringify(data)}`);
+    })
+    .catch(error => {
+      console.error('서버 요청 실패:', error);
+      Alert.alert('Error', '서버 요청 실패: ' + error.message);
+    });
 }
 
 export default function MainScreen() {
@@ -67,9 +83,8 @@ export default function MainScreen() {
           <Text style={styles.questionText}>Already have an account?</Text>
           <TouchableOpacity
             style={styles.signInButton}
-            onPress={() => navigation.navigate('Login')}
-            // onPress={() => getProducts()}
-          >
+            // onPress={() => navigation.navigate('Login')}
+            onPress={() => testServerConnection()}>
             <Text style={styles.signInButtonText}>Sign in</Text>
           </TouchableOpacity>
         </View>
@@ -82,8 +97,9 @@ export default function MainScreen() {
           <Text style={styles.questionText}>New to Coura?</Text>
           <TouchableOpacity
             style={styles.getStartedButton}
-            // onPress={handleGoogleSignup}
-            onPress={() => navigation.navigate('Survey')}>
+            onPress={handleGoogleSignup}
+            // onPress={() => navigation.navigate('Survey')}
+          >
             <Text style={styles.getStartedButtonText}>Get started</Text>
           </TouchableOpacity>
         </View>

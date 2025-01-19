@@ -33,6 +33,10 @@
 		<array>
 			<string>coura</string>
 		</array>
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+		<string>coura</string>
+		</array>
 		</dict>
 	</array>
 
