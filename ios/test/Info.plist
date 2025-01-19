@@ -23,6 +23,12 @@
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
+	<key>NSFaceIDUsageDescription</key>
+  <string>[REASON]</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>[REASON]</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>[REASON]</string>
 	<true/>
 
 <!-- URL Scheme 추가 - google -->
