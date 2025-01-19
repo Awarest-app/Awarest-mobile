@@ -1,13 +1,12 @@
 // WelcomeScreen.tsx
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  Alert,
   PixelRatio,
 } from 'react-native';
 // 아래 import는 react-native 프로젝트 환경에 따라 교체 가능
@@ -15,9 +14,10 @@ import LinearGradient from 'react-native-linear-gradient';
 import {LoginStackParamList} from '../type/route.type';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
-import SafariView from 'react-native-safari-view';
 import GoogleIcon from '../assets/svg/google-icon.svg';
 import AppleIcon from '../assets/svg/apple-icon.svg';
+import {handleGoogleSignup} from '../api/safariView';
+import {testServerConnection} from '../api/axios';
 // import GoogleOauth from '../lib/googleOauth';
 
 // 화면 높이/너비 구하기 (스타일에 사용)
@@ -29,46 +29,8 @@ interface Test {
   content: string;
 }
 
-function testServerConnection() {
-  fetch('http://localhost:3000/test', {
-    method: 'GET',
-  })
-    .then(response => response.json())
-    .then(data => {
-      console.log('서버 응답:', data);
-      Alert.alert('Success', `서버 응답: ${JSON.stringify(data)}`);
-    })
-    .catch(error => {
-      console.error('서버 요청 실패:', error);
-      Alert.alert('Error', '서버 요청 실패: ' + error.message);
-    });
-}
-
 export default function MainScreen() {
   const navigation = useNavigation<NavigationProp<LoginStackParamList>>();
-
-  const handleGoogleSignup = async () => {
-    try {
-      // 예: Docker나 서버가 3000 포트에서 동작 중이라면
-      const SERVER_URL = 'http://localhost:3000';
-      // 실제 기기면 IP 혹은 도메인을 사용
-
-      // SafariView로 열기
-      SafariView.isAvailable()
-        .then(() => {
-          SafariView.show({
-            url: `${SERVER_URL}/auth/google`,
-            // iOS 11+부터는 엔터프라이즈 환경 아니면 기본적으로 SFSafariViewController 적용
-            fromBottom: true, // 모달처럼 밑에서 올라오는 효과
-          });
-        })
-        .catch(error => {
-          console.error('SafariView not available:', error);
-        });
-    } catch (error) {
-      console.error('Failed to open Google OAuth:', error);
-    }
-  };
 
   return (
     <LinearGradient
@@ -104,17 +66,23 @@ export default function MainScreen() {
         <View style={styles.registerSection}>
           <TouchableOpacity
             style={styles.oauthButton}
-            onPress={() => navigation.navigate('Survey')}>
+            // onPress={() => navigation.navigate('Survey')}
+            onPress={() => testServerConnection()}
+            //
+          >
             <View style={styles.oauthTextWrapper}>
-              <GoogleIcon />
+              <AppleIcon />
               <Text style={styles.oauthButtonText}>Sign in with Apple</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.oauthButton}
-            onPress={() => navigation.navigate('Survey')}>
+            // onPress={() => navigation.navigate('Survey')}
+            onPress={() => handleGoogleSignup()}
+            //
+          >
             <View style={styles.oauthTextWrapper}>
-              <AppleIcon />
+              <GoogleIcon />
               <Text style={styles.oauthButtonText}>Sign in with Google</Text>
             </View>
           </TouchableOpacity>
