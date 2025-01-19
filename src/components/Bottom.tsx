@@ -8,7 +8,7 @@ import ProfileIcon from '../assets/svg/profile-icon.svg';
 
 const Tab = createBottomTabNavigator();
 
-export default function TabNavigator() {
+export default function Bottom() {
   return (
     <Tab.Navigator>
       <Tab.Screen

@@ -8,6 +8,12 @@ export type RootStackParamList = {
   //   Register: {type: 'edit' | 'create'}; // edit으로 들어온건지, create로 들어온건지 구분하기
   // Member: undefined;
   Login: undefined;
+
+  LoginStack: {
+    screen: keyof LoginStackParamList;
+  }; // LoginStack 내부로 이동
+
+  // MainTabs: undefined; // MainTabs로 이동
 };
 
 export type LoginStackParamList = {
