@@ -1,115 +1,3 @@
-// import React from 'react';
-// import {
-//   View,
-//   Text,
-//   TouchableOpacity,
-//   StyleSheet,
-//   ScrollView,
-// } from 'react-native';
-// import LinearGradient from 'react-native-linear-gradient';
-// import colors from '../styles/colors';
-// import {globalStyle} from '../styles/global';
-
-// export default function SurveyScreen() {
-//   const ageGroups = [
-//     'Under 18',
-//     '18 - 22',
-//     '23 - 26',
-//     '27 - 34',
-//     '35 - 44',
-//     '45+',
-//   ];
-
-//   const heardFromOptions = [
-//     'Friends',
-//     'Google search',
-//     'Appstore',
-//     'Reddit',
-//     'Social media',
-//     'Other',
-//   ];
-//   const workWordsOptions = [
-//     'Creative',
-//     'Analytical',
-//     'Teamwork',
-//     'Leadership',
-//     'Self-driven',
-//     'Other',
-//   ];
-
-//   return (
-//     <LinearGradient
-//       colors={[colors.green_gradientStart, colors.green_gradientEnd]} // 상단(밝은색) -> 하단(어두운색) 그라디언트
-//       start={{x: 0, y: 0.4}} // 왼쪽 위
-//       end={{x: 0, y: 1}} // 오른쪽
-//       style={styles.gradientContainer}>
-//       <View style={styles.container}>
-//         {/* 상단 로고/타이틀 영역 */}
-//         <Text style={globalStyle.logo}>Coura</Text>
-//         <Text style={styles.subtitle}>Create your Own Aura</Text>
-
-//         {/* 질문 문구 */}
-//         <Text style={styles.question}>What is your age group?</Text>
-
-//         {/* 항목들은 개수가 많아 스크롤이 가능하도록 ScrollView 사용 예시 */}
-//         <ScrollView
-//           style={styles.scrollContainer}
-//           contentContainerStyle={{alignItems: 'center'}}
-//           showsVerticalScrollIndicator={false}>
-//           {ageGroups.map((item, index) => (
-//             <TouchableOpacity key={index} style={styles.option}>
-//               <Text style={styles.optionText}>{item}</Text>
-//             </TouchableOpacity>
-//           ))}
-//         </ScrollView>
-//       </View>
-//     </LinearGradient>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   gradientContainer: {
-//     flex: 1, // 전체 화면을 그라디언트로
-//   },
-//   container: {
-//     flex: 1,
-//     // backgroundColor: '#C5E0D7', // 전체 배경색
-//     alignItems: 'center',
-//     paddingTop: 80, // 상단 여백
-//   },
-//   subtitle: {
-//     fontSize: 14,
-//     color: '#666',
-//     marginTop: 4,
-//     marginBottom: 36,
-//   },
-//   question: {
-//     fontSize: 24,
-//     fontWeight: 'bold',
-//     color: '#333',
-//     marginBottom: 24,
-//     textAlign: 'center',
-//   },
-//   scrollContainer: {
-//     width: '100%',
-//     // 높이를 고정해도 되고, flexGrow 등을 사용해도 됩니다.
-//   },
-//   option: {
-//     width: '80%',
-//     backgroundColor: '#E3F2EE',
-//     paddingVertical: 16,
-//     borderRadius: 12,
-//     marginBottom: 12,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   optionText: {
-//     fontSize: 18,
-//     color: '#333',
-//     fontWeight: '500',
-//   },
-// });
-
 import React, {useState} from 'react';
 import {
   View,
@@ -118,7 +6,9 @@ import {
   StyleSheet,
   ScrollView,
   Dimensions,
+  Switch,
 } from 'react-native';
+import MemoGradient from '../components/Hooks/MemoGradient';
 import LinearGradient from 'react-native-linear-gradient';
 import {fonts} from '../styles/fonts'
 import colors from '../styles/colors';
@@ -188,6 +78,8 @@ export default function SurveyScreen() {
   const [questionIndex, setQuestionIndex] = useState(0);
   // 사용자가 선택한 답변들을 저장
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
+  const [isEnabled, setIsEnabled] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   // 옵션을 선택했을 때(답변했을 때) 호출되는 함수
   const handleOptionSelect = (option: string) => {
@@ -207,6 +99,13 @@ export default function SurveyScreen() {
     }
   };
 
+  //notification on/off 함수
+  const handleNoti = () => {
+    setIsDisabled(true);
+    console.log('notification: ', isEnabled);
+    console.log('disable: ', isDisabled);
+    setIsEnabled(!isEnabled);
+  };
   // 뒤로가기 버튼 클릭 시 이전 질문으로 돌아가는 함수
   const handleBack = () => {
     if (questionIndex > 0) {
@@ -216,14 +115,11 @@ export default function SurveyScreen() {
 
   
   return (
-    <LinearGradient
-    colors={[colors.green_gradientStart, colors.green_gradientEnd]}
-    start={{x: 0, y: 0.4}}
-    end={{x: 0, y: 1}}
-    style={styles.gradientContainer}>
-      <View style={styles.container}>
+    <View style={styles.container}>
+      <MemoGradient />
+      <View style={styles.contentContainer}>
         {/* 상단 로고/타이틀 영역 */}
-       <View style={styles.logoSection}>
+        <View style={styles.logoSection}>
           <Text style={styles.logoText}>Coura</Text>
           <Text style={styles.subTitle}>Create your Own Aura</Text>
         </View>
@@ -245,15 +141,34 @@ export default function SurveyScreen() {
               <TouchableOpacity
               key={index}
               style={styles.option}
-              onPress={() => handleOptionSelect(item)}>
+              onPress={() => handleOptionSelect(item)}
+              >
                 <Text style={styles.optionText}>{item}</Text>
               </TouchableOpacity>
             ))}
-            <Text>{questionIndex}</Text>
             </ScrollView>
             ) : (
-            <ScrollView style={styles.permissonSection} scrollEnabled={false}>
-              <Text>asddasadssd</Text>
+            <ScrollView style={styles.permissonSection} scrollEnabled={false}
+              >
+              <TouchableOpacity style={styles.permissonNoti}
+                disabled={isDisabled}
+                onPress={handleNoti}
+                activeOpacity={0.9}
+              >
+                <Switch style={styles.permissonSwitch}
+                  disabled={isDisabled}
+                  trackColor={{false: 'white', true: '#93C5FD'}}
+                  ios_backgroundColor={'white'}
+                  thumbColor={'#0D9488'}
+                  onValueChange={handleNoti}
+                  value={isEnabled}
+                >
+                </Switch>
+                <View style={styles.permissonContent}>
+                  <Text style={styles.permissonName}>Notifications</Text>
+                  <Text style={styles.permissonDiscription}>necessary to send motivational notifications</Text>
+                </View>
+              </TouchableOpacity>
             </ScrollView>
           )}
         </View>
@@ -264,7 +179,7 @@ export default function SurveyScreen() {
           </TouchableOpacity>
         )}
       </View>
-    </LinearGradient>
+    </View>
   );
 }
 
@@ -274,12 +189,14 @@ const calculateDp = (px: number) => {
 }
 
 const styles = StyleSheet.create({
-  gradientContainer: {
-    flex: 1,
-  },
   container: {
     flex: 1,
+    backgroundColor: 'transparent',
     alignItems: 'center',
+  },
+  contentContainer: {
+    flex: 1,
+    width: '80%',
   },
   logoSection: {
     alignItems: 'center',
@@ -299,7 +216,6 @@ const styles = StyleSheet.create({
     color: colors.textSubtle,
   },
   surveySection: {
-    width: '80%',
   },
   questionSection: {
     marginBottom: calculateDp(20),
@@ -335,15 +251,42 @@ const styles = StyleSheet.create({
     color: '#000000',
   },
   permissonSection: {
-    height: '48%',
-    backgroundColor: 'red',
+    height: '30%',
+    marginTop: 40,
     borderRadius: 8,
-    marginBottom: 10,
-    paddingHorizontal: 20,
-    boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)',
+    // boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)',
+  },
+  permissonNoti: {
+    flexDirection: 'row',
+    width: '100%',
+    height: calculateDp(80),
+    borderRadius: 8,
+    backgroundColor: '#ffffff',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: colors.card_border,
+  },
+  permissonSwitch: {
+    width: '20%',
+    height: '100%',
+  },
+  permissonContent: {
+    width: '80%',
+    gap: 5,
+    flexDirection: 'column',
+  },
+  permissonName: {
+    fontFamily: fonts.roboto_medium,
+    fontSize: calculateDp(16),
+    color: 'black'
+  },
+  permissonDiscription: {
+    fontFamily: fonts.lato_regular,
+    fontSize: calculateDp(14),
+    color: colors.input_ph,
   },
   backButton: {
-    width: '80%',
+    width: '100%',
     height: calculateDp(38),
     alignItems: 'center',
     justifyContent: 'center',
