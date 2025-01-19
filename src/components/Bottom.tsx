@@ -1,10 +1,11 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {HomeStack} from '../../App';
 import ProfileScreen from '../screens/ProfileScreen';
 
 import HomeIcon from '../assets/svg/home-icon.svg';
 import ProfileIcon from '../assets/svg/profile-icon.svg';
+// import {HomeStack} from '../screens/stacks/HomeStack';
+import HomeScreen from '../screens/HomeScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -12,8 +13,8 @@ export default function Bottom() {
   return (
     <Tab.Navigator>
       <Tab.Screen
-        name="HomeStack"
-        component={HomeStack}
+        name="Home"
+        component={HomeScreen}
         options={{
           title: 'Home',
           headerShown: false, // Tab Navigator에서 자체 헤더는 숨기기

@@ -14,7 +14,7 @@ import {globalStyle} from '../styles/global';
 import MemoGradient from '../components/Hooks/MemoGradient';
 import {Header} from '../components/Header';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '../type/route.type';
+import {HomeStackParamList} from '../type/route.type';
 
 export default function AnswerScreen() {
   // 입력값을 저장하기 위한 state
@@ -33,85 +33,85 @@ export default function AnswerScreen() {
   };
 
   // const navigation = useNavigation();
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
 
   return (
     <View style={styles.container}>
       <MemoGradient />
-        <ScrollView style={styles.contentContainer}>
-          <Header />
-          {/* 메인 타이틀 */}
-          <View style={styles.mainContainer}>
-            <View style={styles.titleContainer}>
-              <Text style={styles.title}>Question</Text>
-              <Text style={styles.question}>What made you feel proud today?</Text>
-            </View>
+      <ScrollView style={styles.contentContainer}>
+        <Header />
+        {/* 메인 타이틀 */}
+        <View style={styles.mainContainer}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>Question</Text>
+            <Text style={styles.question}>What made you feel proud today?</Text>
+          </View>
 
-            {/* 각 질문 + 입력 폼 */}
-            <View style={styles.answerContainer}>
-              <View style={styles.inputBlock}>
-                <Text style={styles.inputLabel}>Did you call your parents?</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Start writing your thoughts..."
-                  value={callParents}
-                  onChangeText={setCallParents}
-                  placeholderTextColor={colors.text_hint}
-                  multiline
-                />
-              </View>
-              <View style={styles.inputBlock}>
-                <Text style={styles.inputLabel}>
-                  Did you make time to take care of yourself?
-                </Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Start writing your thoughts..."
-                  value={selfCare}
-                  onChangeText={setSelfCare}
-                  placeholderTextColor={colors.text_hint}
-                  multiline
-                />
-              </View>
-              <View style={styles.inputBlock}>
-                <Text style={styles.inputLabel}>
-                  Did you focus on your studying or working on a task?
-                </Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Start writing your thoughts..."
-                  value={studyFocus}
-                  onChangeText={setStudyFocus}
-                  placeholderTextColor={colors.text_hint}
-                  multiline
-                />
-              </View>
+          {/* 각 질문 + 입력 폼 */}
+          <View style={styles.answerContainer}>
+            <View style={styles.inputBlock}>
+              <Text style={styles.inputLabel}>Did you call your parents?</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Start writing your thoughts..."
+                value={callParents}
+                onChangeText={setCallParents}
+                placeholderTextColor={colors.text_hint}
+                multiline
+              />
             </View>
-
-            {/* 버튼 영역 */}
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.saveButton}
-                onPress={handleSaveDraft}>
-                <Text style={styles.saveButtonText}>Save Draft</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.publishButton}
-                onPress={() => navigation.navigate('Result')}>
-                <Text style={styles.publishButtonText}>Publish</Text>
-              </TouchableOpacity>
+            <View style={styles.inputBlock}>
+              <Text style={styles.inputLabel}>
+                Did you make time to take care of yourself?
+              </Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Start writing your thoughts..."
+                value={selfCare}
+                onChangeText={setSelfCare}
+                placeholderTextColor={colors.text_hint}
+                multiline
+              />
+            </View>
+            <View style={styles.inputBlock}>
+              <Text style={styles.inputLabel}>
+                Did you focus on your studying or working on a task?
+              </Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Start writing your thoughts..."
+                value={studyFocus}
+                onChangeText={setStudyFocus}
+                placeholderTextColor={colors.text_hint}
+                multiline
+              />
             </View>
           </View>
-        </ScrollView>
 
-        {/* 하단 탭바 예시 */}
+          {/* 버튼 영역 */}
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.saveButton}
+              onPress={handleSaveDraft}>
+              <Text style={styles.saveButtonText}>Save Draft</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.publishButton}
+              onPress={() => navigation.navigate('Result')}>
+              <Text style={styles.publishButtonText}>Publish</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+
+      {/* 하단 탭바 예시 */}
     </View>
   );
 }
 const {width, height} = Dimensions.get('window');
 const calculateDp = (px: number) => {
-  return ((px * width) / 320);
-}
+  return (px * width) / 320;
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'black',
   },
-  answerContainer:{
+  answerContainer: {
     gap: 16,
   },
   // 질문 및 입력 영역

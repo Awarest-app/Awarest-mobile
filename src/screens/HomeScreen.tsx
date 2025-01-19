@@ -8,20 +8,20 @@ import {
   Dimensions,
 } from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '../type/route.type';
+import {HomeStackParamList} from '../type/route.type';
 import {Header} from '../components/Header';
 import MemoGradient from '../components/Hooks/MemoGradient';
 import LinearGradient from 'react-native-linear-gradient';
 import colors from '../styles/colors';
 // import {getQuestions} from '../api/api';
-import TrashIcon from '../assets/svg/trash-icon.svg'
-import EditIcon from '../assets/svg/edit-icon.svg'
+import TrashIcon from '../assets/svg/trash-icon.svg';
+import EditIcon from '../assets/svg/edit-icon.svg';
 import {QuestionProps} from '../type/api.type';
 import {fonts} from '../styles/fonts';
 import {globalStyle} from '../styles/global';
 
 const HomeScreen = () => {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
   const [todayQuestions, setTodayQuestion] = useState<QuestionProps>([]);
 
   // const handleGetTodayQuestions = async () => {
@@ -37,21 +37,20 @@ const HomeScreen = () => {
   const dummyQuestions: QuestionProps[] = [
     {
       id: 1,
-      type: "multiple-choice",
-      content: "What is your favorite color?",
+      type: 'multiple-choice',
+      content: 'What is your favorite color?',
     },
     {
       id: 2,
-      type: "open-ended",
-      content: "Describe your ideal vacation destination.",
+      type: 'open-ended',
+      content: 'Describe your ideal vacation destination.',
     },
     {
       id: 3,
-      type: "true-false",
-      content: "Do you enjoy working in teams?",
+      type: 'true-false',
+      content: 'Do you enjoy working in teams?',
     },
   ];
-  
 
   const previousAnswers = [
     {
@@ -113,21 +112,14 @@ const HomeScreen = () => {
             </View>
           </TouchableOpacity>
           {previousAnswers.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-            >
-              <View
-                style={styles.prevQuestionContainer}
-                key={index}
-                >
-                <Text style={styles.questionText}>
-                  {item.question}
-                </Text>
+            <TouchableOpacity key={index}>
+              <View style={styles.prevQuestionContainer} key={index}>
+                <Text style={styles.questionText}>{item.question}</Text>
                 {item.answers.map((answer, ansIndex) => (
                   <View
                     style={styles.answerContainer}
                     key={ansIndex}
-                    onStartShouldSetResponder={() => true}//자식요소가 touch event 소비하게 하기
+                    onStartShouldSetResponder={() => true} //자식요소가 touch event 소비하게 하기
                   >
                     <Text style={styles.answerText}>{answer.text}</Text>
                     <View style={styles.answerDateContainer}>
@@ -149,8 +141,8 @@ const HomeScreen = () => {
 };
 const {width, height} = Dimensions.get('window');
 const calculateDp = (px: number) => {
-  return ((px * width) / 320);
-}
+  return (px * width) / 320;
+};
 export default HomeScreen;
 
 const styles = StyleSheet.create({
@@ -212,7 +204,7 @@ const styles = StyleSheet.create({
     boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
   },
   prevQuestion: {
-    fontFamily: fonts.roboto_medium, 
+    fontFamily: fonts.roboto_medium,
     fontSize: calculateDp(16),
   },
   answerContainer: {

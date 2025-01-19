@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 // 아래 import는 react-native 프로젝트 환경에 따라 교체 가능
 import LinearGradient from 'react-native-linear-gradient';
-import {LoginStackParamList} from '../type/route.type';
+import {HomeStackParamList, RootStackParamList} from '../type/route.type';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
 import GoogleIcon from '../assets/svg/google-icon.svg';
@@ -30,7 +30,7 @@ interface Test {
 }
 
 export default function MainScreen() {
-  const navigation = useNavigation<NavigationProp<LoginStackParamList>>();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
     <LinearGradient
@@ -66,8 +66,12 @@ export default function MainScreen() {
         <View style={styles.registerSection}>
           <TouchableOpacity
             style={styles.oauthButton}
-            // onPress={() => navigation.navigate('Survey')}
-            onPress={() => testServerConnection()}
+            onPress={() =>
+              navigation.navigate('HomeStack', {
+                screen: 'Home', // HomeStack 내부의 Home 스크린
+              })
+            }
+            // onPress={() => testServerConnection()}
             //
           >
             <View style={styles.oauthTextWrapper}>

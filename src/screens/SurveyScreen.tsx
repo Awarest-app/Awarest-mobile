@@ -10,52 +10,20 @@ import {
 } from 'react-native';
 import MemoGradient from '../components/Hooks/MemoGradient';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '../type/route.type';
-import {checkNotifications, requestNotifications} from 'react-native-permissions'
-import PushNotification from 'react-native-push-notification'
-import {fonts} from '../styles/fonts'
+import {HomeStackParamList} from '../type/route.type';
+// import {checkNotifications, requestNotifications} from 'react-native-permissions'
+// import PushNotification from 'react-native-push-notification';
+import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
-import {globalStyle} from '../styles/global';
+import {
+  ageGroups,
+  goalOptions,
+  heardFromOptions,
+  workWordsOptions,
+} from '../constant/survey';
+
 export default function SurveyScreen() {
   // 설문에 사용할 옵션들
-  const ageGroups = [
-    'Under 18',
-    '18 - 22',
-    '23 - 26',
-    '27 - 34',
-    '35 - 44',
-    '45+',
-  ];
-  const goalOptions = [
-    'Understand myself better',
-    'Find life direction',
-    'No specific purpose',
-    'Discover my purpose',
-    'Build strong habits',
-    'Other',
-  ];
-  const heardFromOptions = [
-    'Friends',
-    'Google search',
-    'Appstore',
-    'Reddit',
-    'Social media',
-    'Other',
-  ];
-  const workWordsOptions = [
-    'Student',
-    'Retired',
-    'Engineer',
-    'Developer',
-    'Sales',
-    'Founder',
-    'Artist',
-    'Founder',
-    'Designer',
-    'Investor',
-    'Teacher',
-    'Other',
-  ];
 
   // 설문 질문들을 순서대로 배열에 담기
   const questions = [
@@ -76,12 +44,14 @@ export default function SurveyScreen() {
       options: heardFromOptions,
     },
   ];
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
   // 현재 어떤 질문을 보여줄지 인덱스로 관리
   const [questionIndex, setQuestionIndex] = useState(0);
   // 사용자가 선택한 답변들을 저장
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const [isEnabled, setIsEnabled] = useState(false);
+
   const [isDisabled, setIsDisabled] = useState(false);
 
   // 옵션을 선택했을 때(답변했을 때) 호출되는 함수
@@ -90,6 +60,8 @@ export default function SurveyScreen() {
     const updatedAnswers = [...userAnswers];
     // 현재 설문 인덱스 위치에 사용자 선택값 저장
     updatedAnswers[questionIndex] = option;
+
+    console.log('updatedAnswers', updatedAnswers);
     setUserAnswers(updatedAnswers);
 
     // 마지막 질문이 아니라면 다음 질문으로 넘어감
@@ -103,7 +75,7 @@ export default function SurveyScreen() {
   };
   //notification on/off 함수
   const handleNoti = () => {
-    // setIsDisabled(true); 나중에 넣어야됨 
+    // setIsDisabled(true); 나중에 넣어야됨
     setIsEnabled(!isEnabled);
   };
   // 뒤로가기 버튼 클릭 시 이전 질문으로 돌아가는 함수
@@ -113,7 +85,6 @@ export default function SurveyScreen() {
     }
   };
 
-  
   return (
     <View style={styles.container}>
       <MemoGradient />
@@ -126,7 +97,7 @@ export default function SurveyScreen() {
         {/* 현재 질문 표시 */}
         <View style={styles.surveySection}>
           <View style={styles.questionSection}>
-            <Text style={styles.questionOrder}>{questionIndex+1}/5</Text>
+            <Text style={styles.questionOrder}>{questionIndex + 1}/5</Text>
             <Text style={styles.question}>
               {questionIndex < 4 && questions[questionIndex].title}
               {questionIndex == 4 && 'We need permisson for some features'}
@@ -134,45 +105,43 @@ export default function SurveyScreen() {
           </View>
 
           {questionIndex < 4 ? (
-          <ScrollView
-            style={styles.scrollContainer}
-            showsVerticalScrollIndicator={false}>
-            {questions[questionIndex].options.map((item, index) => (
-              <TouchableOpacity
-              key={index}
-              style={styles.option}
-              onPress={() => handleOptionSelect(item)}
-              >
-                <Text style={styles.optionText}>{item}</Text>
-              </TouchableOpacity>
-            ))}
-              <TouchableOpacity
+            <ScrollView
+              style={styles.scrollContainer}
+              showsVerticalScrollIndicator={false}>
+              {questions[questionIndex].options.map((item, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.option}
+                  onPress={() => handleOptionSelect(item)}>
+                  <Text style={styles.optionText}>{item}</Text>
+                </TouchableOpacity>
+              ))}
+              {/* <TouchableOpacity
                 style={{width: 50, height: 50, backgroundColor: 'skyblue'}}
-                onPress={() => navigation.navigate('Login')}
-              >
+                onPress={() => navigation.navigate('Login')}>
                 <Text>Go to Login</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </ScrollView>
-            ) : (
-            <ScrollView style={styles.permissonSection} scrollEnabled={false}
-              >
-              <TouchableOpacity style={styles.permissonNoti}
+          ) : (
+            <ScrollView style={styles.permissonSection} scrollEnabled={false}>
+              <TouchableOpacity
+                style={styles.permissonNoti}
                 disabled={isDisabled}
                 onPress={handleNoti}
-                activeOpacity={0.9}
-              >
-                <Switch style={styles.permissonSwitch}
+                activeOpacity={0.9}>
+                <Switch
+                  style={styles.permissonSwitch}
                   disabled={isDisabled}
                   trackColor={{false: 'white', true: '#93C5FD'}}
                   ios_backgroundColor={'white'}
                   thumbColor={'#0D9488'}
                   onValueChange={handleNoti}
-                  value={isEnabled}
-                >
-                </Switch>
+                  value={isEnabled}></Switch>
                 <View style={styles.permissonContent}>
                   <Text style={styles.permissonName}>Notifications</Text>
-                  <Text style={styles.permissonDiscription}>necessary to send motivational notifications</Text>
+                  <Text style={styles.permissonDiscription}>
+                    necessary to send motivational notifications
+                  </Text>
                 </View>
               </TouchableOpacity>
             </ScrollView>
@@ -191,8 +160,8 @@ export default function SurveyScreen() {
 
 const {width, height} = Dimensions.get('window');
 const calculateDp = (px: number) => {
-  return ((px * width) / 320);
-}
+  return (px * width) / 320;
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -221,8 +190,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.lato_regular,
     color: colors.textSubtle,
   },
-  surveySection: {
-  },
+  surveySection: {},
   questionSection: {
     marginBottom: calculateDp(20),
     gap: calculateDp(6),
@@ -284,7 +252,7 @@ const styles = StyleSheet.create({
   permissonName: {
     fontFamily: fonts.roboto_medium,
     fontSize: calculateDp(16),
-    color: 'black'
+    color: 'black',
   },
   permissonDiscription: {
     fontFamily: fonts.lato_regular,

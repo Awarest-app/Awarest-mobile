@@ -17,3 +17,24 @@ export const testServerConnection = async () => {
     Alert.alert('Error', '서버 요청 실패: ' + error);
   }
 };
+
+//
+const axiosSuper = async (answers: {key: string; value: string}[]) => {
+  try {
+    const response = await fetch('https://your-backend-api.com/submit-survey', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({answers}), // 키-값 형태로 전송
+    });
+
+    if (response.ok) {
+      console.log('Survey submitted successfully!');
+    } else {
+      console.error('Failed to submit survey:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error submitting survey:', error);
+  }
+};
