@@ -51,8 +51,8 @@ export default function MainScreen() {
           <Text>go home</Text>
         </TouchableOpacity> */}
         <View style={styles.sloganSection}>
-          <Text style={styles.mainSlogan}>Be Aware of Yourself in Your Own Time</Text>
-          <Text style={styles.subSlogan}>Be Aware of Yourself hlelo wordl eslipse world man  bottle</Text>
+          <Text style={styles.mainSlogan}>Take a moment each day to find your path in life</Text>
+          <Text style={styles.subSlogan}>Discover yourself in Your own time</Text>
         </View>
         
         {/* <View style={styles.divider} /> */}
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   logoSection: {
     alignItems: 'center',
     marginTop: calculateDp(60),
-    marginBottom: 100,
+    marginBottom: calculateDp(120),
   },
   logoText: {
     fontSize: calculateDp(34),
@@ -121,15 +121,15 @@ const styles = StyleSheet.create({
     fontFamily: fonts.lato_regular,
     color: colors.primary,
     textAlign: 'center',
-    width: calculateDp(205),
-    marginBottom: calculateDp(10),
+    width: calculateDp(242),
+    marginBottom: calculateDp(6),
   },
   subSlogan: {
-    fontSize: calculateDp(12),
+    fontSize: calculateDp(14),
     fontFamily: fonts.lato_regular,
     color: colors.textSubtle,
     textAlign: 'center',
-    width: calculateDp(180),
+    width: '100%',
   },
   registerSection: {
     gap: calculateDp(10),

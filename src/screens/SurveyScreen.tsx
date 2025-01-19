@@ -9,7 +9,10 @@ import {
   Switch,
 } from 'react-native';
 import MemoGradient from '../components/Hooks/MemoGradient';
-import LinearGradient from 'react-native-linear-gradient';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../type/route.type';
+import {checkNotifications, requestNotifications} from 'react-native-permissions'
+import PushNotification from 'react-native-push-notification'
 import {fonts} from '../styles/fonts'
 import colors from '../styles/colors';
 import {globalStyle} from '../styles/global';
@@ -73,7 +76,7 @@ export default function SurveyScreen() {
       options: heardFromOptions,
     },
   ];
-
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   // 현재 어떤 질문을 보여줄지 인덱스로 관리
   const [questionIndex, setQuestionIndex] = useState(0);
   // 사용자가 선택한 답변들을 저장
@@ -98,12 +101,9 @@ export default function SurveyScreen() {
       // 예: 설문 완료 페이지로 이동하거나 알람을 띄울 수 있습니다.
     }
   };
-
   //notification on/off 함수
   const handleNoti = () => {
-    setIsDisabled(true);
-    console.log('notification: ', isEnabled);
-    console.log('disable: ', isDisabled);
+    // setIsDisabled(true); 나중에 넣어야됨 
     setIsEnabled(!isEnabled);
   };
   // 뒤로가기 버튼 클릭 시 이전 질문으로 돌아가는 함수
@@ -146,6 +146,12 @@ export default function SurveyScreen() {
                 <Text style={styles.optionText}>{item}</Text>
               </TouchableOpacity>
             ))}
+              <TouchableOpacity
+                style={{width: 50, height: 50, backgroundColor: 'skyblue'}}
+                onPress={() => navigation.navigate('Login')}
+              >
+                <Text>Go to Login</Text>
+              </TouchableOpacity>
             </ScrollView>
             ) : (
             <ScrollView style={styles.permissonSection} scrollEnabled={false}
@@ -183,8 +189,8 @@ export default function SurveyScreen() {
   );
 }
 
+const {width, height} = Dimensions.get('window');
 const calculateDp = (px: number) => {
-  const {width, height} = Dimensions.get('window');
   return ((px * width) / 320);
 }
 

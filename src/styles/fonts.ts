@@ -9,7 +9,9 @@ export const fonts = {
 
   lato_regular: 'Lato-Regular',
 
+  roboto_regular: 'Roboto-Regular',
   roboto_medium: 'Roboto-Medium',
+  roboto_semibold: 'Roboto-SemiBold',
   // 폰트
   // title 폰트
   // title_font: 'Roboto-SemiBold',

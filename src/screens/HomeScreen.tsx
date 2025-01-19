@@ -5,13 +5,17 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../type/route.type';
 import {Header} from '../components/Header';
+import MemoGradient from '../components/Hooks/MemoGradient';
 import LinearGradient from 'react-native-linear-gradient';
 import colors from '../styles/colors';
 // import {getQuestions} from '../api/api';
+import TrashIcon from '../assets/svg/trash-icon.svg'
+import EditIcon from '../assets/svg/edit-icon.svg'
 import {QuestionProps} from '../type/api.type';
 import {fonts} from '../styles/fonts';
 import {globalStyle} from '../styles/global';
@@ -51,11 +55,15 @@ const HomeScreen = () => {
 
   const previousAnswers = [
     {
-      question: 'What made you feel proud today?',
+      question: 'What made you feel proud todaydsds?',
       answers: [
         {
           text: 'I completed a challenging project at work ahead of schedule.',
-          date: '2025-01-24 10:20 AM',
+          date: '2025-01-21 10:20 AM',
+        },
+        {
+          text: 'teystuy uasukdy ukyd wqiudy ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
+          date: '2025-01-24 01:40 PM',
         },
       ],
     },
@@ -75,133 +83,164 @@ const HomeScreen = () => {
   // }, []);
 
   return (
-    <LinearGradient
-      colors={[colors.green_gradientStart, colors.green_gradientEnd]} // 그라디언트 색상 설정
-      start={{x: 0, y: 0.4}} // 그라디언트 시작점
-      end={{x: 0, y: 1}} // 그라디언트 종료점
-      style={globalStyle.gradientContainer} // 전체 배경 적용
-    >
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.contentContainer}>
-          <Header />
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Today's Questions</Text>
-            {dummyQuestions &&
-              dummyQuestions.map(question => (
-                <TouchableOpacity
-                  key={question.id}
-                  style={styles.questionBox}
-                  onPress={() => {
-                    navigation.navigate('Anwser');
-                  }}>
-                  <Text style={styles.questionText}>{question.content}</Text>
-                  <Text style={styles.tapToReflect}>Tap to reflect</Text>
-                </TouchableOpacity>
-              ))}
-          </View>
+    <View style={styles.container}>
+      <MemoGradient />
+      <ScrollView contentContainerStyle={styles.contentContainer}>
+        <Header />
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Today's Questions</Text>
+          {dummyQuestions &&
+            dummyQuestions.map(question => (
+              <TouchableOpacity
+                key={question.id}
+                style={styles.questionBox}
+                onPress={() => {
+                  navigation.navigate('Anwser');
+                }}>
+                <Text style={styles.questionText}>{question.content}</Text>
+                <Text style={styles.tapToReflect}>Tap to reflect</Text>
+              </TouchableOpacity>
+            ))}
+        </View>
 
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Your previous Answers</Text>
-            {previousAnswers.map((item, index) => (
-              <View key={index} style={styles.previousAnswerBlock}>
-                <Text style={[styles.questionText, styles.previousQuestion]}>
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Your previous Answers</Text>
+          <TouchableOpacity>
+            <View style={styles.prevQuestionContainer}>
+              <Text style={styles.questionText}>
+                What made you feel proud today?
+              </Text>
+            </View>
+          </TouchableOpacity>
+          {previousAnswers.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+            >
+              <View
+                style={styles.prevQuestionContainer}
+                key={index}
+                >
+                <Text style={styles.questionText}>
                   {item.question}
                 </Text>
                 {item.answers.map((answer, ansIndex) => (
-                  <View key={ansIndex} style={styles.answerContainer}>
+                  <View
+                    style={styles.answerContainer}
+                    key={ansIndex}
+                    onStartShouldSetResponder={() => true}//자식요소가 touch event 소비하게 하기
+                  >
                     <Text style={styles.answerText}>{answer.text}</Text>
-                    <Text style={styles.answerDate}>{answer.date}</Text>
+                    <View style={styles.answerDateContainer}>
+                      <Text style={styles.answerDate}>{answer.date}</Text>
+                      <View style={styles.answerIcons}>
+                        <TrashIcon />
+                        <EditIcon />
+                      </View>
+                    </View>
                   </View>
                 ))}
               </View>
-            ))}
-          </View>
-
-          {/* 나중에 제외 */}
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Your previous Answers</Text>
-            {previousAnswers.map((item, index) => (
-              <View key={index} style={styles.previousAnswerBlock}>
-                <Text style={[styles.questionText, styles.previousQuestion]}>
-                  {item.question}
-                </Text>
-                {item.answers.map((answer, ansIndex) => (
-                  <View key={ansIndex} style={styles.answerContainer}>
-                    <Text style={styles.answerText}>{answer.text}</Text>
-                    <Text style={styles.answerDate}>{answer.date}</Text>
-                  </View>
-                ))}
-              </View>
-            ))}
-          </View>
-        </ScrollView>
-      </View>
-    </LinearGradient>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+    </View>
   );
 };
-
+const {width, height} = Dimensions.get('window');
+const calculateDp = (px: number) => {
+  return ((px * width) / 320);
+}
 export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'transparent',
+    // alignItems: 'center',
   },
   contentContainer: {
     paddingVertical: 16,
     paddingHorizontal: 16,
   },
   card: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    marginBottom: 16,
-    padding: 16,
-    elevation: 2,
-    opacity: 0.9,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    borderRadius: 10,
+    marginBottom: 50,
+    paddingHorizontal: 14,
+    paddingVertical: 24,
+    gap: 16,
+    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
+    borderWidth: 1,
+    borderColor: colors.card_border,
+    // elevation: 2,
+    // opacity: 0.9,
   },
   cardTitle: {
-    marginLeft: 8,
-    marginTop: 16,
-    marginBottom: 20,
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: fonts.roboto_semibold,
+    fontSize: calculateDp(18),
+    paddingHorizontal: 12,
+    marginBottom: 12,
+    marginTop: 12,
   },
   questionBox: {
-    borderColor: '#ddd',
-    borderWidth: 0.5,
-    borderRadius: 6,
-    padding: 10,
-    marginBottom: 10,
-    gap: 5,
-    // backgroundColor: '#fafafa',
+    borderColor: colors.card_border,
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 16,
+    gap: 8,
+    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
   },
   questionText: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontFamily: fonts.roboto_medium,
+    fontSize: calculateDp(16),
   },
   tapToReflect: {
-    fontSize: 14,
-    color: '#888',
+    fontFamily: fonts.lato_regular,
+    // fontFamily: fonts.roboto_regular,
+    fontSize: calculateDp(14),
+    color: colors.text_hint,
   },
-  previousAnswerBlock: {
-    marginBottom: 16,
+  prevQuestionContainer: {
+    backgroundColor: 'white',
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    gap: 16,
+    borderWidth: 1,
+    borderColor: colors.card_border,
+    borderRadius: 10,
+    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
   },
-  previousQuestion: {
-    marginBottom: 6,
-    fontWeight: 'bold',
+  prevQuestion: {
+    fontFamily: fonts.roboto_medium, 
+    fontSize: calculateDp(16),
   },
   answerContainer: {
-    backgroundColor: '#f9f9f9',
-    padding: 8,
-    borderRadius: 6,
-    marginBottom: 8,
+    backgroundColor: 'white',
+    paddingVertical: 16,
+    paddingHorizontal: 14,
+    gap: 14,
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: colors.card_border,
+    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
   },
   answerText: {
-    fontSize: 14,
-    marginBottom: 4,
+    fontFamily: fonts.lato_regular,
+    fontSize: calculateDp(14),
+    color: colors.prev_answer,
+  },
+  answerDateContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   answerDate: {
-    fontSize: 12,
-    color: '#888',
+    fontFamily: fonts.roboto_regular,
+    fontSize: calculateDp(14),
+    color: colors.text_hint,
+  },
+  answerIcons: {
+    flexDirection: 'row',
+    gap: 12,
   },
 });
