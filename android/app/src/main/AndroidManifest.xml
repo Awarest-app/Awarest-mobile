@@ -20,6 +20,10 @@
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
+            <!-- host는 나중에 수정 -->
+            <data
+              android:scheme="coura"
+              android:host="login" />
         </intent-filter>
       </activity>
     </application>
