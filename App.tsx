@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from './src/screens/HomeScreen';
@@ -41,6 +41,8 @@ export function HomeStack() {
 }
 
 function App() {
+  const navigationRef = useRef();
+
   useEffect(() => {
     console.log('useEffect 내부');
     const handleDeepLink = (event: {url: string}) => {
@@ -48,6 +50,7 @@ function App() {
       const url = event.url;
       // "coura://login?token=xxx" 형태
       console.log('딥 링크 url', url);
+
       // const tokenMatch = url.match(/token=(.*)/);
       const tokenMatch = url.match(/token=(.*)/);
       if (tokenMatch && tokenMatch[1]) {
@@ -56,18 +59,12 @@ function App() {
         // 토큰 저장, 로그인 처리 등
       }
       SafariView.dismiss();
+
+      // navigationRef.current?.navigate('Survey'); // SurveyScreen으로 이동
     };
 
     // Background → Foreground: 앱이 이미 background에 있다가, 딥 링크로 포그라운드 복귀하면
     const subscription = Linking.addEventListener('url', handleDeepLink);
-
-    // Linking.canOpenURL('coura://login/token=').then(supported => {
-    //   if (supported) {
-    //     Linking.openURL('coura://login/');
-    //   } else {
-    //     console.log("Don't know how to open URI: coura://");
-    //   }
-    // });
 
     // Cold Start: 앱이 완전히 종료된 상태에서 딥 링크로 실행
     Linking.getInitialURL().then(initialUrl => {
@@ -83,11 +80,6 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator>
         {/* 1) 로그인 & 설문을 처리하는 LoginStack */}
-        {/* <Stack.Screen
-          name="OAuth"
-          component={OAuthScreen}
-          options={{headerShown: false}} // OAuth 화면에서는 헤더를 숨김
-        /> */}
         <Stack.Screen
           name="LoginStack"
           component={LoginStack}
@@ -101,11 +93,11 @@ function App() {
         />
 
         {/* 3) 예시로 필요한 ResultScreen */}
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Result"
           component={ResultScreen}
           options={{headerShown: false}}
-        />
+        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -23,13 +23,14 @@
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
 	<key>NSFaceIDUsageDescription</key>
-  <string>[REASON]</string>
+  	<string>[REASON]</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>[REASON]</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>[REASON]</string>
-	<true/>
+	<!-- <true/> -->
 
 	<!-- deep link 설정 -->
 	<key>CFBundleURLTypes</key>
