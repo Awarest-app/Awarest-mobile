@@ -182,10 +182,6 @@ export default function SurveyScreen() {
       title: 'How did you hear about us?',
       options: heardFromOptions,
     },
-    {
-      title: 'We need permisson for some features ',
-      options: heardFromOptions,
-    },
   ];
 
   // 현재 어떤 질문을 보여줄지 인덱스로 관리
@@ -202,7 +198,7 @@ export default function SurveyScreen() {
     setUserAnswers(updatedAnswers);
 
     // 마지막 질문이 아니라면 다음 질문으로 넘어감
-    if (questionIndex < questions.length - 1) {
+    if (questionIndex < questions.length) {
       setQuestionIndex(questionIndex + 1);
     } else {
       // 모든 설문이 끝났을 때 로직 (예: 서버 전송, 다음 화면 이동 등)
@@ -235,7 +231,10 @@ export default function SurveyScreen() {
         <View style={styles.surveySection}>
           <View style={styles.questionSection}>
             <Text style={styles.questionOrder}>{questionIndex+1}/5</Text>
-            <Text style={styles.question}>{questions[questionIndex].title}</Text>
+            <Text style={styles.question}>
+              {questionIndex < 4 && questions[questionIndex].title}
+              {questionIndex == 4 && 'We need permisson for some features'}
+            </Text>
           </View>
 
           {questionIndex < 4 ? (
@@ -253,9 +252,9 @@ export default function SurveyScreen() {
             <Text>{questionIndex}</Text>
             </ScrollView>
             ) : (
-              <View style={styles.permissonSection}>
-              <Text>Aasdaassdasddsllow</Text>
-            </View>
+            <ScrollView style={styles.permissonSection} scrollEnabled={false}>
+              <Text>asddasadssd</Text>
+            </ScrollView>
           )}
         </View>
         {/* 뒤로가기 버튼 (첫 번째 질문에서는 숨길 수도 있음) */}
@@ -338,11 +337,9 @@ const styles = StyleSheet.create({
   permissonSection: {
     height: '48%',
     backgroundColor: 'red',
-    zIndex: 999,
     borderRadius: 8,
     marginBottom: 10,
     paddingHorizontal: 20,
-    justifyContent: 'center',
     boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)',
   },
   backButton: {
