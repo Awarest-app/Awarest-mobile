@@ -4,12 +4,14 @@ import {
   View,
   Text,
   TextInput,
+  Dimensions,
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
 import {globalStyle} from '../styles/global';
-import LinearGradient from 'react-native-linear-gradient';
+import MemoGradient from '../components/Hooks/MemoGradient';
 import {Header} from '../components/Header';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../type/route.type';
@@ -34,56 +36,56 @@ export default function AnswerScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
-    <LinearGradient
-      colors={[colors.green_gradientStart, colors.green_gradientEnd]} // 그라디언트 색상 설정
-      start={{x: 0, y: 0.4}} // 그라디언트 시작점
-      end={{x: 0, y: 1}} // 그라디언트 종료점
-      style={globalStyle.gradientContainer} // 전체 배경 적용
-    >
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.contentContainer}>
+    <View style={styles.container}>
+      <MemoGradient />
+        <ScrollView style={styles.contentContainer}>
           <Header />
           {/* 메인 타이틀 */}
           <View style={styles.mainContainer}>
-            <Text style={styles.title}>Question</Text>
-            <Text style={styles.subTitle}>What made you feel proud today?</Text>
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>Question</Text>
+              <Text style={styles.question}>What made you feel proud today?</Text>
+            </View>
 
             {/* 각 질문 + 입력 폼 */}
-            <View style={styles.inputBlock}>
-              <Text style={styles.inputLabel}>Did you call your parents?</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="start writing your thoughts..."
-                value={callParents}
-                onChangeText={setCallParents}
-                multiline
-              />
-            </View>
-
-            <View style={styles.inputBlock}>
-              <Text style={styles.inputLabel}>
-                Did you make time to take care of yourself?
-              </Text>
-              <TextInput
-                style={styles.input}
-                placeholder="start writing your thoughts..."
-                value={selfCare}
-                onChangeText={setSelfCare}
-                multiline
-              />
-            </View>
-
-            <View style={styles.inputBlock}>
-              <Text style={styles.inputLabel}>
-                Did you focus on your studying or working on a task?
-              </Text>
-              <TextInput
-                style={styles.input}
-                placeholder="start writing your thoughts..."
-                value={studyFocus}
-                onChangeText={setStudyFocus}
-                multiline
-              />
+            <View style={styles.answerContainer}>
+              <View style={styles.inputBlock}>
+                <Text style={styles.inputLabel}>Did you call your parents?</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Start writing your thoughts..."
+                  value={callParents}
+                  onChangeText={setCallParents}
+                  placeholderTextColor={colors.text_hint}
+                  multiline
+                />
+              </View>
+              <View style={styles.inputBlock}>
+                <Text style={styles.inputLabel}>
+                  Did you make time to take care of yourself?
+                </Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Start writing your thoughts..."
+                  value={selfCare}
+                  onChangeText={setSelfCare}
+                  placeholderTextColor={colors.text_hint}
+                  multiline
+                />
+              </View>
+              <View style={styles.inputBlock}>
+                <Text style={styles.inputLabel}>
+                  Did you focus on your studying or working on a task?
+                </Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Start writing your thoughts..."
+                  value={studyFocus}
+                  onChangeText={setStudyFocus}
+                  placeholderTextColor={colors.text_hint}
+                  multiline
+                />
+              </View>
             </View>
 
             {/* 버튼 영역 */}
@@ -103,11 +105,13 @@ export default function AnswerScreen() {
         </ScrollView>
 
         {/* 하단 탭바 예시 */}
-      </View>
-    </LinearGradient>
+    </View>
   );
 }
-
+const {width, height} = Dimensions.get('window');
+const calculateDp = (px: number) => {
+  return ((px * width) / 320);
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -115,88 +119,98 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingVertical: 16,
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
   },
   mainContainer: {
     flex: 1,
+    gap: 25,
     paddingVertical: 24,
     paddingHorizontal: 16,
     borderRadius: 8,
     // paddingHorizontal: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
     opacity: 0.9,
+    marginBottom: 40,
+  },
+  titleContainer: {
+    gap: 6,
   },
   // 메인 타이틀
   title: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#333',
-    marginBottom: 10,
+    fontFamily: fonts.roboto_medium,
+    color: 'black',
+    fontSize: 24,
   },
   // 서브 타이틀
-  subTitle: {
-    fontSize: 16,
-    fontWeight: '400',
-    color: '#333',
-    marginBottom: 24,
+  question: {
+    fontFamily: fonts.roboto_regular,
+    fontSize: 20,
+    color: 'black',
+  },
+  answerContainer:{
+    gap: 16,
   },
   // 질문 및 입력 영역
   inputBlock: {
-    marginBottom: 20,
+    backgroundColor: 'white',
     borderWidth: 1,
     borderColor: colors.card_border,
     borderRadius: 8,
+    gap: 10,
     padding: 10,
-    elevation: 2,
+    // elevation: 2,
   },
   inputLabel: {
-    fontSize: 16,
-    marginBottom: 8,
-    fontWeight: '600',
-    color: '#555',
+    fontSize: 18,
+    // marginBottom: 8,
   },
   input: {
+    fontFamily: fonts.lato_regular,
+    fontSize: 16,
+    color: 'black',
     minHeight: 60,
     borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
+    borderColor: colors.card_border,
+    borderRadius: 10,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    backgroundColor: '#fff',
-    fontSize: 15,
+    // backgroundColor: 'white',
     lineHeight: 20,
     height: 80,
   },
   // 버튼 영역
   buttonContainer: {
+    justifyContent: 'space-between',
     flexDirection: 'row',
-    marginBottom: 24,
+    height: calculateDp(36),
+    paddingHorizontal: 10,
   },
   saveButton: {
-    flex: 1,
-    marginRight: 8,
-    backgroundColor: colors.gray_200,
-    paddingVertical: 14,
-    borderRadius: 8,
+    width: calculateDp(96),
+    // height: '100%',
+    backgroundColor: colors.gray_button,
+    borderRadius: 10,
     alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
   },
   saveButtonText: {
-    color: '#444',
-    fontWeight: '600',
-    fontSize: 16,
+    fontFamily: fonts.roboto_regular,
+    color: colors.grey_button_text,
+    fontSize: 18,
   },
   publishButton: {
-    flex: 1,
-    marginLeft: 8,
+    width: calculateDp(96),
     backgroundColor: colors.primary,
-    paddingVertical: 14,
-    borderRadius: 8,
+    borderRadius: 10,
     alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
   },
   publishButtonText: {
-    color: '#fff',
-    fontWeight: '600',
-    fontSize: 16,
+    fontSize: 18,
+    fontFamily: fonts.roboto_regular,
+    color: colors.green_button_text,
   },
   // 하단 탭바
   tabBar: {
