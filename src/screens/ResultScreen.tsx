@@ -6,157 +6,140 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import colors from '../styles/colors';
+import {fonts} from '../styles/fonts';
+import CheckIcon from '../assets/svg/check-icon.svg';
 import {globalStyle} from '../styles/global';
 import {Header} from '../components/Header';
+import MemoGradient from '../components/Hooks/MemoGradient';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {HomeStackParamList} from '../type/route.type';
 
 export default function ResultScreen() {
   // 시간, XP 등의 데이터를 실제 로직에 맞게 받아오거나 계산해서 표시할 수 있습니다.
+  const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
   const xpEarned = 50;
   const timeSpent = '3m 21s';
 
   const handleContinue = () => {
     // ‘Continue’ 버튼 클릭 시 동작(예: 홈 화면으로 이동 등)
     console.log('Continue clicked');
+    navigation.navigate('Home');
   };
 
   return (
-    <LinearGradient
-      colors={[colors.green_gradientStart, colors.green_gradientEnd]} // 그라디언트 색상 설정
-      start={{x: 0, y: 0.4}} // 그라디언트 시작점
-      end={{x: 0, y: 1}} // 그라디언트 종료점
-      style={globalStyle.gradientContainer} // 전체 배경 적용
-    >
+    <View style={styles.container}>
+      <MemoGradient />
+      <View style={styles.contentContainer}>
+      <Header />
       <SafeAreaView style={styles.safeArea}>
         {/* 상단 상태 표시 영역 */}
-        <Header />
-
         {/* 가운데 메인 카드(파란색 테두리 박스) */}
         <View style={styles.cardContainer}>
-          <Text style={styles.cardTitle}>Response Complete!</Text>
+          <Text style={styles.cardTitle}>Response complete !</Text>
 
           {/* 체크 아이콘 예시(단순 텍스트 이모지 사용) */}
-          <View style={styles.checkIconWrapper}>
-            <Text style={styles.checkIcon}>✓</Text>
+          <View style={styles.resultContainer}>
+            <View style={styles.checkIconContainer}>
+              <CheckIcon />
+            </View>
+            <Text style={styles.evalutionMessage}>Great Reflection !</Text>
+            <Text style={styles.subMessage}>You've earned</Text>
+            <Text style={styles.gainXp}>+ {xpEarned} XP</Text>
+            <Text style={styles.subMessage}>Time spent: {timeSpent}</Text>
+
+            {/* Continue 버튼 */}
+            <TouchableOpacity
+              style={styles.continueButton}
+              onPress={handleContinue}>
+              <Text style={styles.continueButtonText}>Continue</Text>
+            </TouchableOpacity>
           </View>
-
-          <Text style={styles.mainMessage}>Great Reflection!</Text>
-          <Text style={styles.subMessage}>You’ve earned</Text>
-          <Text style={styles.xpText}>+ {xpEarned} XP</Text>
-          <Text style={styles.subMessage}>Time spent: {timeSpent}</Text>
-
-          {/* Continue 버튼 */}
-          <TouchableOpacity
-            style={styles.continueButton}
-            onPress={handleContinue}>
-            <Text style={styles.continueButtonText}>Continue</Text>
-          </TouchableOpacity>
         </View>
       </SafeAreaView>
-    </LinearGradient>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  contentContainer: {
+    flex: 1,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+  },
   safeArea: {
     flex: 1,
-    // backgroundColor: '#f8fafc',
+    justifyContent: 'center',
   },
   /* -----------------------
      상단 상태 표시 영역 
   ------------------------*/
-  headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingTop: 16, // SafeAreaView 외에 추가 여백
-    paddingBottom: 12,
-    backgroundColor: '#f8fafc',
-  },
-  headerItem: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-  },
-  /* -----------------------
-     메인 카드 컨테이너 
-  ------------------------*/
   cardContainer: {
-    margin: 16,
+    width: '100%',
+    height: '75%',
     padding: 24,
-    borderWidth: 2,
-    borderColor: '#2979FF', // 파란 테두리
-    borderRadius: 16,
-    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: colors.card_border, // 파란 테두리
+    borderRadius: 10,
+    backgroundColor: 'white',
     alignItems: 'center',
+    marginBottom: 40,
+    gap: 40,
   },
   cardTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#333',
+    fontFamily: fonts.roboto_medium,
+    fontSize: 24,
+    color: 'black',
+  },
+  checkIconContainer: {
+    width: 80,
+    height: 80, 
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.success,
     marginBottom: 16,
   },
-  checkIconWrapper: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#d3f8dd', // 연한 초록색 배경
+  resultContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
+    gap: 16,
   },
-  checkIcon: {
-    fontSize: 28,
-    color: '#4CAF50', // 초록색 체크
-    fontWeight: 'bold',
-  },
-  mainMessage: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginVertical: 8,
-    color: '#333',
+  evalutionMessage: {
+    fontFamily: fonts.roboto_medium,
+    fontSize: 22,
+    color: 'black',
   },
   subMessage: {
-    fontSize: 16,
-    color: '#777',
-    marginBottom: 4,
-  },
-  xpText: {
+    fontFamily: fonts.roboto_regular,
     fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 8,
+    color: colors.sub_mesasage,
+  },
+  gainXp: {
+    fontFamily: fonts.roboto_semibold,
+    fontSize: 22,
+    color: colors.primary,
   },
   continueButton: {
-    marginTop: 16,
-    backgroundColor: '#4CAF50',
-    borderRadius: 8,
+    backgroundColor: colors.primary,
+    width: 120,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+    borderRadius: 10,
     paddingVertical: 12,
     paddingHorizontal: 24,
   },
   continueButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
+    fontFamily: fonts.roboto_regular,
+    color: colors.green_button_text,
+    fontSize: 18,
   },
   /* -----------------------
      하단 탭바
   ------------------------*/
-  tabBar: {
-    flexDirection: 'row',
-    borderTopWidth: 1,
-    borderColor: '#ddd',
-    paddingVertical: 12,
-    backgroundColor: '#fff',
-    justifyContent: 'space-around',
-  },
-  tabItem: {
-    alignItems: 'center',
-  },
-  tabText: {
-    color: '#333',
-    fontSize: 16,
-    fontWeight: '500',
-  },
 });

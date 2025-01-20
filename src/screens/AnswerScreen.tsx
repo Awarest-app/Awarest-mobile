@@ -157,12 +157,12 @@ const styles = StyleSheet.create({
     borderColor: colors.card_border,
     borderRadius: 8,
     gap: 10,
-    padding: 10,
+    padding: 12,
     // elevation: 2,
   },
   inputLabel: {
+    fontFamily: fonts.roboto_medium,
     fontSize: 18,
-    // marginBottom: 8,
   },
   input: {
     fontFamily: fonts.lato_regular,
