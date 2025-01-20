@@ -24,21 +24,30 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSFaceIDUsageDescription</key>
+  	<string>[REASON]</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>[REASON]</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>[REASON]</string>
+	<!-- <true/> -->
 
-<!-- URL Scheme 추가 - google -->
-	<!-- <key>CFBundleURLTypes</key>
+	<!-- deep link 설정 -->
+	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>${GOOGLE_URL_SCHEME}</string>
-			</array>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			<string>coura</string>
+		</array>
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+		<string>coura</string>
+		</array>
 		</dict>
-	</array> -->
+	</array>
 
-	<key>CFBundleURLTypes</key>
+	<!-- <key>CFBundleURLTypes</key>
 	<array>
 	<dict>
 		<key>CFBundleTypeRole</key>
@@ -48,7 +57,7 @@
 		<string>coura</string>
 		</array>
 	</dict>
-	</array>
+	</array> -->
 	
 
 	<key>NSAppTransportSecurity</key>

@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context'; // 추가
-import {RootStackParamList} from '../type/route.type';
+import {HomeStackParamList} from '../type/route.type';
 
 import FireIcon from '../assets/svg/fire-blue-icon.svg';
 import StarIcon from '../assets/svg/star-icon.svg';
@@ -11,7 +11,7 @@ export function Header() {
   // Safe Area insets
   const insets = useSafeAreaInsets();
 
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
 
   return (
     <View style={[styles.headerContainer, {paddingTop: insets.top}]}>

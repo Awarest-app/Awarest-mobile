@@ -1,45 +1,83 @@
-import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import React, {useEffect, useRef} from 'react';
+import {
+  NavigationContainer,
+  NavigationContainerRef,
+} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from './src/screens/HomeScreen';
 import AnswerScreen from './src/screens/AnswerScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import ResultScreen from './src/screens/ResultScreen';
-import TabNavigator from './src/components/Bottom';
+import Bottom from './src/components/Bottom';
 import LoginStack from './src/screens/stacks/LoginStack';
+import {Linking} from 'react-native';
+import SafariView from 'react-native-safari-view';
+import {RootStackParamList} from './src/type/route.type';
+import {getToken, storeToken} from './src/api/secureStorage';
+import {HomeStack} from './src/screens/stacks/HomeStack';
 
 const Stack = createNativeStackNavigator();
 
-export function HomeStack() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="Anwser"
-        component={AnswerScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="Result"
-        component={ResultScreen}
-        options={{headerShown: false}}
-      />
-    </Stack.Navigator>
-  );
-}
-
 function App() {
+  const navigationRef =
+    useRef<NavigationContainerRef<RootStackParamList>>(null);
+
+  useEffect(() => {
+    console.log('useEffect 내부');
+    const handleDeepLink = (event: {url: string}) => {
+      const url = event.url;
+      console.log('딥 링크 url', url);
+
+      // const isSurvey = url.match(/survey=(.*)/);
+      const isSurveyMatch = url.match(/survey=(.*)/);
+      const isSurvey = isSurveyMatch ? isSurveyMatch[1] : null;
+      // 토큰이 이미 존재 ->
+      // survey가 없다면 survey로 이동
+      // survey가 있다면 home으로 이동
+      const isToken = getToken();
+      if (isToken !== null) {
+        if (isSurvey === 'ture') {
+          navigationRef.current?.navigate('HomeStack', {
+            screen: 'Home',
+          });
+        } else {
+          navigationRef.current?.navigate('LoginStack', {
+            screen: 'Survey',
+          });
+        }
+        // 웹 뷰 닫기
+        SafariView.dismiss();
+        return;
+      }
+
+      const tokenMatch = url.match(/token=(.*)/);
+      if (tokenMatch && tokenMatch[1]) {
+        const token = tokenMatch[1];
+        console.log('딥 링크에서 토큰 수신:', token);
+        // 토큰 저장
+        storeToken(token);
+      }
+      navigationRef.current?.navigate('LoginStack', {
+        screen: 'Survey',
+      });
+      SafariView.dismiss();
+    };
+
+    // Background → Foreground: 앱이 이미 background에 있다가, 딥 링크로 포그라운드 복귀하면
+    const subscription = Linking.addEventListener('url', handleDeepLink);
+
+    // Cold Start: 앱이 완전히 종료된 상태에서 딥 링크로 실행
+    Linking.getInitialURL().then(initialUrl => {
+      if (initialUrl) handleDeepLink({url: initialUrl});
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
         {/* 1) 로그인 & 설문을 처리하는 LoginStack */}
         <Stack.Screen
@@ -47,16 +85,18 @@ function App() {
           component={LoginStack}
           options={{headerShown: false}}
         />
-        {/* 2) 로그인 후 보여줄 메인 탭 */}
+
+        {/* 2) bottom navigation*/}
         <Stack.Screen
           name="MainTabs"
-          component={TabNavigator}
+          component={Bottom}
           options={{headerShown: false}}
         />
-        {/* 3) 예시로 필요한 ResultScreen */}
+
+        {/* 3) Main Stack */}
         <Stack.Screen
-          name="Result"
-          component={ResultScreen}
+          name="HomeStack"
+          component={HomeStack}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

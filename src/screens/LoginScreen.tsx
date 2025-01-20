@@ -57,7 +57,7 @@ export default function LoginScreen() {
             // 로그인 완료 후 MainTabs로 이동
             navigation.reset({
               index: 0, // 네비게이션 스택을 리셋하여 이전 화면 제거
-              routes: [{name: 'MainTabs'}],
+              routes: [{name: 'HomeStack'}],
             });
           }}>
           <Text style={styles.signInButtonText}>Sign in</Text>

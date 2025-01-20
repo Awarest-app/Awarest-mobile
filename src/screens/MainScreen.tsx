@@ -1,6 +1,6 @@
 // WelcomeScreen.tsx
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -11,11 +11,13 @@ import {
 } from 'react-native';
 // 아래 import는 react-native 프로젝트 환경에 따라 교체 가능
 import LinearGradient from 'react-native-linear-gradient';
-import {LoginStackParamList} from '../type/route.type';
+import {HomeStackParamList, RootStackParamList} from '../type/route.type';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
 import GoogleIcon from '../assets/svg/google-icon.svg';
 import AppleIcon from '../assets/svg/apple-icon.svg';
+import {handleGoogleSignup} from '../api/safariView';
+import {testServerConnection} from '../api/axios';
 // import GoogleOauth from '../lib/googleOauth';
 
 // 화면 높이/너비 구하기 (스타일에 사용)
@@ -28,7 +30,7 @@ interface Test {
 }
 
 export default function MainScreen() {
-  const navigation = useNavigation<NavigationProp<LoginStackParamList>>();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
     <LinearGradient
@@ -51,28 +53,40 @@ export default function MainScreen() {
           <Text>go home</Text>
         </TouchableOpacity> */}
         <View style={styles.sloganSection}>
-          <Text style={styles.mainSlogan}>Be Aware of Yourself in Your Own Time</Text>
-          <Text style={styles.subSlogan}>Be Aware of Yourself hlelo wordl eslipse world man  bottle</Text>
+          <Text style={styles.mainSlogan}>
+            Take a moment each day to find your path in life
+          </Text>
+          <Text style={styles.subSlogan}>
+            Discover yourself in Your own time
+          </Text>
         </View>
-        
+
         {/* <View style={styles.divider} /> */}
         {/* 회원가입 영역 */}
         <View style={styles.registerSection}>
           <TouchableOpacity
             style={styles.oauthButton}
-            onPress={() => navigation.navigate('Survey')}
+            onPress={() =>
+              navigation.navigate('HomeStack', {
+                screen: 'Home', // HomeStack 내부의 Home 스크린
+              })
+            }
+            // onPress={() => testServerConnection()}
+            //
           >
             <View style={styles.oauthTextWrapper}>
-              <GoogleIcon />
+              <AppleIcon />
               <Text style={styles.oauthButtonText}>Sign in with Apple</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.oauthButton}
-            onPress={() => navigation.navigate('Survey')}
+            // onPress={() => navigation.navigate('Survey')}
+            onPress={() => handleGoogleSignup()}
+            //
           >
             <View style={styles.oauthTextWrapper}>
-              <AppleIcon/>
+              <GoogleIcon />
               <Text style={styles.oauthButtonText}>Sign in with Google</Text>
             </View>
           </TouchableOpacity>
@@ -83,8 +97,8 @@ export default function MainScreen() {
 }
 
 const calculateDp = (px: number) => {
-  return ((px * width) / 320);
-}
+  return (px * width) / 320;
+};
 
 const styles = StyleSheet.create({
   gradientContainer: {
@@ -99,7 +113,7 @@ const styles = StyleSheet.create({
   logoSection: {
     alignItems: 'center',
     marginTop: calculateDp(60),
-    marginBottom: 100,
+    marginBottom: calculateDp(120),
   },
   logoText: {
     fontSize: calculateDp(34),
@@ -121,15 +135,15 @@ const styles = StyleSheet.create({
     fontFamily: fonts.lato_regular,
     color: colors.primary,
     textAlign: 'center',
-    width: calculateDp(205),
-    marginBottom: calculateDp(10),
+    width: calculateDp(242),
+    marginBottom: calculateDp(6),
   },
   subSlogan: {
-    fontSize: calculateDp(12),
+    fontSize: calculateDp(14),
     fontFamily: fonts.lato_regular,
     color: colors.textSubtle,
     textAlign: 'center',
-    width: calculateDp(180),
+    width: '100%',
   },
   registerSection: {
     gap: calculateDp(10),

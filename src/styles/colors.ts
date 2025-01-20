@@ -10,13 +10,15 @@ const colors = {
   // input
   input_bg: '#f5f5f5',
   input_ph: '#9CA3AF',
-
+  text_hint: '#9CA3AF',
   primary: '#0D9488', //
   danger: '#D03030', // 경고 색상
 
   //gray - button gray
-  gray_200: '#F3F4F6',
+  gray_button: '#F3F4F6',
   green_button_text: '#F0F9F8',
+  grey_button_text: '#4B5563',
+  prev_answer: '#4B5563',
   // border color
   card_border: '#E5E7EB',
   button_color:'rgba(255,255,255,0.75)',
