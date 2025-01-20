@@ -4,7 +4,7 @@ import AnswerScreen from '../AnswerScreen';
 import HomeScreen from '../HomeScreen';
 import ProfileScreen from '../ProfileScreen';
 import ResultScreen from '../ResultScreen';
-
+import SettingsScreen from '../SettingsScreen';
 const Stack = createNativeStackNavigator();
 
 export function HomeStack() {
@@ -28,6 +28,11 @@ export function HomeStack() {
       <Stack.Screen
         name="Result"
         component={ResultScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Settings"
+        component={SettingsScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

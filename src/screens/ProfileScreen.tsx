@@ -10,9 +10,12 @@ import {
 import {Header} from '../components/Header';
 import MemoGradient from '../components/Hooks/MemoGradient';
 import ProfileGradient from '../components/Hooks/ProfileGradient';
+import SettingIcon from '../assets/svg/setting-icon.svg';
+import ShareIcon from '../assets/svg/share-icon.svg';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {HomeStackParamList} from '../type/route.type';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
-import {globalStyle} from '../styles/global';
 
 // 샘플용 임시 프로필 이미지(회색 원을 Image 대신 View로 표현할 수도 있음)
 const ProfilePlaceholder = () => (
@@ -23,6 +26,7 @@ const ProfilePlaceholder = () => (
 );
 
 export default function ProfileScreen() {
+  const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
   const userName = 'Sarah Johnson';
   const memberSince = 'January 2025';
   const dayStreak = 7;
@@ -38,17 +42,23 @@ export default function ProfileScreen() {
       <Header />
       <SafeAreaView style={styles.safeArea}>
         <Text style={styles.logo}>Coura</Text>
+        <TouchableOpacity style={styles.settingButton}
+          onPress={() => navigation.navigate('Settings')}
+        >
+          <SettingIcon />
+        </TouchableOpacity>
 
         {/* 메인 프로필 박스(파란색 외곽선) */}
         <View style={styles.profileContainer}>
           {/* 내부 dotted 박스 */}
             {/* 프로필 섹션 */}
             <View style={styles.imgContainer}>
+              <ShareIcon />
               <ProfileGradient />
               <ProfilePlaceholder />
-              <View style={styles.shareButton}>
-                {/* 공유버튼  */}
-              </View>
+              <TouchableOpacity style={styles.shareButton}>
+                <ShareIcon />
+              </TouchableOpacity>
               <View style={styles.nameContainer}>
                 <Text style={styles.userName}>
                   {userName}
@@ -110,15 +120,24 @@ const styles = StyleSheet.create({
   --------------------------*/
   logo: {
     fontFamily: fonts.logo,
-    marginTop: -20,
     marginBottom: 12,
     fontSize: 36,
     color: colors.primary,
     textAlign: 'center',
   },
-  /* -------------------------
-     메인 박스 (파란색 외곽선)
-  --------------------------*/
+  settingButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    position: 'absolute',
+    borderRadius: 50,
+    top: 5,
+    right: 0,
+    padding: 16,
+    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
+  },
   profileContainer: {
     gap: 24,
     backgroundColor: 'white',
@@ -149,7 +168,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#cccccc', // 회색 배경(임시)
   },
   shareButton: {
-
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    width: 36,
+    height: 36,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.75)',
+    borderRadius: 50,
+    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
   },
   nameContainer: {
     alignItems: 'center',

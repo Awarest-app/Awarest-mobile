@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     // marginVertical: 20
-    marginBottom: 40,
+    marginBottom: 20,
     backgroundColor: 'transparent', // 투명 배경
   },
   header: {
