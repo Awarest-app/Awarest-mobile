@@ -12,10 +12,14 @@ import MemoGradient from '../components/Hooks/MemoGradient';
 import ProfileGradient from '../components/Hooks/ProfileGradient';
 import SettingIcon from '../assets/svg/setting-icon.svg';
 import ShareIcon from '../assets/svg/share-icon.svg';
+import {useRef} from 'react';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {HomeStackParamList} from '../type/route.type';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Modalize } from 'react-native-modalize';
+import BottomSheet from '../components/Hooks/BottomSheet';
 
 // 샘플용 임시 프로필 이미지(회색 원을 Image 대신 View로 표현할 수도 있음)
 const ProfilePlaceholder = () => (
@@ -34,70 +38,77 @@ export default function ProfileScreen() {
   const level = 1;
   const totalAnswers = 12;
   const achievements = 2;
+  const settingsRef = useRef<Modalize>(null);
 
+  const openSettings = () => {
+    settingsRef.current?.open();
+  };
   return (
-    <View style={styles.container}>
-      <MemoGradient />
-      <View style={styles.contentContainer}>
-      <Header />
-      <SafeAreaView style={styles.safeArea}>
-        <Text style={styles.logo}>Coura</Text>
-        <TouchableOpacity style={styles.settingButton}
-          onPress={() => navigation.navigate('Settings')}
-        >
-          <SettingIcon />
-        </TouchableOpacity>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <MemoGradient />
+        <View style={styles.contentContainer}>
+        <Header />
+        <SafeAreaView style={styles.safeArea}>
+          <Text style={styles.logo}>Coura</Text>
+          <TouchableOpacity style={styles.settingButton}
+            onPress={openSettings}
+          >
+            <SettingIcon />
+          </TouchableOpacity>
 
-        {/* 메인 프로필 박스(파란색 외곽선) */}
-        <View style={styles.profileContainer}>
-          {/* 내부 dotted 박스 */}
-            {/* 프로필 섹션 */}
-            <View style={styles.imgContainer}>
-              <ShareIcon />
-              <ProfileGradient />
-              <ProfilePlaceholder />
-              <TouchableOpacity style={styles.shareButton}>
+          {/* 메인 프로필 박스(파란색 외곽선) */}
+          <View style={styles.profileContainer}>
+            {/* 내부 dotted 박스 */}
+              {/* 프로필 섹션 */}
+              <View style={styles.imgContainer}>
                 <ShareIcon />
-              </TouchableOpacity>
-              <View style={styles.nameContainer}>
-                <Text style={styles.userName}>
-                  {userName}
-                </Text>
-                <Text style={styles.userMemberSince}>
-                  Member since {memberSince}
-                </Text>
+                <ProfileGradient />
+                <ProfilePlaceholder />
+                <TouchableOpacity style={styles.shareButton}>
+                  <ShareIcon />
+                </TouchableOpacity>
+                <View style={styles.nameContainer}>
+                  <Text style={styles.userName}>
+                    {userName}
+                  </Text>
+                  <Text style={styles.userMemberSince}>
+                    Member since {memberSince}
+                  </Text>
+                </View>
               </View>
-            </View>
 
-            <View style={styles.MainStats}>
-              <View style={styles.statBox}>
-                <Text style={styles.statNumber}>{dayStreak}</Text>
-                <Text style={styles.statLabel}>Day Streak</Text>
+              <View style={styles.MainStats}>
+                <View style={styles.statBox}>
+                  <Text style={styles.statNumber}>{dayStreak}</Text>
+                  <Text style={styles.statLabel}>Day Streak</Text>
+                </View>
+                <View style={styles.statBox}>
+                  <Text style={styles.statNumber}>{totalXP}</Text>
+                  <Text style={styles.statLabel}>Total XP</Text>
+                </View>
               </View>
-              <View style={styles.statBox}>
-                <Text style={styles.statNumber}>{totalXP}</Text>
-                <Text style={styles.statLabel}>Total XP</Text>
+              {/* 상세 정보 목록 */}
+              <View style={styles.subStats}>
+                <View style={styles.infoBox}>
+                  <Text style={styles.infoItemTitle}>Level</Text>
+                  <Text style={styles.infoItemValue}>{level}</Text>
+                </View>
+                <View style={styles.infoBox}>
+                  <Text style={styles.infoItemTitle}>Total Answers</Text>
+                  <Text style={styles.infoItemValue}>{totalAnswers}</Text>
+                </View>
+                <View style={styles.infoBox}>
+                  <Text style={styles.infoItemTitle}>Achievements</Text>
+                  <Text style={styles.infoItemValue}>{achievements}</Text>
+                </View>
               </View>
-            </View>
-            {/* 상세 정보 목록 */}
-            <View style={styles.subStats}>
-              <View style={styles.infoBox}>
-                <Text style={styles.infoItemTitle}>Level</Text>
-                <Text style={styles.infoItemValue}>{level}</Text>
-              </View>
-              <View style={styles.infoBox}>
-                <Text style={styles.infoItemTitle}>Total Answers</Text>
-                <Text style={styles.infoItemValue}>{totalAnswers}</Text>
-              </View>
-              <View style={styles.infoBox}>
-                <Text style={styles.infoItemTitle}>Achievements</Text>
-                <Text style={styles.infoItemValue}>{achievements}</Text>
-              </View>
-            </View>
+          </View>
+        </SafeAreaView>
         </View>
-      </SafeAreaView>
+        <BottomSheet ref={settingsRef}/>
       </View>
-    </View>
+    </GestureHandlerRootView>
   );
 }
 

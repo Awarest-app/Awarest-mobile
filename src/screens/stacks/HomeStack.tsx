@@ -4,7 +4,9 @@ import AnswerScreen from '../AnswerScreen';
 import HomeScreen from '../HomeScreen';
 import ProfileScreen from '../ProfileScreen';
 import ResultScreen from '../ResultScreen';
-import SettingsScreen from '../SettingsScreen';
+import SettingProfileScreen from '../SettingProfileScreen';
+import ReportScreen from '../ReportScreen';
+
 const Stack = createNativeStackNavigator();
 
 export function HomeStack() {
@@ -31,8 +33,13 @@ export function HomeStack() {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="Settings"
-        component={SettingsScreen}
+        name="SettingProfile" // 새로 추가된 스크린 이름
+        component={SettingProfileScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Report" // 새로 추가된 스크린 이름
+        component={ReportScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

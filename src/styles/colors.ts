@@ -3,8 +3,12 @@ const colors = {
   // gradient
   green_gradientStart: '#D9EDEB', // 40%에 적용할 색상
   green_gradientEnd: '#0D9488', // 100%에 적용할 색상
-  profile_gradientStart: '#D9EDEB', // 40%에 적용할 색상
+
+  profile_gradientStart: '#D9EDEB', // 0%에 적용할 색상
   profile_gradientEnd: '#FFFFFF', // 100%에 적용할 색상
+
+  settings_gradientStart: '#E5EFED', // 40%에 적용할 색상
+  settings_gradientEnd: '#82C3BD', // 100%에 적용할 색상
 
   blue_gradientStart: '#DBECF8', // 40%에 적용할 색상
   blue_gradientEnd: '#FFFFFF', // 100%에 적용할 색상
@@ -24,6 +28,8 @@ const colors = {
 
   sub_mesasage: '#6B7280',
   // border color
+  settings_border: '#9CA3AF',
+  // card_border: '#D1D5DB',
   card_border: '#E5E7EB',
   button_color:'rgba(255,255,255,0.75)',
   warning: '#f39c12', // 주의 색상
