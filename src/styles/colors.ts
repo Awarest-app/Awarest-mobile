@@ -3,6 +3,8 @@ const colors = {
   // gradient
   green_gradientStart: '#D9EDEB', // 40%에 적용할 색상
   green_gradientEnd: '#0D9488', // 100%에 적용할 색상
+  profile_gradientStart: '#D9EDEB', // 40%에 적용할 색상
+  profile_gradientEnd: '#FFFFFF', // 100%에 적용할 색상
 
   blue_gradientStart: '#DBECF8', // 40%에 적용할 색상
   blue_gradientEnd: '#FFFFFF', // 100%에 적용할 색상
