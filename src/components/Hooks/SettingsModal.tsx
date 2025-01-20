@@ -6,7 +6,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { Modalize } from 'react-native-modalize';
-import {forwardRef, useEffect} from 'react';
+import {forwardRef} from 'react';
 import {fonts} from '../../styles/fonts';
 import colors from '../../styles/colors';
 import SettingsGradient from './SettingsGradient';
@@ -15,7 +15,7 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {HomeStackParamList} from '../../type/route.type';
 const {width, height} = Dimensions.get('window');
 
-const BottomSheet = forwardRef<Modalize, {}>((props, ref) => {
+const SettingsModal = forwardRef<Modalize, {}>((props, ref) => {
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
   const modalizeRef = ref as React.MutableRefObject<Modalize | null>;
 
@@ -31,9 +31,9 @@ const BottomSheet = forwardRef<Modalize, {}>((props, ref) => {
     modalHeight={height * 0.75}
     >
       <SettingsGradient/>
-      <View style={styles.bottomSheetContainer}>
-        <View style={styles.bottomSheetHeader}>
-          <Text style={styles.bottomSheetTitle}>
+      <View style={styles.SettingsContainer}>
+        <View style={styles.SettingsHeader}>
+          <Text style={styles.SettingsTitle}>
             Settings
           </Text>
           <TouchableOpacity
@@ -89,16 +89,16 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 40, // 왼쪽 상단 모서리
     borderTopRightRadius: 40, // 오른쪽 상단 모서리
   },
-  bottomSheetContainer: {
+  SettingsContainer: {
     gap: 30,
     padding: 40,
   },
-  bottomSheetHeader: {
+  SettingsHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  bottomSheetTitle: {
+  SettingsTitle: {
     fontFamily: fonts.roboto_semibold,
     fontSize: 22,
     color: colors.primary,
@@ -128,4 +128,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BottomSheet;
+export default SettingsModal;

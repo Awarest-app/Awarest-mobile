@@ -108,19 +108,22 @@ export default function SurveyScreen() {
             <ScrollView
               style={styles.scrollContainer}
               showsVerticalScrollIndicator={false}>
-              {questions[questionIndex].options.map((item, index) => (
+                {Object.entries(questions[questionIndex].options).map(([key, value]) => (
+                  <TouchableOpacity
+                    key={key}
+                    style={styles.option}
+                    onPress={() => handleOptionSelect(value)}>
+                    <Text style={styles.optionText}>{value}</Text>
+                  </TouchableOpacity>
+                ))}
+              {/* {questions[questionIndex].options.map((item, index) => (
                 <TouchableOpacity
                   key={index}
                   style={styles.option}
                   onPress={() => handleOptionSelect(item)}>
                   <Text style={styles.optionText}>{item}</Text>
                 </TouchableOpacity>
-              ))}
-              {/* <TouchableOpacity
-                style={{width: 50, height: 50, backgroundColor: 'skyblue'}}
-                onPress={() => navigation.navigate('Login')}>
-                <Text>Go to Login</Text>
-              </TouchableOpacity> */}
+              ))} */}
             </ScrollView>
           ) : (
             <ScrollView style={styles.permissonSection} scrollEnabled={false}>

@@ -19,7 +19,7 @@ import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Modalize } from 'react-native-modalize';
-import BottomSheet from '../components/Hooks/BottomSheet';
+import Settings from '../components/Hooks/SettingsModal';
 
 // 샘플용 임시 프로필 이미지(회색 원을 Image 대신 View로 표현할 수도 있음)
 const ProfilePlaceholder = () => (
@@ -106,7 +106,7 @@ export default function ProfileScreen() {
           </View>
         </SafeAreaView>
         </View>
-        <BottomSheet ref={settingsRef}/>
+        <Settings ref={settingsRef}/>
       </View>
     </GestureHandlerRootView>
   );

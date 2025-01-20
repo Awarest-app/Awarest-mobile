@@ -22,7 +22,7 @@ import {globalStyle} from '../styles/global';
 
 const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
-  const [todayQuestions, setTodayQuestion] = useState<QuestionProps>([]);
+  // const [todayQuestions, setTodayQuestion] = useState<QuestionProps>([]);
 
   // const handleGetTodayQuestions = async () => {
   //   try {
