@@ -27,5 +27,5 @@ export type HomeStackParamList = {
   Profile: undefined;
   Setting: undefined;
   Report: undefined;
-  // toDo: undefined;
+  Settings: undefined;
 };

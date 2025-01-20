@@ -13,7 +13,7 @@ export const globalStyle = StyleSheet.create({
     fontSize: 40,
     fontWeight: 'bold',
     color: colors.primary,
-    fontFamily: fonts.logo_font,
+    fontFamily: fonts.logo,
   },
 
   // 그레디언트

@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   },
   logoText: {
     fontSize: calculateDp(34),
-    fontFamily: fonts.logo_font, // 로고 폰트
+    fontFamily: fonts.logo, // 로고 폰트
     fontWeight: 'bold',
     color: colors.primary,
     marginBottom: -10,

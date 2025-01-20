@@ -15,7 +15,7 @@ import MemoGradient from '../components/Hooks/MemoGradient';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {HomeStackParamList} from '../type/route.type';
 
-export default function ResultScreen() {
+export default function SettingsScreen() {
   // 시간, XP 등의 데이터를 실제 로직에 맞게 받아오거나 계산해서 표시할 수 있습니다.
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
   const xpEarned = 50;
@@ -33,29 +33,7 @@ export default function ResultScreen() {
       <View style={styles.contentContainer}>
       <Header />
       <SafeAreaView style={styles.safeArea}>
-        {/* 상단 상태 표시 영역 */}
-        {/* 가운데 메인 카드(파란색 테두리 박스) */}
-        <View style={styles.cardContainer}>
-          <Text style={styles.cardTitle}>Response complete !</Text>
 
-          {/* 체크 아이콘 예시(단순 텍스트 이모지 사용) */}
-          <View style={styles.resultContainer}>
-            <View style={styles.checkIconContainer}>
-              <CheckIcon />
-            </View>
-            <Text style={styles.evalutionMessage}>Great Reflection !</Text>
-            <Text style={styles.subMessage}>You've earned</Text>
-            <Text style={styles.gainXp}>+ {xpEarned} XP</Text>
-            <Text style={styles.subMessage}>Time spent: {timeSpent}</Text>
-
-            {/* Continue 버튼 */}
-            <TouchableOpacity
-              style={styles.continueButton}
-              onPress={handleContinue}>
-              <Text style={styles.continueButtonText}>Continue</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
       </SafeAreaView>
       </View>
     </View>
@@ -81,8 +59,7 @@ const styles = StyleSheet.create({
   cardContainer: {
     width: '100%',
     height: '75%',
-    paddingHorizontal: 24,
-    paddingVertical: 40,
+    padding: 24,
     borderWidth: 1,
     borderColor: colors.card_border, // 파란 테두리
     borderRadius: 10,

@@ -26,7 +26,7 @@ export default function Bottom() {
       />
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={HomeStack}
         options={{
           title: 'Profile',
           headerShown: false, // Tab Navigator에서 자체 헤더는 숨기기

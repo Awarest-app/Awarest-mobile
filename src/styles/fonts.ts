@@ -5,13 +5,14 @@ export const fonts = {
   poppins_bold: 'Poppins-Bold',
 
   // 로고 폰트
-  logo_font: 'Pacifico-Regular',
+  logo: 'Pacifico-Regular',
 
   lato_regular: 'Lato-Regular',
 
   roboto_regular: 'Roboto-Regular',
   roboto_medium: 'Roboto-Medium',
   roboto_semibold: 'Roboto-SemiBold',
+  roboto_bold: 'Roboto-Bold',
   // 폰트
   // title 폰트
   // title_font: 'Roboto-SemiBold',
