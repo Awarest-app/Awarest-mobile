@@ -87,16 +87,10 @@ function App() {
         />
 
         {/* 2) bottom navigation*/}
-        <Stack.Screen
-          name="MainTabs"
-          component={Bottom}
-          options={{headerShown: false}}
-        />
-
         {/* 3) Main Stack */}
         <Stack.Screen
           name="HomeStack"
-          component={HomeStack}
+          component={Bottom}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

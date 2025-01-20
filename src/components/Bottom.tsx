@@ -6,15 +6,16 @@ import HomeIcon from '../assets/svg/home-icon.svg';
 import ProfileIcon from '../assets/svg/profile-icon.svg';
 // import {HomeStack} from '../screens/stacks/HomeStack';
 import HomeScreen from '../screens/HomeScreen';
+import { HomeStack } from '../screens/stacks/HomeStack';
 
 const Tab = createBottomTabNavigator();
 
 export default function Bottom() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator >
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeStack}
         options={{
           title: 'Home',
           headerShown: false, // Tab Navigator에서 자체 헤더는 숨기기
