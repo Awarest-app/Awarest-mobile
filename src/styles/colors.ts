@@ -40,6 +40,9 @@ const colors = {
   border: '#dddddd', // 테두리 색상
   transparent: 'rgba(0, 0, 0, 0)',
   secondary: '#2ecc71', // 보조 색상
+
+  delete_button: '#2D2D2D',
+  delete_text: '#EF4444',
 };
 
 export default colors;
