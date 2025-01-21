@@ -144,8 +144,11 @@ const styles = StyleSheet.create({
   },
   hiddenContent: {
     position: 'absolute',
+    top: 0,
+    left: 0,
     right: 0,
-    opacity: 0, // 보이지 않게 처리
+    opacity: 0,
+    paddingHorizontal: 16, //contentContainerPadding이랑 같아야됨
   },
   animateContainer: {
     overflow: 'hidden',
