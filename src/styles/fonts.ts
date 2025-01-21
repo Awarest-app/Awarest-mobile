@@ -8,6 +8,7 @@ export const fonts = {
   logo: 'Pacifico-Regular',
 
   lato_regular: 'Lato-Regular',
+  lato_bold: 'Lato-Bold',
 
   roboto_regular: 'Roboto-Regular',
   roboto_medium: 'Roboto-Medium',
