@@ -11,7 +11,6 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {HomeStackParamList} from '../type/route.type';
 import {Header} from '../components/Header';
 import MemoGradient from '../components/Hooks/MemoGradient';
-import LinearGradient from 'react-native-linear-gradient';
 import colors from '../styles/colors';
 // import {getQuestions} from '../api/api';
 import TrashIcon from '../assets/svg/trash-icon.svg';
@@ -24,16 +23,6 @@ const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
   const [todayQuestions, setTodayQuestion] = useState<QuestionProps>([]);
 
-  // const handleGetTodayQuestions = async () => {
-  //   try {
-  //     const res = await getQuestions();
-  //     // const data = await response.json();
-  //     console.log('res', res);
-  //     setTodayQuestion(res);
-  //   } catch (error) {
-  //     console.log('error', error);
-  //   }
-  // };
   const dummyQuestions: QuestionProps[] = [
     {
       id: 1,
@@ -76,10 +65,6 @@ const HomeScreen = () => {
       ],
     },
   ];
-
-  // useEffect(() => {
-  //   handleGetTodayQuestions();
-  // }, []);
 
   return (
     <View style={styles.container}>

@@ -9,78 +9,60 @@ import {
   Switch,
 } from 'react-native';
 import MemoGradient from '../components/Hooks/MemoGradient';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {HomeStackParamList} from '../type/route.type';
-// import {checkNotifications, requestNotifications} from 'react-native-permissions'
-// import PushNotification from 'react-native-push-notification';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
-import {
-  ageGroups,
-  goalOptions,
-  heardFromOptions,
-  workWordsOptions,
-} from '../constant/survey';
+import {questions} from '../constant/questions';
 
 export default function SurveyScreen() {
-  // 설문에 사용할 옵션들
-
-  // 설문 질문들을 순서대로 배열에 담기
-  const questions = [
-    {
-      title: 'What is your age group?',
-      options: ageGroups,
-    },
-    {
-      title: 'What is your goal?',
-      options: goalOptions,
-    },
-    {
-      title: 'What words can describe your work?',
-      options: workWordsOptions,
-    },
-    {
-      title: 'How did you hear about us?',
-      options: heardFromOptions,
-    },
-  ];
-
-  const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
-  // 현재 어떤 질문을 보여줄지 인덱스로 관리
   const [questionIndex, setQuestionIndex] = useState(0);
-  // 사용자가 선택한 답변들을 저장
-  const [userAnswers, setUserAnswers] = useState<string[]>([]);
+  const [userAnswers, setUserAnswers] = useState<{
+    ageRange?: string;
+    goal?: string;
+    job?: string;
+    how_hear?: string;
+  }>({});
   const [isEnabled, setIsEnabled] = useState(false);
-
   const [isDisabled, setIsDisabled] = useState(false);
 
-  // 옵션을 선택했을 때(답변했을 때) 호출되는 함수
-  const handleOptionSelect = (option: string) => {
-    // 기존 답변 복사
-    const updatedAnswers = [...userAnswers];
-    // 현재 설문 인덱스 위치에 사용자 선택값 저장
-    updatedAnswers[questionIndex] = option;
+  const questionKeys = ['ageRange', 'goal', 'job', 'how_hear'];
 
-    console.log('updatedAnswers', updatedAnswers);
+  const handleOptionSelect = (option: string) => {
+    const key = questionKeys[questionIndex];
+    const updatedAnswers = {
+      ...userAnswers,
+      [key]: option,
+    };
+
+    // console.log('updatedAnswers', updatedAnswers);
     setUserAnswers(updatedAnswers);
 
-    // 마지막 질문이 아니라면 다음 질문으로 넘어감
     if (questionIndex < questions.length) {
       setQuestionIndex(questionIndex + 1);
     } else {
-      // 모든 설문이 끝났을 때 로직 (예: 서버 전송, 다음 화면 이동 등)
       console.log('All questions answered: ', updatedAnswers);
-      // 예: 설문 완료 페이지로 이동하거나 알람을 띄울 수 있습니다.
+      // 모든 설문 완료 후 처리 로직
     }
   };
+
   //notification on/off 함수
   const handleNoti = () => {
     // setIsDisabled(true); 나중에 넣어야됨
     setIsEnabled(!isEnabled);
   };
-  // 뒤로가기 버튼 클릭 시 이전 질문으로 돌아가는 함수
+
   const handleBack = () => {
     if (questionIndex > 0) {
+      const keyToRemove = questionKeys[
+        questionIndex
+      ] as keyof typeof userAnswers;
+
+      setUserAnswers(prevAnswers => {
+        const updatedAnswers = {...prevAnswers};
+        delete updatedAnswers[keyToRemove];
+        // console.log('뒤로가기 버튼 후', updatedAnswers);
+        return updatedAnswers;
+      });
+
       setQuestionIndex(questionIndex - 1);
     }
   };
@@ -108,14 +90,33 @@ export default function SurveyScreen() {
             <ScrollView
               style={styles.scrollContainer}
               showsVerticalScrollIndicator={false}>
-              {questions[questionIndex].options.map((item, index) => (
+              {/* {questions[questionIndex].options.map((item, index) => (
                 <TouchableOpacity
                   key={index}
                   style={styles.option}
                   onPress={() => handleOptionSelect(item)}>
                   <Text style={styles.optionText}>{item}</Text>
                 </TouchableOpacity>
-              ))}
+              ))} */}
+              {questions[questionIndex].options.map((item, index) => {
+                const currentKey = questionKeys[
+                  questionIndex
+                ] as keyof typeof userAnswers;
+
+                const selectedValue = userAnswers[currentKey];
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    style={[
+                      styles.option,
+                      // 선택된 값과 일치하면 배경 스타일 적용
+                      selectedValue === item ? styles.selectedOption : null,
+                    ]}
+                    onPress={() => handleOptionSelect(item)}>
+                    <Text style={styles.optionText}>{item}</Text>
+                  </TouchableOpacity>
+                );
+              })}
               {/* <TouchableOpacity
                 style={{width: 50, height: 50, backgroundColor: 'skyblue'}}
                 onPress={() => navigation.navigate('Login')}>
@@ -218,6 +219,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     justifyContent: 'center',
     boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)',
+  },
+  selectedOption: {
+    backgroundColor: '#D3D3D3',
+    // 원하는 배경색으로 변경
   },
   optionText: {
     fontFamily: fonts.lato_regular,

@@ -53,7 +53,6 @@ function App() {
       const tokenMatch = url.match(/token=(.*)/);
       if (tokenMatch && tokenMatch[1]) {
         const token = tokenMatch[1];
-        console.log('딥 링크에서 토큰 수신:', token);
         // 토큰 저장
         storeToken(token);
       }
