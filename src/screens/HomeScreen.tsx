@@ -11,14 +11,13 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {HomeStackParamList} from '../type/route.type';
 import {Header} from '../components/Header';
 import MemoGradient from '../components/Hooks/MemoGradient';
-import LinearGradient from 'react-native-linear-gradient';
 import colors from '../styles/colors';
 // import {getQuestions} from '../api/api';
-import TrashIcon from '../assets/svg/trash-icon.svg';
 import EditIcon from '../assets/svg/edit-icon.svg';
 import {QuestionProps} from '../type/api.type';
 import {fonts} from '../styles/fonts';
 import {globalStyle} from '../styles/global';
+import Accordion from '../components/Hooks/Accordion';
 
 const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
@@ -54,11 +53,15 @@ const HomeScreen = () => {
 
   const previousAnswers = [
     {
-      question: 'What made you feel proud todaydsds?',
+      question: 'What made you feel proud todaydsasd asd asd asdasd adsasd asd asd ds?',
       answers: [
         {
           text: 'I completed a challenging project at work ahead of schedule.',
           date: '2025-01-21 10:20 AM',
+        },
+        {
+          text: 'teystuy uasukdy ukyd wqiudy ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
+          date: '2025-01-24 01:40 PM',
         },
         {
           text: 'teystuy uasukdy ukyd wqiudy ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
@@ -71,6 +74,15 @@ const HomeScreen = () => {
       answers: [
         {
           text: 'React Native styling techniques',
+          date: '2025-01-24 10:25 AM',
+        },
+      ],
+    },
+    {
+      question: "Third dummy question",
+      answers: [
+        {
+          text: 'hello wolrdes',
           date: '2025-01-24 10:25 AM',
         },
       ],
@@ -104,35 +116,29 @@ const HomeScreen = () => {
 
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Your previous Answers</Text>
-          <TouchableOpacity>
-            <View style={styles.prevQuestionContainer}>
-              <Text style={styles.questionText}>
-                What made you feel proud today?
-              </Text>
-            </View>
-          </TouchableOpacity>
           {previousAnswers.map((item, index) => (
-            <TouchableOpacity key={index}>
+            <Accordion
+              title={item.question}
+              key={index}
+            >
               <View style={styles.prevQuestionContainer} key={index}>
-                <Text style={styles.questionText}>{item.question}</Text>
                 {item.answers.map((answer, ansIndex) => (
                   <View
                     style={styles.answerContainer}
                     key={ansIndex}
-                    onStartShouldSetResponder={() => true} //자식요소가 touch event 소비하게 하기
+                    // onStartShouldSetResponder={() => true} //자식요소가 touch event 소비하게 하기
                   >
                     <Text style={styles.answerText}>{answer.text}</Text>
-                    <View style={styles.answerDateContainer}>
+                    <View style={styles.answerBottom}>
                       <Text style={styles.answerDate}>{answer.date}</Text>
-                      <View style={styles.answerIcons}>
-                        <TrashIcon />
+                      <TouchableOpacity>
                         <EditIcon />
-                      </View>
+                      </TouchableOpacity>
                     </View>
                   </View>
                 ))}
               </View>
-            </TouchableOpacity>
+            </Accordion>
           ))}
         </View>
       </ScrollView>
@@ -194,18 +200,8 @@ const styles = StyleSheet.create({
     color: colors.text_hint,
   },
   prevQuestionContainer: {
-    backgroundColor: 'white',
-    paddingVertical: 20,
-    paddingHorizontal: 16,
+    // height: '100%',
     gap: 16,
-    borderWidth: 1,
-    borderColor: colors.card_border,
-    borderRadius: 10,
-    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
-  },
-  prevQuestion: {
-    fontFamily: fonts.roboto_medium,
-    fontSize: calculateDp(16),
   },
   answerContainer: {
     backgroundColor: 'white',
@@ -222,7 +218,7 @@ const styles = StyleSheet.create({
     fontSize: calculateDp(14),
     color: colors.prev_answer,
   },
-  answerDateContainer: {
+  answerBottom: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -230,9 +226,5 @@ const styles = StyleSheet.create({
     fontFamily: fonts.roboto_regular,
     fontSize: calculateDp(14),
     color: colors.text_hint,
-  },
-  answerIcons: {
-    flexDirection: 'row',
-    gap: 12,
   },
 });
