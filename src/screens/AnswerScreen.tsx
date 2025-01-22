@@ -22,14 +22,14 @@ export default function AnswerScreen() {
   const [selfCare, setSelfCare] = useState('');
   const [studyFocus, setStudyFocus] = useState('');
 
-  const handleSaveDraft = () => {
+  const handleDraft = () => {
     // 임시 저장 로직
     console.log('Draft Saved:', {callParents, selfCare, studyFocus});
   };
 
-  const handlePublish = () => {
+  const handleSubmit = () => {
     // 게시 로직
-    console.log('Published:', {callParents, selfCare, studyFocus});
+    console.log('Submit:', {callParents, selfCare, studyFocus});
   };
 
   // const navigation = useNavigation();
@@ -91,14 +91,14 @@ export default function AnswerScreen() {
           {/* 버튼 영역 */}
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              style={styles.saveButton}
-              onPress={handleSaveDraft}>
-              <Text style={styles.saveButtonText}>Save Draft</Text>
+              style={styles.draftButton}
+              onPress={handleDraft}>
+              <Text style={styles.draftButtonText}>Draft</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.publishButton}
+              style={styles.submitButton}
               onPress={() => navigation.navigate('Result')}>
-              <Text style={styles.publishButtonText}>Publish</Text>
+              <Text style={styles.submithButtonText}>Submit</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     height: calculateDp(36),
     paddingHorizontal: 10,
   },
-  saveButton: {
+  draftButton: {
     width: calculateDp(96),
     // height: '100%',
     backgroundColor: colors.gray_button,
@@ -194,12 +194,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
   },
-  saveButtonText: {
+  draftButtonText: {
     fontFamily: fonts.roboto_regular,
     color: colors.grey_button_text,
     fontSize: 18,
   },
-  publishButton: {
+  submitButton: {
     width: calculateDp(96),
     backgroundColor: colors.primary,
     borderRadius: 10,
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
   },
-  publishButtonText: {
+  submithButtonText: {
     fontSize: 18,
     fontFamily: fonts.roboto_regular,
     color: colors.green_button_text,

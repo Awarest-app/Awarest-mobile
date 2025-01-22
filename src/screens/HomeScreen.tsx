@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   View,
   Text,
@@ -6,34 +6,32 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
+  Modal,
+  TextInput,
 } from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {HomeStackParamList} from '../type/route.type';
 import {Header} from '../components/Header';
 import MemoGradient from '../components/Hooks/MemoGradient';
-import LinearGradient from 'react-native-linear-gradient';
 import colors from '../styles/colors';
 // import {getQuestions} from '../api/api';
-import TrashIcon from '../assets/svg/trash-icon.svg';
 import EditIcon from '../assets/svg/edit-icon.svg';
+import PrevIcon from '../assets/svg/prev-icon.svg';
+import NextIcon from '../assets/svg/next-icon.svg';
 import {QuestionProps} from '../type/api.type';
 import {fonts} from '../styles/fonts';
 import {globalStyle} from '../styles/global';
+import Accordion from '../components/Hooks/Accordion';
+import EditModal from '../components/modals/EditModal';
 
+//todo: 컴포넌트 쪼개기
 const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
-  const [todayQuestions, setTodayQuestion] = useState<QuestionProps>([]);
-
-  // const handleGetTodayQuestions = async () => {
-  //   try {
-  //     const res = await getQuestions();
-  //     // const data = await response.json();
-  //     console.log('res', res);
-  //     setTodayQuestion(res);
-  //   } catch (error) {
-  //     console.log('error', error);
-  //   }
-  // };
+  const [answersIndex, setAnswersIndex] = useState<number>(0);
+  const scrollRef = useRef<ScrollView>(null);
+  const answersPerPage = 3;
+  const [pageChanged, setPageChanged] = useState<boolean>(false);
+  const [closeAccordion, setCloseAccordion] = useState<boolean>(false);
   const dummyQuestions: QuestionProps[] = [
     {
       id: 1,
@@ -52,39 +50,185 @@ const HomeScreen = () => {
     },
   ];
 
-  const previousAnswers = [
+  //todo : 이거 axios 날릴때 남은건냅두고 처음에 6개, 그뒤에 6개씩추가
+  const [previousAnswers, setPreviousAnswers] = useState([
     {
-      question: 'What made you feel proud todaydsds?',
-      answers: [
+      question: 'What made you feel proud todaydsasd asd asd asdasd adsasd asd asd ds?',
+      subquestions: [
         {
-          text: 'I completed a challenging project at work ahead of schedule.',
+          text: 'subquestionasdhkjasdhkj1323987',
+          answer: 'answer1',
           date: '2025-01-21 10:20 AM',
         },
         {
-          text: 'teystuy uasukdy ukyd wqiudy ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
+          text: 'teystuy uasukdy ukyd wqiud2222222y ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
+          answer: 'answer2',
+          date: '2025-01-24 01:40 PM',
+        }
+      ],
+    },
+    {
+      question: 'What made you feel proud todaydsasd asd asd asdasd adsasd asd asd ds?',
+      subquestions: [
+        {
+          text: 'subquestionasdhkjasdhkj1323987',
+          answer: 'answer1',
+          date: '2025-01-21 10:20 AM',
+        },
+        {
+          text: 'teystuy uasukdy ukyd wqi222222uasukdy ukyd wqi5555jbadjk',
+          answer: 'answer2',
+          date: '2025-01-24 01:40 PM',
+        }
+      ],
+    },
+    {
+      question: 'What made you feel proud todaydsasd asd asd asdasd adsasd asd asd ds?',
+      subquestions: [
+        {
+          text: 'subquestionasdhkjasdhkj1323987',
+          answer: 'answer1',
+          date: '2025-01-21 10:20 AM',
+        },
+        {
+          text: 'teystuy uasukdy ukyd wqi2222222udy ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
+          answer: 'answer2',
+          date: '2025-01-24 01:40 PM',
+        },
+        {
+          text: 'teystuy uasukdy ukyd wqi3333333udy ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
+          answer: 'answer3',
+          date: '2025-01-24 01:40 PM',
+        },
+        {
+          text: 'teystuy uasukdy ukyd wqiu444444444dy ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
+          answer: 'answer4',
+          date: '2025-01-24 01:40 PM',
+        },
+        {
+          text: 'teystuy uasukdy ukyd wqi666udy ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
+          answer: 'answer5',
           date: '2025-01-24 01:40 PM',
         },
       ],
     },
     {
-      question: "What's one thing you learned?",
-      answers: [
+      question: 'next page test',
+      subquestions: [
         {
-          text: 'React Native styling techniques',
-          date: '2025-01-24 10:25 AM',
+          text: 'subquesasdadationasdhkjasdhkj1323987',
+          answer: 'ansssswer1',
+          date: '2025-01-21 10:20 AM',
         },
+        {
+          text: 'teystuy uasukdy ukyd wqiud2222222y ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
+          answer: 'answer2',
+          date: '2025-01-24 01:40 PM',
+        }
       ],
     },
-  ];
+    {
+      question: 'next page test',
+      subquestions: [
+        {
+          text: 'subquestionasdhkjasdhkj1323987',
+          answer: 'answer1',
+          date: '2025-01-21 10:20 AM',
+        },
+        {
+          text: 'teystuy uasukdy ukyd wqiud2222222y ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
+          answer: 'answer2',
+          date: '2025-01-24 01:40 PM',
+        }
+      ],
+    },
+    {
+      question: 'next page test',
+      subquestions: [
+        {
+          text: 'subquestionasdhkjasdhkj1323987',
+          answer: 'answer1',
+          date: '2025-01-21 10:20 AM',
+        },
+        {
+          text: 'teystuy uasukdy ukyd wqiud2222222y ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
+          answer: 'answer2',
+          date: '2025-01-24 01:40 PM',
+        }
+      ],
+    },
+  ]);
+  const totalPages = Math.ceil(previousAnswers.length / answersPerPage);
+  const paginatedAnswers = previousAnswers.slice(
+    answersIndex * answersPerPage, (answersIndex + 1) * answersPerPage
+  );
+  const handlePrev = () => {
+    if (answersIndex === 0) return;
+    
+    setCloseAccordion(true);
+    setTimeout(() => {
+      setAnswersIndex(answersIndex - 1);
+      setPageChanged(true);
+      setCloseAccordion(false);
+    }, 300); // Accordion에서 duration이랑 맞춰야됨
+  };
+  const handleNext = () => {
+    if (answersIndex === totalPages - 1) return;
 
-  // useEffect(() => {
-  //   handleGetTodayQuestions();
-  // }, []);
+    setCloseAccordion(true);
+    setTimeout(() => {
+      setAnswersIndex(answersIndex + 1);
+      setPageChanged(true);
+      setCloseAccordion(false);
+    }, 300); // Accordion에서 duration이랑 맞춰야됨
+  };
+  useEffect(() => {
+    if (pageChanged) {
+      const timer = setTimeout(() => {
+        scrollRef.current?.scrollToEnd({animated: true});
+        setPageChanged(false);
+      }, 0);
 
+      return () => clearTimeout(timer);
+    }
+  }, [answersIndex, pageChanged]);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [editAnswer, setEditAnswer] = useState<string>('');
+  const [editingIndexes, setEditingIndexes] = useState<{ questionIndex: number; subquestionIndex: number } | null>(null);
+
+  const handleEdit = (text: string, questionIndex: number, subquestionIndex: number) => {
+    const questionIdx = answersIndex * answersPerPage + questionIndex;
+    setEditAnswer(text);
+    setIsModalVisible(true);
+    setEditingIndexes({ questionIndex: questionIdx, subquestionIndex });
+  };
+  const handleSaveEdit = (newText: string) => {
+    //todo 이거 백엔드로 날려야됨
+    //이거 수정이라서 백엔드 
+    if (!editingIndexes) return;
+    const updatedAnswers = [...previousAnswers];//shallow copy
+    updatedAnswers[editingIndexes.questionIndex].subquestions[editingIndexes.subquestionIndex].answer = newText;
+    setPreviousAnswers(updatedAnswers);
+  };
   return (
     <View style={styles.container}>
+      <EditModal 
+        isOpen={isModalVisible}
+        currentText={editAnswer}
+        question={editingIndexes
+          ? previousAnswers[editingIndexes.questionIndex].subquestions[
+              editingIndexes.subquestionIndex
+            ].text
+          : 'Error'}
+        onClose={()=>setIsModalVisible(false)}
+        onSave={handleSaveEdit}
+      />
       <MemoGradient />
-      <ScrollView contentContainerStyle={styles.contentContainer}>
+      <ScrollView 
+        contentContainerStyle={styles.contentContainer}
+        ref={scrollRef}
+      >
         <Header />
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Today's Questions</Text>
@@ -104,36 +248,54 @@ const HomeScreen = () => {
 
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Your previous Answers</Text>
-          <TouchableOpacity>
-            <View style={styles.prevQuestionContainer}>
-              <Text style={styles.questionText}>
-                What made you feel proud today?
-              </Text>
-            </View>
-          </TouchableOpacity>
-          {previousAnswers.map((item, index) => (
-            <TouchableOpacity key={index}>
-              <View style={styles.prevQuestionContainer} key={index}>
-                <Text style={styles.questionText}>{item.question}</Text>
-                {item.answers.map((answer, ansIndex) => (
-                  <View
-                    style={styles.answerContainer}
-                    key={ansIndex}
-                    onStartShouldSetResponder={() => true} //자식요소가 touch event 소비하게 하기
-                  >
-                    <Text style={styles.answerText}>{answer.text}</Text>
-                    <View style={styles.answerDateContainer}>
-                      <Text style={styles.answerDate}>{answer.date}</Text>
-                      <View style={styles.answerIcons}>
-                        <TrashIcon />
-                        <EditIcon />
+          <View style={styles.prevAnsweralign}>
+            <View style={styles.prevAnswerContainer}>
+              {paginatedAnswers.map((item, questionIndex) => (
+                <Accordion
+                  title={item.question}
+                  key={questionIndex}
+                  forceClose={closeAccordion}
+                >
+                  <View style={styles.prevAnswers}>
+                    {item.subquestions.map((subquestion, subquestionIndex) => (
+                      <View style={styles.subquestionContainer}
+                        key={subquestionIndex}
+                      >
+                        <Text style={styles.subquestionText}>{subquestion.text}</Text>
+                        <View style={styles.answerContainer}>
+                          <Text style={styles.answerText}>{subquestion.answer}</Text>
+                          <View style={styles.answerBottom}>
+                            <Text style={styles.answerDate}>{subquestion.date}</Text>
+                            <TouchableOpacity style={styles.editButton}
+                              onPress={() =>
+                                handleEdit(subquestion.answer, questionIndex, subquestionIndex)
+                              }
+                            >
+                              <EditIcon />
+                            </TouchableOpacity>
+                          </View>
+                        </View>
                       </View>
-                    </View>
+                    ))}
                   </View>
-                ))}
-              </View>
-            </TouchableOpacity>
-          ))}
+                </Accordion>
+              ))}
+            </View>
+            <View style={styles.moveButtonContainer}>
+              <TouchableOpacity style={styles.prevButton}
+                onPress={handlePrev}
+                >
+                <PrevIcon/>
+                <Text style={styles.prevButtonText}>Prev</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.nextButton}
+                onPress={handleNext}
+              >
+                <Text style={styles.nextButtonText}>Next</Text>
+                <NextIcon/>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -149,7 +311,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'transparent',
-    // alignItems: 'center',
   },
   contentContainer: {
     paddingVertical: 16,
@@ -165,8 +326,6 @@ const styles = StyleSheet.create({
     boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
     borderWidth: 1,
     borderColor: colors.card_border,
-    // elevation: 2,
-    // opacity: 0.9,
   },
   cardTitle: {
     fontFamily: fonts.roboto_semibold,
@@ -193,19 +352,23 @@ const styles = StyleSheet.create({
     fontSize: calculateDp(14),
     color: colors.text_hint,
   },
-  prevQuestionContainer: {
-    backgroundColor: 'white',
-    paddingVertical: 20,
-    paddingHorizontal: 16,
+  prevAnsweralign: {
     gap: 16,
-    borderWidth: 1,
-    borderColor: colors.card_border,
-    borderRadius: 10,
-    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+    alignItems: 'center',
   },
-  prevQuestion: {
+  prevAnswerContainer: {
+    gap: 10,
+  },
+  prevAnswers: {
+    gap: 16,
+  },
+  subquestionContainer: {
+    gap: 10,
+  },
+  subquestionText: {
     fontFamily: fonts.roboto_medium,
-    fontSize: calculateDp(16),
+    fontSize: 18,
+    color: colors.primary,
   },
   answerContainer: {
     backgroundColor: 'white',
@@ -222,7 +385,7 @@ const styles = StyleSheet.create({
     fontSize: calculateDp(14),
     color: colors.prev_answer,
   },
-  answerDateContainer: {
+  answerBottom: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -231,8 +394,33 @@ const styles = StyleSheet.create({
     fontSize: calculateDp(14),
     color: colors.text_hint,
   },
-  answerIcons: {
+  editButton: {
+  },
+  moveButtonContainer: {
+    width: '90%',
+    height: 50,
+    alignItems: 'center',
     flexDirection: 'row',
-    gap: 12,
+    justifyContent: 'space-between',
+  },
+  prevButton: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 6,
+  },
+  prevButtonText: {
+    fontFamily: fonts.roboto_regular,
+    fontSize: 18,
+    color: colors.text_hint,
+  },
+  nextButton: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 6,
+  },
+  nextButtonText: {
+    fontFamily: fonts.roboto_regular,
+    fontSize: 18,
+    color: 'black',
   },
 });
