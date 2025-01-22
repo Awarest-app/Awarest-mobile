@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   View,
   Text,
@@ -24,6 +24,11 @@ import Accordion from '../components/Hooks/Accordion';
 
 const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
+  const [answersIndex, setAnswersIndex] = useState<number>(0);
+  const scrollRef = useRef<ScrollView>(null);
+  const answersPerPage = 3;
+  const [pageChanged, setPageChanged] = useState<boolean>(false);
+  const [closeAccordion, setCloseAccordion] = useState<boolean>(false);
   // const [todayQuestions, setTodayQuestion] = useState<QuestionProps>([]);
 
   // const handleGetTodayQuestions = async () => {
@@ -54,6 +59,7 @@ const HomeScreen = () => {
     },
   ];
 
+  //todo : 이거 axios 날릴때 남은건냅두고 처음에 6개, 그뒤에 6개씩추가
   const previousAnswers = [
     {
       question: 'What made you feel proud todaydsasd asd asd asdasd adsasd asd asd ds?',
@@ -115,6 +121,51 @@ const HomeScreen = () => {
         },
       ],
     },
+    {
+      question: 'next page test',
+      subquestions: [
+        {
+          text: 'subquestionasdhkjasdhkj1323987',
+          answer: 'answer1',
+          date: '2025-01-21 10:20 AM',
+        },
+        {
+          text: 'teystuy uasukdy ukyd wqiud2222222y ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
+          answer: 'answer2',
+          date: '2025-01-24 01:40 PM',
+        }
+      ],
+    },
+    {
+      question: 'next page test',
+      subquestions: [
+        {
+          text: 'subquestionasdhkjasdhkj1323987',
+          answer: 'answer1',
+          date: '2025-01-21 10:20 AM',
+        },
+        {
+          text: 'teystuy uasukdy ukyd wqiud2222222y ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
+          answer: 'answer2',
+          date: '2025-01-24 01:40 PM',
+        }
+      ],
+    },
+    {
+      question: 'next page test',
+      subquestions: [
+        {
+          text: 'subquestionasdhkjasdhkj1323987',
+          answer: 'answer1',
+          date: '2025-01-21 10:20 AM',
+        },
+        {
+          text: 'teystuy uasukdy ukyd wqiud2222222y ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
+          answer: 'answer2',
+          date: '2025-01-24 01:40 PM',
+        }
+      ],
+    },
   ];
   const handleEdit = () => {
     //여기서 소질문 뜨게 하기 
@@ -135,11 +186,49 @@ const HomeScreen = () => {
       { cancelable: false } // Alert 외부를 눌렀을 때 닫힘 여부
     );
   }
+  const totalPages = Math.ceil(previousAnswers.length / answersPerPage);
+  const paginatedAnswers = previousAnswers.slice(
+    answersIndex * answersPerPage, (answersIndex + 1) * answersPerPage
+  );
+  const handlePrev = () => {
+    if (answersIndex === 0) return;
 
+    setCloseAccordion(true);
+    setTimeout(() => {
+      setAnswersIndex(answersIndex - 1);
+      setPageChanged(true);
+      setCloseAccordion(false);
+    }, 300); // Accordion에서 duration: 300과 동일
+  };
+  const handleNext = () => {
+    if (answersIndex === totalPages - 1) return;
+
+    setCloseAccordion(true);
+    setTimeout(() => {
+      setAnswersIndex(answersIndex + 1);
+      setPageChanged(true);
+      setCloseAccordion(false);
+    }, 300); // Accordion에서 duration: 300과 동일
+  };
+  useEffect(() => {
+    if (pageChanged) {
+      // setTimeout 또는 requestAnimationFrame 등을 사용하여
+      // 실제 렌더링이 완료된 뒤에 scrollToEnd() 호출
+      const timer = setTimeout(() => {
+        scrollRef.current?.scrollToEnd({animated: true});
+        setPageChanged(false);
+      }, 0);
+
+      return () => clearTimeout(timer);
+    }
+  }, [answersIndex, pageChanged]);
   return (
     <View style={styles.container}>
       <MemoGradient />
-      <ScrollView contentContainerStyle={styles.contentContainer}>
+      <ScrollView 
+        contentContainerStyle={styles.contentContainer}
+        ref={scrollRef}
+      >
         <Header />
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Today's Questions</Text>
@@ -161,10 +250,11 @@ const HomeScreen = () => {
           <Text style={styles.cardTitle}>Your previous Answers</Text>
           <View style={styles.prevAnsweralign}>
             <View style={styles.prevAnswerContainer}>
-              {previousAnswers.map((item, index) => (
+              {paginatedAnswers.map((item, index) => (
                 <Accordion
                   title={item.question}
                   key={index}
+                  forceClose={closeAccordion}
                 >
                   <View style={styles.prevAnswers} key={index}>
                     {item.subquestions.map((subquestion, ansIndex) => (
@@ -193,11 +283,15 @@ const HomeScreen = () => {
               ))}
             </View>
             <View style={styles.moveButtonContainer}>
-              <TouchableOpacity style={styles.prevButton}>
+              <TouchableOpacity style={styles.prevButton}
+                onPress={handlePrev}
+                >
                 <PrevIcon/>
                 <Text style={styles.prevButtonText}>Previous</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.nextButton}>
+              <TouchableOpacity style={styles.nextButton}
+                onPress={handleNext}
+              >
                 <Text style={styles.nextButtonText}>Next</Text>
                 <NextIcon/>
               </TouchableOpacity>

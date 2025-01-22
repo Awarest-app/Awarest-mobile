@@ -15,6 +15,7 @@ interface AccordionProps {
   title: string;
   collapseOnStart?: boolean;
   children: React.ReactNode;
+  forceClose?: boolean;
 }
 
 interface MemoizedContentProps {
@@ -39,6 +40,7 @@ const Accordion = memo(
   ({
     collapseOnStart = true,
     title,
+    forceClose,
     children,
   }: AccordionProps) => {
     // 접힘/펼침 상태
@@ -51,6 +53,12 @@ const Accordion = memo(
     const animeValue = useRef(new Animated.Value(collapseOnStart ? 0 : 1)).current;
 
     // 접힘/펼침 상태가 바뀔 때마다 애니메이션 실행
+    useEffect(() => {
+      if (forceClose && !collapsed) {
+        setCollapsed(true);
+      }
+    }, [forceClose, collapsed]);
+  
     useEffect(() => {
       Animated.timing(animeValue, {
         toValue: collapsed ? 0 : 1,
