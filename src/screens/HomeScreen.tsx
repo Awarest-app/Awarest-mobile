@@ -164,7 +164,7 @@ const HomeScreen = () => {
   );
   const handlePrev = () => {
     if (answersIndex === 0) return;
-
+    
     setCloseAccordion(true);
     setTimeout(() => {
       setAnswersIndex(answersIndex - 1);
@@ -286,7 +286,7 @@ const HomeScreen = () => {
                 onPress={handlePrev}
                 >
                 <PrevIcon/>
-                <Text style={styles.prevButtonText}>Previous</Text>
+                <Text style={styles.prevButtonText}>Prev</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.nextButton}
                 onPress={handleNext}
