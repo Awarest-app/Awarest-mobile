@@ -29,9 +29,9 @@ const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
   const [answersIndex, setAnswersIndex] = useState<number>(0);
   const scrollRef = useRef<ScrollView>(null);
-  const answersPerPage = 3;
   const [pageChanged, setPageChanged] = useState<boolean>(false);
   const [closeAccordion, setCloseAccordion] = useState<boolean>(false);
+  const answersPerPage = 3;
   const dummyQuestions: QuestionProps[] = [
     {
       id: 1,
@@ -193,14 +193,14 @@ const HomeScreen = () => {
     }
   }, [answersIndex, pageChanged]);
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [editAnswer, setEditAnswer] = useState<string>('');
   const [editingIndexes, setEditingIndexes] = useState<{ questionIndex: number; subquestionIndex: number } | null>(null);
 
   const handleEdit = (text: string, questionIndex: number, subquestionIndex: number) => {
     const questionIdx = answersIndex * answersPerPage + questionIndex;
     setEditAnswer(text);
-    setIsModalVisible(true);
+    setIsModalOpen(true);
     setEditingIndexes({ questionIndex: questionIdx, subquestionIndex });
   };
   const handleSaveEdit = (newText: string) => {
@@ -214,14 +214,14 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <EditModal 
-        isOpen={isModalVisible}
+        isOpen={isModalOpen}
         currentText={editAnswer}
         question={editingIndexes
           ? previousAnswers[editingIndexes.questionIndex].subquestions[
               editingIndexes.subquestionIndex
             ].text
           : 'Error'}
-        onClose={()=>setIsModalVisible(false)}
+        onClose={()=>setIsModalOpen(false)}
         onSave={handleSaveEdit}
       />
       <MemoGradient />
@@ -233,12 +233,12 @@ const HomeScreen = () => {
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Today's Questions</Text>
           {dummyQuestions &&
-            dummyQuestions.map(question => (
+            dummyQuestions.map((question) => (
               <TouchableOpacity
                 key={question.id}
                 style={styles.questionBox}
                 onPress={() => {
-                  navigation.navigate('Anwser');
+                  navigation.navigate('Answer', { mainQuestion: question.content });
                 }}>
                 <Text style={styles.questionText}>{question.content}</Text>
                 <Text style={styles.tapToReflect}>Tap to reflect</Text>

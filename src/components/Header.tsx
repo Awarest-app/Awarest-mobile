@@ -24,7 +24,8 @@ export function Header() {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.iconButton} // 스타일 추가
-          onPress={() => navigation.navigate('Anwser')}>
+          onPress={() => navigation.navigate('Home')}//todo 이거변경
+        >
           <StarIcon width={16} height={16} />
           <Text style={styles.headerTitle}>answer</Text>
         </TouchableOpacity>

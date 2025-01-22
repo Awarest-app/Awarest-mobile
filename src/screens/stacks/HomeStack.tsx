@@ -19,7 +19,7 @@ export function HomeStack() {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="Anwser"
+        name="Answer"
         component={AnswerScreen}
         options={{headerShown: false}}
       />

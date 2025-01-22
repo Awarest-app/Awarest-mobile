@@ -22,7 +22,7 @@ export type LoginStackParamList = {
 
 export type HomeStackParamList = {
   Home: undefined;
-  Anwser: undefined;
+  Answer: { mainQuestion?: string }; 
   Result: undefined;
   Profile: undefined;
   Setting: undefined;
