@@ -6,7 +6,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
-  Alert,
+  Modal,
+  TextInput,
 } from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {HomeStackParamList} from '../type/route.type';
@@ -21,7 +22,9 @@ import {QuestionProps} from '../type/api.type';
 import {fonts} from '../styles/fonts';
 import {globalStyle} from '../styles/global';
 import Accordion from '../components/Hooks/Accordion';
+import EditModal from '../components/modals/EditModal';
 
+//todo: 컴포넌트 쪼개기
 const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
   const [answersIndex, setAnswersIndex] = useState<number>(0);
@@ -29,18 +32,6 @@ const HomeScreen = () => {
   const answersPerPage = 3;
   const [pageChanged, setPageChanged] = useState<boolean>(false);
   const [closeAccordion, setCloseAccordion] = useState<boolean>(false);
-  // const [todayQuestions, setTodayQuestion] = useState<QuestionProps>([]);
-
-  // const handleGetTodayQuestions = async () => {
-  //   try {
-  //     const res = await getQuestions();
-  //     // const data = await response.json();
-  //     console.log('res', res);
-  //     setTodayQuestion(res);
-  //   } catch (error) {
-  //     console.log('error', error);
-  //   }
-  // };
   const dummyQuestions: QuestionProps[] = [
     {
       id: 1,
@@ -60,7 +51,7 @@ const HomeScreen = () => {
   ];
 
   //todo : 이거 axios 날릴때 남은건냅두고 처음에 6개, 그뒤에 6개씩추가
-  const previousAnswers = [
+  const [previousAnswers, setPreviousAnswers] = useState([
     {
       question: 'What made you feel proud todaydsasd asd asd asdasd adsasd asd asd ds?',
       subquestions: [
@@ -125,8 +116,8 @@ const HomeScreen = () => {
       question: 'next page test',
       subquestions: [
         {
-          text: 'subquestionasdhkjasdhkj1323987',
-          answer: 'answer1',
+          text: 'subquesasdadationasdhkjasdhkj1323987',
+          answer: 'ansssswer1',
           date: '2025-01-21 10:20 AM',
         },
         {
@@ -166,26 +157,7 @@ const HomeScreen = () => {
         }
       ],
     },
-  ];
-  const handleEdit = () => {
-    //여기서 소질문 뜨게 하기 
-    Alert.alert(
-      'Profile', // 제목
-      'Do you want to proceed?', // 메시지
-      [
-        {
-          text: 'No',
-          onPress: () => console.log('No Pressed'),
-          style: 'cancel', // 버튼 스타일 (기본: cancel)
-        },
-        {
-          text: 'Yes',
-          onPress: () => console.log('Yes Pressed'),
-        },
-      ],
-      { cancelable: false } // Alert 외부를 눌렀을 때 닫힘 여부
-    );
-  }
+  ]);
   const totalPages = Math.ceil(previousAnswers.length / answersPerPage);
   const paginatedAnswers = previousAnswers.slice(
     answersIndex * answersPerPage, (answersIndex + 1) * answersPerPage
@@ -198,7 +170,7 @@ const HomeScreen = () => {
       setAnswersIndex(answersIndex - 1);
       setPageChanged(true);
       setCloseAccordion(false);
-    }, 300); // Accordion에서 duration: 300과 동일
+    }, 300); // Accordion에서 duration이랑 맞춰야됨
   };
   const handleNext = () => {
     if (answersIndex === totalPages - 1) return;
@@ -208,12 +180,10 @@ const HomeScreen = () => {
       setAnswersIndex(answersIndex + 1);
       setPageChanged(true);
       setCloseAccordion(false);
-    }, 300); // Accordion에서 duration: 300과 동일
+    }, 300); // Accordion에서 duration이랑 맞춰야됨
   };
   useEffect(() => {
     if (pageChanged) {
-      // setTimeout 또는 requestAnimationFrame 등을 사용하여
-      // 실제 렌더링이 완료된 뒤에 scrollToEnd() 호출
       const timer = setTimeout(() => {
         scrollRef.current?.scrollToEnd({animated: true});
         setPageChanged(false);
@@ -222,8 +192,38 @@ const HomeScreen = () => {
       return () => clearTimeout(timer);
     }
   }, [answersIndex, pageChanged]);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [editAnswer, setEditAnswer] = useState<string>('');
+  const [editingIndexes, setEditingIndexes] = useState<{ questionIndex: number; subquestionIndex: number } | null>(null);
+
+  const handleEdit = (text: string, questionIndex: number, subquestionIndex: number) => {
+    const questionIdx = answersIndex * answersPerPage + questionIndex;
+    setEditAnswer(text);
+    setIsModalVisible(true);
+    setEditingIndexes({ questionIndex: questionIdx, subquestionIndex });
+  };
+  const handleSaveEdit = (newText: string) => {
+    //todo 이거 백엔드로 날려야됨
+    //이거 수정이라서 백엔드 
+    if (!editingIndexes) return;
+    const updatedAnswers = [...previousAnswers];//shallow copy
+    updatedAnswers[editingIndexes.questionIndex].subquestions[editingIndexes.subquestionIndex].answer = newText;
+    setPreviousAnswers(updatedAnswers);
+  };
   return (
     <View style={styles.container}>
+      <EditModal 
+        isOpen={isModalVisible}
+        currentText={editAnswer}
+        question={editingIndexes
+          ? previousAnswers[editingIndexes.questionIndex].subquestions[
+              editingIndexes.subquestionIndex
+            ].text
+          : 'Error'}
+        onClose={()=>setIsModalVisible(false)}
+        onSave={handleSaveEdit}
+      />
       <MemoGradient />
       <ScrollView 
         contentContainerStyle={styles.contentContainer}
@@ -250,27 +250,26 @@ const HomeScreen = () => {
           <Text style={styles.cardTitle}>Your previous Answers</Text>
           <View style={styles.prevAnsweralign}>
             <View style={styles.prevAnswerContainer}>
-              {paginatedAnswers.map((item, index) => (
+              {paginatedAnswers.map((item, questionIndex) => (
                 <Accordion
                   title={item.question}
-                  key={index}
+                  key={questionIndex}
                   forceClose={closeAccordion}
                 >
-                  <View style={styles.prevAnswers} key={index}>
-                    {item.subquestions.map((subquestion, ansIndex) => (
+                  <View style={styles.prevAnswers}>
+                    {item.subquestions.map((subquestion, subquestionIndex) => (
                       <View style={styles.subquestionContainer}
-                        key={ansIndex}
+                        key={subquestionIndex}
                       >
                         <Text style={styles.subquestionText}>{subquestion.text}</Text>
-                        <View
-                          style={styles.answerContainer}
-                          // onStartShouldSetResponder={() => true} //자식요소가 touch event 소비하게 하기
-                        >
+                        <View style={styles.answerContainer}>
                           <Text style={styles.answerText}>{subquestion.answer}</Text>
                           <View style={styles.answerBottom}>
                             <Text style={styles.answerDate}>{subquestion.date}</Text>
                             <TouchableOpacity style={styles.editButton}
-                              onPress={handleEdit}
+                              onPress={() =>
+                                handleEdit(subquestion.answer, questionIndex, subquestionIndex)
+                              }
                             >
                               <EditIcon />
                             </TouchableOpacity>
@@ -312,7 +311,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'transparent',
-    // alignItems: 'center',
   },
   contentContainer: {
     paddingVertical: 16,
@@ -328,8 +326,6 @@ const styles = StyleSheet.create({
     boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
     borderWidth: 1,
     borderColor: colors.card_border,
-    // elevation: 2,
-    // opacity: 0.9,
   },
   cardTitle: {
     fontFamily: fonts.roboto_semibold,
