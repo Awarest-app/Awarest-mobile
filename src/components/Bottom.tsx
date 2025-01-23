@@ -3,17 +3,28 @@ import {StyleSheet, View} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import ProfileScreen from '../screens/ProfileScreen';
 import colors from '../styles/colors';
-import HomeIcon from '../assets/svg/home-icon.svg';
-import ProfileIcon from '../assets/svg/profile-icon.svg';
+import {fonts} from '../styles/fonts';
+import GreenHomeIcon from '../assets/svg/home-icon-green.svg';
+import GrayHomeIcon from '../assets/svg/home-icon-gray.svg';
+import GreenProfileIcon from '../assets/svg/profile-icon-green.svg';
+import GrayProfileIcon from '../assets/svg/profile-icon-gray.svg';
 import { globalStyle } from '../styles/global';
 import { BlurView } from "@react-native-community/blur";
 // import {HomeStack} from '../screens/stacks/HomeStack';
-import HomeScreen from '../screens/HomeScreen';
 import { HomeStack } from '../screens/stacks/HomeStack';
 
+import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 const Tab = createBottomTabNavigator();
 
 export default function Bottom() {
+  const getTabBarVisibility = (route: any) => {
+    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
+    if (routeName === 'Answer' || routeName === 'Result') {
+      return styles.hiddenTabBarStyle;
+    }
+    return styles.tabBarStyle;
+  };
+  
   return (
     <Tab.Navigator
       screenOptions={{
@@ -32,13 +43,18 @@ export default function Bottom() {
       <Tab.Screen
         name="Home"
         component={HomeStack}
-        options={{
+        options={({route}) => ({
           title: 'Home',
           headerShown: false, // Tab Navigator에서 자체 헤더는 숨기기
-          tabBarIcon: (
-            {color, size}, // 여기서 tabBarIcon을 사용합니다.
-          ) => <HomeIcon fill={color} width={size} height={size} />,
-        }}
+          tabBarStyle: getTabBarVisibility(route),
+          tabBarIcon: ({focused, size}) => (
+            focused ? (
+              <GreenHomeIcon width={size} height={size} />
+            ) : (
+              <GrayHomeIcon width={size} height={size} />
+            )
+          ), // 여기서 tabBarIcon을 사용합니다.
+        })}
       />
       <Tab.Screen
         name="Profile"
@@ -46,9 +62,13 @@ export default function Bottom() {
         options={{
           title: 'Profile',
           headerShown: false, // Tab Navigator에서 자체 헤더는 숨기기
-          tabBarIcon: (
-            {color, size}, // 여기서 tabBarIcon을 사용합니다.
-          ) => <ProfileIcon fill={color} width={size} height={size} />,
+          tabBarIcon: ({focused, size}) => (
+            focused ? (
+              <GreenProfileIcon width={size} height={size} />
+            ) : (
+              <GrayProfileIcon width={size} height={size} />
+            )
+          ) // 여기서 tabBarIcon을 사용합니다.
         }}
       />
     </Tab.Navigator>
@@ -65,10 +85,13 @@ const styles = StyleSheet.create({
     // elevation: 0, // Android 그림자 제거
     // shadowOpacity: 0, // iOS 그림자 제거
   },
+  hiddenTabBarStyle: {
+    display: 'none',
+  },
   tabBarLabelStyle: {
     //이름
-    fontSize: 12,
-    fontWeight: '600',
+    fontFamily: fonts.roboto_medium,
+    fontSize: 14,
   },
   background: {
     width: '100%',
