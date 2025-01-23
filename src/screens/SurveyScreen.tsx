@@ -12,6 +12,9 @@ import MemoGradient from '../components/Hooks/MemoGradient';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
 import {questions} from '../constant/questions';
+import {axiosSurveySumbit} from '../api/axios';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {HomeStackParamList, RootStackParamList} from '../type/route.type';
 
 export default function SurveyScreen() {
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -21,6 +24,8 @@ export default function SurveyScreen() {
     job?: string;
     how_hear?: string;
   }>({});
+  // 알림 모달?
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [isEnabled, setIsEnabled] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
 
@@ -67,6 +72,20 @@ export default function SurveyScreen() {
     }
   };
 
+  const handleSurveySubmit = async () => {
+    try {
+      const response = await axiosSurveySumbit({
+        ...userAnswers,
+        noti: isEnabled,
+      });
+      navigation.navigate('HomeStack');
+      console.log(response);
+    } catch (error: unknown) {
+      // const {status, data} = error.response;
+      console.error('survey submit Error response:');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <MemoGradient />
@@ -90,14 +109,6 @@ export default function SurveyScreen() {
             <ScrollView
               style={styles.scrollContainer}
               showsVerticalScrollIndicator={false}>
-              {/* {questions[questionIndex].options.map((item, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={styles.option}
-                  onPress={() => handleOptionSelect(item)}>
-                  <Text style={styles.optionText}>{item}</Text>
-                </TouchableOpacity>
-              ))} */}
               {questions[questionIndex].options.map((item, index) => {
                 const currentKey = questionKeys[
                   questionIndex
@@ -144,6 +155,11 @@ export default function SurveyScreen() {
                     necessary to send motivational notifications
                   </Text>
                 </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => handleSurveySubmit()}
+                style={{width: 50, height: 50, backgroundColor: 'skyblue'}}>
+                <Text>api test</Text>
               </TouchableOpacity>
             </ScrollView>
           )}
