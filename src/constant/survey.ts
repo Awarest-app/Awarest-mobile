@@ -16,15 +16,6 @@ export const goalOptions = {
   5: 'Other',
 };
 
-export const heardFromOptions = {
-  0: 'Friends',
-  1: 'Google search',
-  2: 'Appstore',
-  3: 'Reddit',
-  4: 'Social media',
-  5: 'Other',
-};
-
 export const workWordsOptions = {
   0: 'Student',
   1: 'Retired',
@@ -37,4 +28,17 @@ export const workWordsOptions = {
   8: 'Investor',
   9: 'Teacher',
   10: 'Other'
+};
+
+export const heardFromOptions = {
+  0: 'Friends',
+  1: 'Google search',
+  2: 'Appstore',
+  3: 'Reddit',
+  4: 'Instagram',
+  5: 'Threads',
+  6: 'Advertisement',
+  7: 'Reddit',
+  8: 'Social media',
+  9: 'Other',
 };
