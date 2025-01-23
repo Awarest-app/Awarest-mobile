@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   card: {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
     borderRadius: 10,
     marginBottom: 50,
     paddingHorizontal: 14,
@@ -340,6 +340,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 16,
     gap: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
     boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
   },
   questionText: {
@@ -371,7 +372,6 @@ const styles = StyleSheet.create({
     color: colors.primary,
   },
   answerContainer: {
-    backgroundColor: 'white',
     paddingVertical: 16,
     paddingHorizontal: 14,
     gap: 14,
