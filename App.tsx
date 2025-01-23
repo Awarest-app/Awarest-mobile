@@ -23,15 +23,13 @@ function App() {
       const isSurveyMatch = url.match(/survey=(.*)/);
       // console.log('isSurveyMatch', isSurveyMatch);
       const isSurvey = isSurveyMatch ? isSurveyMatch[1] : null;
-      // 토큰이 이미 존재 ->
-      // survey가 없다면 survey로 이동
-      // survey가 있다면 home으로 이동
+      console.log('isSurvey', isSurvey);
       // await removeToken();
 
       const isToken = await getToken();
       console.log('isToken', isToken);
       if (isToken !== null) {
-        if (isSurvey === 'ture') {
+        if (isSurvey === 'true') {
           navigationRef.current?.navigate('HomeStack', {
             screen: 'Home',
           });
