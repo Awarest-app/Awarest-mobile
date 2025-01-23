@@ -1,18 +1,14 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import ProfileScreen from '../screens/ProfileScreen';
-
 import HomeIcon from '../assets/svg/home-icon.svg';
 import ProfileIcon from '../assets/svg/profile-icon.svg';
-// import {HomeStack} from '../screens/stacks/HomeStack';
-import HomeScreen from '../screens/HomeScreen';
-import { HomeStack } from '../screens/stacks/HomeStack';
+import {HomeStack} from '../screens/stacks/HomeStack';
 
 const Tab = createBottomTabNavigator();
 
 export default function Bottom() {
   return (
-    <Tab.Navigator >
+    <Tab.Navigator>
       <Tab.Screen
         name="Home"
         component={HomeStack}

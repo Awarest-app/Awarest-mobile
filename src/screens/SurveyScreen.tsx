@@ -7,14 +7,23 @@ import {
   ScrollView,
   Dimensions,
   Switch,
+  Alert,
+  Platform,
 } from 'react-native';
 import MemoGradient from '../components/Hooks/MemoGradient';
-import {fonts} from '../styles/fonts';
-import colors from '../styles/colors';
 import {questions} from '../constant/questions';
 import {axiosSurveySumbit} from '../api/axios';
+import {
+  checkNotifications,
+  requestNotifications,
+  RESULTS,
+} from 'react-native-permissions';
+
+import {fonts} from '../styles/fonts';
+import colors from '../styles/colors';
+import {CustomDefaultAlert} from '../components/utils/CustomAlert';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {HomeStackParamList, RootStackParamList} from '../type/route.type';
+import {RootStackParamList} from '../type/route.type';
 
 export default function SurveyScreen() {
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -38,7 +47,6 @@ export default function SurveyScreen() {
       [key]: option,
     };
 
-    // console.log('updatedAnswers', updatedAnswers);
     setUserAnswers(updatedAnswers);
 
     if (questionIndex < questions.length) {
@@ -48,13 +56,68 @@ export default function SurveyScreen() {
       // 모든 설문 완료 후 처리 로직
     }
   };
-
-  //notification on/off 함수
-  const handleNoti = () => {
-    // setIsDisabled(true); 나중에 넣어야됨
-    setIsEnabled(!isEnabled);
+  const platformCheck = (): boolean => {
+    return Platform.OS === 'ios';
+    // Platform.OS === 'android';
   };
+  //notification on/off 함수
+  const requestNotificationPermission = async () => {
+    const {status} = await requestNotifications(['alert', 'sound', 'badge']);
+    if (status === RESULTS.GRANTED) {
+      Alert.alert('Permission Granted', 'Notifications have been enabled.');
+    } else {
+      Alert.alert('Permission Denied', 'Notifications are not enabled.');
+    }
+  };
+  const handleNoti = async () => {
+    if (!platformCheck()) return;
+    setIsEnabled(!isEnabled); // toggle 모양
+    setIsDisabled(true);
+    const {status} = await checkNotifications();
 
+    switch (status) {
+      case RESULTS.GRANTED:
+        CustomDefaultAlert({
+          mainText: 'Permission Granted',
+          subText: 'Notifications are enabled.',
+          onPress: () => {
+            navigation.navigate('HomeStack', {
+              screen: 'Home', // HomeStack 내부의 Home 스크린
+            });
+          },
+        });
+        break;
+      case RESULTS.DENIED:
+        await requestNotificationPermission();
+        break;
+      case RESULTS.BLOCKED:
+        CustomDefaultAlert({
+          mainText: 'Permission Blocked',
+          subText: 'Notifications are blocked. Please enable them in settings.',
+          onPress: () => {
+            navigation.navigate('HomeStack', {
+              screen: 'Home', // HomeStack 내부의 Home 스크린
+            });
+          },
+        });
+        break;
+      case RESULTS.UNAVAILABLE:
+        CustomDefaultAlert({
+          mainText: 'Permission Unavailable',
+          subText: 'Notifications are not available on this device.',
+          onPress: () => {
+            navigation.navigate('HomeStack', {
+              screen: 'Home', // HomeStack 내부의 Home 스크린
+            });
+          },
+        });
+        break;
+      default:
+        console.log('Unknown permission status:', status);
+    }
+    //todo axios updatedAnswers
+  };
+  // 뒤로가기 버튼 클릭 시 이전 질문으로 돌아가는 함수
   const handleBack = () => {
     if (questionIndex > 0) {
       const keyToRemove = questionKeys[
@@ -78,7 +141,10 @@ export default function SurveyScreen() {
         ...userAnswers,
         noti: isEnabled,
       });
-      navigation.navigate('HomeStack');
+      // navigation.navigate('HomeStack');
+      navigation.navigate('HomeStack', {
+        screen: 'Home', // HomeStack 내부의 Home 스크린
+      });
       console.log(response);
     } catch (error: unknown) {
       // const {status, data} = error.response;
@@ -148,7 +214,8 @@ export default function SurveyScreen() {
                   ios_backgroundColor={'white'}
                   thumbColor={'#0D9488'}
                   onValueChange={handleNoti}
-                  value={isEnabled}></Switch>
+                  value={isEnabled}
+                />
                 <View style={styles.permissonContent}>
                   <Text style={styles.permissonName}>Notifications</Text>
                   <Text style={styles.permissonDiscription}>
@@ -193,42 +260,42 @@ const styles = StyleSheet.create({
   logoSection: {
     alignItems: 'center',
     marginTop: calculateDp(60),
-    marginBottom: calculateDp(20),
+    marginBottom: calculateDp(24),
   },
   logoText: {
-    fontSize: calculateDp(34),
+    fontSize: 40,
     fontFamily: fonts.logo, // 로고 폰트
     fontWeight: 'bold',
     color: colors.primary,
     marginBottom: -10,
   },
   subTitle: {
-    fontSize: calculateDp(12),
+    fontSize: 14,
     fontFamily: fonts.lato_regular,
     color: colors.textSubtle,
   },
   surveySection: {},
   questionSection: {
-    marginBottom: calculateDp(20),
-    gap: calculateDp(6),
+    marginBottom: 30,
+    gap: 6,
   },
   questionOrder: {
     fontFamily: fonts.roboto_medium,
-    fontSize: calculateDp(14),
+    fontSize: 18,
     color: colors.primary,
     letterSpacing: 1,
   },
   question: {
-    fontSize: calculateDp(18),
+    fontSize: 24,
     fontFamily: fonts.lato_regular,
     color: '#000000',
   },
   scrollContainer: {
     width: '100%',
-    height: '48%',
+    height: '49%',
   },
   option: {
-    height: calculateDp(44),
+    height: 55,
     backgroundColor: colors.button_color,
     borderRadius: 8,
     marginBottom: 10,
@@ -242,7 +309,7 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontFamily: fonts.lato_regular,
-    fontSize: calculateDp(14),
+    fontSize: 18,
     color: '#000000',
   },
   permissonSection: {
@@ -254,7 +321,7 @@ const styles = StyleSheet.create({
   permissonNoti: {
     flexDirection: 'row',
     width: '100%',
-    height: calculateDp(80),
+    height: 100,
     borderRadius: 8,
     backgroundColor: '#ffffff',
     padding: 10,
@@ -272,17 +339,17 @@ const styles = StyleSheet.create({
   },
   permissonName: {
     fontFamily: fonts.roboto_medium,
-    fontSize: calculateDp(16),
+    fontSize: 20,
     color: 'black',
   },
   permissonDiscription: {
     fontFamily: fonts.lato_regular,
-    fontSize: calculateDp(14),
+    fontSize: 17,
     color: colors.input_ph,
   },
   backButton: {
     width: '100%',
-    height: calculateDp(38),
+    height: 48,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
@@ -295,7 +362,7 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     fontFamily: fonts.roboto_medium,
-    fontSize: calculateDp(16),
+    fontSize: 20,
     color: colors.green_button_text,
   },
 });
