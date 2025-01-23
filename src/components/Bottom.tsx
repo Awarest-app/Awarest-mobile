@@ -58,7 +58,7 @@ export default function Bottom() {
       />
       <Tab.Screen
         name="Profile"
-        component={HomeStack}
+        component={ProfileScreen}
         options={{
           title: 'Profile',
           headerShown: false, // Tab Navigator에서 자체 헤더는 숨기기
@@ -77,7 +77,7 @@ export default function Bottom() {
 
 const styles = StyleSheet.create({
   tabBarStyle: {
-    height: 76,
+    height: 78,
     borderTopWidth: 1,
     borderTopColor: colors.card_border,
     backgroundColor: 'rgba(237, 237, 237, 0.75)',

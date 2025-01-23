@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   SafeAreaView,
   View,
@@ -13,7 +13,7 @@ import ProfileGradient from '../components/Hooks/ProfileGradient';
 import SettingIcon from '../assets/svg/setting-icon.svg';
 import ShareIcon from '../assets/svg/share-icon.svg';
 import {useRef} from 'react';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
+// import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {HomeStackParamList} from '../type/route.type';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
@@ -22,27 +22,27 @@ import { Modalize } from 'react-native-modalize';
 import Settings from '../components/Hooks/SettingsModal';
 
 // 샘플용 임시 프로필 이미지(회색 원을 Image 대신 View로 표현할 수도 있음)
-const ProfilePlaceholder = () => (
-  <View style={styles.profilePlaceholder}>
-    {/* 실제로는 Image 컴포넌트로 소스 불러오기 가능 */}
-    {/* 예: <Image source={{uri: 'https://...'}} style={styles.profileImage} /> */}
-  </View>
-);
 
 export default function ProfileScreen() {
-  const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
-  const userName = 'Sarah Johnson';
-  const memberSince = 'January 2025';
-  const dayStreak = 7;
-  const totalXP = 1222450;
-  const level = 1;
-  const totalAnswers = 12;
-  const achievements = 2;
+  // const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
   const settingsRef = useRef<Modalize>(null);
+  const Stats = {
+    profileImg: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcKBnNMLWjTurCJvK1LQk3awXQDiM-TdAXtg&s',
+    userName: 'Sarah Johnson',
+    memberSince: 'January 2025',
+    dayStreak: 7,
+    totalXP: 1222450,
+    level: 1,
+    totalAnswers: 12,
+    // achievements: 2,
+  }
 
   const openSettings = () => {
     settingsRef.current?.open();
   };
+  useEffect(() => {
+    //todo axios
+  }, []);
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.container}>
@@ -59,32 +59,34 @@ export default function ProfileScreen() {
 
           {/* 메인 프로필 박스(파란색 외곽선) */}
           <View style={styles.profileContainer}>
-            {/* 내부 dotted 박스 */}
-              {/* 프로필 섹션 */}
               <View style={styles.imgContainer}>
-                <ShareIcon />
                 <ProfileGradient />
-                <ProfilePlaceholder />
-                <TouchableOpacity style={styles.shareButton}>
+                <View style={styles.profilePlaceholder}>
+                  <Image
+                    source={{uri: Stats.profileImg}}
+                    style={styles.profileImage}
+                  />
+                </View>
+                {/* <TouchableOpacity style={styles.shareButton}>
                   <ShareIcon />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <View style={styles.nameContainer}>
                   <Text style={styles.userName}>
-                    {userName}
+                    {Stats.userName}
                   </Text>
                   <Text style={styles.userMemberSince}>
-                    Member since {memberSince}
+                    Member since {Stats.memberSince}
                   </Text>
                 </View>
               </View>
 
               <View style={styles.MainStats}>
                 <View style={styles.statBox}>
-                  <Text style={styles.statNumber}>{dayStreak}</Text>
+                  <Text style={styles.statNumber}>{Stats.dayStreak}</Text>
                   <Text style={styles.statLabel}>Day Streak</Text>
                 </View>
                 <View style={styles.statBox}>
-                  <Text style={styles.statNumber}>{totalXP}</Text>
+                  <Text style={styles.statNumber}>{Stats.totalXP}</Text>
                   <Text style={styles.statLabel}>Total XP</Text>
                 </View>
               </View>
@@ -92,15 +94,11 @@ export default function ProfileScreen() {
               <View style={styles.subStats}>
                 <View style={styles.infoBox}>
                   <Text style={styles.infoItemTitle}>Level</Text>
-                  <Text style={styles.infoItemValue}>{level}</Text>
+                  <Text style={styles.infoItemValue}>{Stats.level}</Text>
                 </View>
                 <View style={styles.infoBox}>
                   <Text style={styles.infoItemTitle}>Total Answers</Text>
-                  <Text style={styles.infoItemValue}>{totalAnswers}</Text>
-                </View>
-                <View style={styles.infoBox}>
-                  <Text style={styles.infoItemTitle}>Achievements</Text>
-                  <Text style={styles.infoItemValue}>{achievements}</Text>
+                  <Text style={styles.infoItemValue}>{Stats.totalAnswers}</Text>
                 </View>
               </View>
           </View>
@@ -171,12 +169,20 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   profilePlaceholder: {
+    justifyContent: 'center',
+    alignItems: 'center',
     width: 100,
     height: 100,
     borderRadius: 50,
     borderWidth: 2,
     borderColor: colors.primary,
-    backgroundColor: '#cccccc', // 회색 배경(임시)
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderWidth: 2,
+    borderColor: colors.primary,
   },
   shareButton: {
     position: 'absolute',
