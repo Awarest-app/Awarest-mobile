@@ -25,7 +25,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSFaceIDUsageDescription</key>
-  	<string>[REASON]</string>
+	<string>[REASON]</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>[REASON]</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
