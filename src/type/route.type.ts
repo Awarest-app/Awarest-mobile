@@ -7,9 +7,10 @@ export type RootStackParamList = {
 
   MainTabs: undefined; // MainTabs로 이동
 
-  HomeStack: {
-    screen: keyof HomeStackParamList;
-  }; // LoginStack 내부로 이동
+  HomeStack: { screen: keyof HomeStackParamList };
+  // HomeStack: {
+  //   screen: keyof HomeStackParamList;
+  // }; // LoginStack 내부로 이동
 
   // MainTabs: undefined; // MainTabs로 이동
 };

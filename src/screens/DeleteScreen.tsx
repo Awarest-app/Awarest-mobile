@@ -13,36 +13,59 @@ import colors from '../styles/colors';
 import {fonts} from '../styles/fonts';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {HomeStackParamList} from '../type/route.type';
-import SettingsGradient from '../components/Hooks/SettingsGradient';
-export default function SettingProfileScreen() {
+import PrevIcon from '../assets/svg/setting-prev.svg';
+
+import DeleteModal from '../components/modals/DeleteModal';
+
+interface DeleteScreenProps {
+  setIsDelete: (isDelete: boolean) => void;
+}
+
+export default function DeleteScreen({
+  setIsDelete,
+}: DeleteScreenProps) {
   // 시간, XP 등의 데이터를 실제 로직에 맞게 받아오거나 계산해서 표시할 수 있습니다.
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const name = 'John Doe'; // axios로 받아온 사용자 이름
   const [isEnabled, setIsEnabled] = useState(false);
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
-  const handleNotification = () => {
-    // setIsDisabled(true); 나중에 넣어야됨
-    setIsEnabled(!isEnabled);
-  };
+  const handleOnSubmit = () => {
+    //axios 삭제
+    setIsModalOpen(false);
+  }
   return (
       <View style={styles.container}>
-        <SettingsGradient />
+      <DeleteModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleOnSubmit}
+      />
         <View style={styles.contentContainer}>
         <SafeAreaView style={styles.safeArea}>
-          <View style={styles.ReportHeader}>
-            <Text style={styles.deleteTitle}>
+          <View style={styles.header}>
+            <TouchableOpacity style={styles.prevIcon}
+              onPress={() => {
+                console.log('profileprevIcon');
+                setIsDelete(false);
+              }}
+            >
+              <PrevIcon/>
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>
               Delete Account
             </Text>
           </View>
-          <View>
+          <View style={styles.deleteInfo}>
             <Text style={styles.deleteHelp}>
               By proceeding, you will delete your account
               Once the process is complete, it cannot be undone.
             </Text>
-          </View>
-          <TouchableOpacity style={styles.button}
-          >
-            <Text style={styles.buttonText}>Delete Account</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.button}
+              onPress={() => setIsModalOpen(true)}
+              >
+              <Text style={styles.buttonText}>Delete Account</Text>
+            </TouchableOpacity>
+        </View>
         </SafeAreaView>
         </View>
       </View>
@@ -57,21 +80,37 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     paddingVertical: 16,
-    paddingHorizontal: 40,
   },
   safeArea: {
     flex: 1,
   },
-  ReportHeader: {
+  header: {
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
   },
-  deleteTitle: {
+  prevIcon: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 24,
+    height: '100%',
+    left: 0,
+    top: 0,
+    zIndex: 1,
+  },
+  headerTitle: {
     fontFamily: fonts.roboto_semibold,
     fontSize: 22,
+    textAlign: 'center',
+    width: '100%',
     color: colors.delete_text,
-    marginBottom: 60,
+  },
+  deleteInfo: {
+    flex: 1,
+    alignItems: 'center',
+    paddingHorizontal: 20,
   },
   deleteHelp: {
     fontFamily: fonts.lato_regular,
@@ -142,18 +181,13 @@ const styles = StyleSheet.create({
   },
   button: {
     position: 'absolute',
-    width: '100%',
-    bottom: 20,
-    backgroundColor: colors.delete_button,
+    bottom: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    height: 50,
-    paddingVertical: 12,
-    borderRadius: 8,
   },
   buttonText: {
     fontFamily: fonts.roboto_medium,
-    fontSize: 20,
+    fontSize: 18,
     color: colors.delete_text,
   },
 });

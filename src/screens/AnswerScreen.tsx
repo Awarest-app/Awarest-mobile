@@ -96,7 +96,7 @@ export default function AnswerScreen() {
     // 게시 로직
   };
   const handleOnSubmit = () => {
-    //axios 백엔드로 answers날리기 
+    //axios 백엔드로 answers날리면서 navigate로 xp 같은거 같이 날려주기
     navigation.navigate('Result');
     setIsModalOpen(false);
   }

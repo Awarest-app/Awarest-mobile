@@ -22,4 +22,11 @@ export const globalStyle = StyleSheet.create({
   },
 
   // input
+  //bottom
+  bottom_background: {
+    backgroundColor: 'rgb(255, 255, 255, 0.5)',
+    height: 60,
+    borderTopWidth: 1,
+    borderTopColor: colors.card_border,
+  }
 });

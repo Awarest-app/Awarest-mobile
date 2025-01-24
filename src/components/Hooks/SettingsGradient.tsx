@@ -9,7 +9,7 @@ const SettingsGradient = React.memo(() => {
   return (
     <LinearGradient
       colors={[colors.settings_gradientStart, colors.settings_gradientEnd]}
-      start={{x: 0, y: 0.2}}
+      start={{x: 0, y: 0.1}}
       end={{x: 0, y: 0.5}}
       // 화면 전체를 채우도록
       style={styles.gradientStyle}

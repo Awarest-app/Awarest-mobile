@@ -349,6 +349,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingVertical: 16,
     paddingHorizontal: 20,
+    paddingBottom: 60,
   },
   card: {
     backgroundColor: 'rgba(255, 255, 255, 0.75)',

@@ -11,7 +11,7 @@ import SafariView from 'react-native-safari-view';
 import {RootStackParamList} from './src/type/route.type';
 import {getToken, removeToken, storeToken} from './src/api/secureStorage';
 
-const Stack = createNativeStackNavigator();
+const RootStack = createNativeStackNavigator();
 
 function App() {
   const navigationRef =
@@ -72,22 +72,21 @@ function App() {
 
   return (
     <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator>
+      <RootStack.Navigator>
         {/* 1) 로그인 & 설문을 처리하는 LoginStack */}
-        <Stack.Screen
+        <RootStack.Screen
           name="LoginStack"
           component={LoginStack}
           options={{headerShown: false}}
         />
-
         {/* 2) bottom navigation*/}
         {/* 3) Main Stack */}
-        <Stack.Screen
+        <RootStack.Screen
           name="HomeStack"
           component={Bottom}
           options={{headerShown: false}}
         />
-      </Stack.Navigator>
+      </RootStack.Navigator>
     </NavigationContainer>
   );
 }
