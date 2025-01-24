@@ -1,7 +1,7 @@
 import {Alert} from 'react-native';
 import {axiosInstance} from './axios.instance';
 import {UserServey} from '../type/survey.type';
-import {getToken} from './secureStorage';
+import {getToken, removeToken} from './secureStorage';
 
 // 서버 연결 테스트 함수
 export const axiosTestServer = async () => {
@@ -42,5 +42,28 @@ export const axiosSurveySumbit = async (answers: UserServey) => {
     console.log('Survey submitted:', response.data);
   } catch (error) {
     console.error('Error submitting survey:', error);
+  }
+};
+
+const axiosGetQuestionsURL = '/api/questions/me';
+export const axiosGetQuestions = async () => {
+  try {
+    const response = await axiosInstance.get(axiosGetQuestionsURL);
+    console.log('Questions:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error getting questions:', error);
+    return [];
+  }
+};
+
+const axiosLogoutURL = '/api/auth/logout';
+export const axiosLogout = async () => {
+  try {
+    await removeToken();
+    const response = await axiosInstance.post(axiosLogoutURL);
+    console.log('Logout:', response.data);
+  } catch (error) {
+    console.error('Error logging out:', error);
   }
 };

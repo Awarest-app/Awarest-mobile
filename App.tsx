@@ -18,6 +18,7 @@ function App() {
     useRef<NavigationContainerRef<RootStackParamList>>(null);
 
   useEffect(() => {
+    // removeToken();
     const handleDeepLink = async (event: {url: string}) => {
       const url = event.url;
       const isSurveyMatch = url.match(/survey=(.*)/);

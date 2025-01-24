@@ -12,7 +12,6 @@ import {HomeStackParamList} from '../type/route.type';
 import {Header} from '../components/Header';
 import MemoGradient from '../components/Hooks/MemoGradient';
 import colors from '../styles/colors';
-// import {getQuestions} from '../api/api';
 import EditIcon from '../assets/svg/edit-icon.svg';
 import PrevIcon from '../assets/svg/prev-icon.svg';
 import NextIcon from '../assets/svg/next-icon.svg';
@@ -20,12 +19,11 @@ import {QuestionProps} from '../type/api.type';
 import {fonts} from '../styles/fonts';
 import Accordion from '../components/Hooks/Accordion';
 import EditModal from '../components/modals/EditModal';
+import {axiosGetQuestions} from '../api/axios';
 
 //todo: 컴포넌트 쪼개기
 const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
-  // const [todayQuestions, setTodayQuestion] = useState<QuestionProps>([]);
-
   const [answersIndex, setAnswersIndex] = useState<number>(0);
   const scrollRef = useRef<ScrollView>(null);
   const [pageChanged, setPageChanged] = useState<boolean>(false);
@@ -223,6 +221,19 @@ const HomeScreen = () => {
     ].answer = newText;
     setPreviousAnswers(updatedAnswers);
   };
+  const handleGetQuestions = async () => {
+    try {
+      const response = await axiosGetQuestions();
+      // console.log('Questions:', response);
+    } catch (error) {
+      console.error('Error getting questions:', error);
+    }
+  };
+
+  // useEffect(() => {
+  //   handleGetQuestions();
+  // }, []);
+
   return (
     <View style={styles.container}>
       <EditModal
@@ -244,7 +255,10 @@ const HomeScreen = () => {
         ref={scrollRef}>
         <Header />
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Today's Questions</Text>
+          <TouchableOpacity onPress={handleGetQuestions}>
+            <Text style={styles.cardTitle}>Today's Questions</Text>
+          </TouchableOpacity>
+
           {dummyQuestions &&
             dummyQuestions.map(question => (
               <TouchableOpacity
