@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   View,
@@ -20,23 +20,28 @@ import colors from '../styles/colors';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Modalize } from 'react-native-modalize';
 import Settings from '../components/Hooks/SettingsModal';
+import LevelModal from '../components/modals/LevelModal';
 
 // 샘플용 임시 프로필 이미지(회색 원을 Image 대신 View로 표현할 수도 있음)
 
 export default function ProfileScreen() {
-  // const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const settingsRef = useRef<Modalize>(null);
-  const Stats = {
+  const Datas = {
     profileImg: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcKBnNMLWjTurCJvK1LQk3awXQDiM-TdAXtg&s',
     userName: 'Sarah Johnson',
     memberSince: 'January 2025',
     dayStreak: 7,
-    totalXP: 1222450,
+    totalXP: 120,
+    levelXP: 1000,
     level: 1,
     totalAnswers: 12,
-    // achievements: 2,
+  };
+  const { totalXP, levelXP, level } = Datas;
+  const levelDatas = { totalXP, levelXP, level };
+  const handleLevelModal = () => {
+    setIsModalOpen(!isModalOpen);
   }
-
   const openSettings = () => {
     settingsRef.current?.open();
   };
@@ -45,6 +50,12 @@ export default function ProfileScreen() {
   }, []);
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
+      <LevelModal
+        data={levelDatas}
+        isOpen={isModalOpen}
+        onClose={handleLevelModal}
+        onSubmit={() => {}}
+      />
       <View style={styles.container}>
         <MemoGradient />
         <View style={styles.contentContainer}>
@@ -63,7 +74,7 @@ export default function ProfileScreen() {
                 <ProfileGradient />
                 <View style={styles.profilePlaceholder}>
                   <Image
-                    source={{uri: Stats.profileImg}}
+                    source={{uri: Datas.profileImg}}
                     style={styles.profileImage}
                   />
                 </View>
@@ -72,33 +83,36 @@ export default function ProfileScreen() {
                 </TouchableOpacity> */}
                 <View style={styles.nameContainer}>
                   <Text style={styles.userName}>
-                    {Stats.userName}
+                    {Datas.userName}
                   </Text>
                   <Text style={styles.userMemberSince}>
-                    Member since {Stats.memberSince}
+                    Member since {Datas.memberSince}
                   </Text>
                 </View>
               </View>
 
-              <View style={styles.MainStats}>
+              <View style={styles.MainDatas}>
                 <View style={styles.statBox}>
-                  <Text style={styles.statNumber}>{Stats.dayStreak}</Text>
+                  <Text style={styles.statNumber}>{Datas.dayStreak}</Text>
                   <Text style={styles.statLabel}>Day Streak</Text>
                 </View>
                 <View style={styles.statBox}>
-                  <Text style={styles.statNumber}>{Stats.totalXP}</Text>
+                  <Text style={styles.statNumber}>{Datas.totalXP}</Text>
                   <Text style={styles.statLabel}>Total XP</Text>
                 </View>
               </View>
               {/* 상세 정보 목록 */}
-              <View style={styles.subStats}>
-                <View style={styles.infoBox}>
+              <View style={styles.subDatas}>
+                <TouchableOpacity style={styles.infoBox}
+                  activeOpacity={0.8}
+                  onPress={handleLevelModal}
+                >
                   <Text style={styles.infoItemTitle}>Level</Text>
-                  <Text style={styles.infoItemValue}>{Stats.level}</Text>
-                </View>
+                  <Text style={styles.infoItemValue}>{Datas.level}</Text>
+                </TouchableOpacity>
                 <View style={styles.infoBox}>
                   <Text style={styles.infoItemTitle}>Total Answers</Text>
-                  <Text style={styles.infoItemValue}>{Stats.totalAnswers}</Text>
+                  <Text style={styles.infoItemValue}>{Datas.totalAnswers}</Text>
                 </View>
               </View>
           </View>
@@ -206,7 +220,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.sub_mesasage,
   },
-  MainStats: {
+  MainDatas: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
@@ -234,7 +248,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.sub_mesasage,
   },
-  subStats: {
+  subDatas: {
     gap: 10,
   },
   infoBox: {

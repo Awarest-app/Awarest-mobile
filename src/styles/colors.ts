@@ -23,7 +23,7 @@ const colors = {
   //gray - button gray
   gray_button: '#F3F4F6',
   green_button_text: '#F0F9F8',
-  grey_button_text: '#4B5563',
+  gray_button_text: '#4B5563',
   modal_gray_button: '#4B5563',
   prev_answer: '#4B5563',
 

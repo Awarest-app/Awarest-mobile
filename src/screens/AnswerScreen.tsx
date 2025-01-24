@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
   },
   draftButtonText: {
     fontFamily: fonts.roboto_regular,
-    color: colors.grey_button_text,
+    color: colors.gray_button_text,
     fontSize: 18,
   },
   submitButton: {

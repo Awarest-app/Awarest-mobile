@@ -9,7 +9,7 @@ import {
 import Warning from '../../assets/svg/warning-icon.svg';
 import {fonts} from '../../styles/fonts';
 import colors from '../../styles/colors';
-interface EditModalProps {
+interface DeleteModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: () => void;
@@ -19,7 +19,7 @@ const DeleteModal = ({
   isOpen,
   onClose,
   onSubmit,
-}: EditModalProps) => {
+}: DeleteModalProps ) => {
 
   return (
     <Modal visible={isOpen} transparent={true} animationType="none">
