@@ -124,9 +124,6 @@ const styles = StyleSheet.create({
     flex: 1,
     // justifyContent: 'center',
   },
-  /* -------------------------
-     상단 상태 표시 영역
-  --------------------------*/
   logo: {
     fontFamily: fonts.logo,
     marginBottom: 12,
@@ -164,7 +161,6 @@ const styles = StyleSheet.create({
     height: 180,
     alignItems: 'center',
     justifyContent: 'center',
-    // backgroundColor: 'blue',
     padding: 16,
     borderRadius: 10,
   },
@@ -210,9 +206,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.sub_mesasage,
   },
-  /* -------------------------
-     간단한 통계(7 Day Streak, XP)
-  --------------------------*/
   MainStats: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -230,7 +223,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     gap: 6,
     boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
-    // 그림자나 테두리를 주고 싶다면 추가 가능
   },
   statNumber: {
     fontFamily: fonts.roboto_bold,
@@ -242,9 +234,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.sub_mesasage,
   },
-  /* -------------------------
-     상세 정보 목록
-  --------------------------*/
   subStats: {
     gap: 10,
   },
@@ -271,27 +260,5 @@ const styles = StyleSheet.create({
     fontFamily: fonts.roboto_medium,
     fontSize: 16,
     color: 'black',
-  },
-  /* -------------------------
-     하단 탭바
-  --------------------------*/
-  tabBar: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-    flexDirection: 'row',
-    borderTopWidth: 1,
-    borderColor: '#ddd',
-    paddingVertical: 12,
-    backgroundColor: '#fff',
-    justifyContent: 'space-around',
-  },
-  tabItem: {
-    alignItems: 'center',
-  },
-  tabText: {
-    color: '#333',
-    fontSize: 16,
-    fontWeight: '500',
   },
 });
