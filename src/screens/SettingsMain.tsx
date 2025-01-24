@@ -5,12 +5,15 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  Linking,
 } from 'react-native';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
 import XIcon from '../assets/svg/x-icon.svg';
 const {width, height} = Dimensions.get('window');
 import {settingsTypes} from '../type/settings.type';
+import InAppReview from 'react-native-in-app-review';
+import {ABOUT_PAGE_URL} from '@env';
 
 interface SettingsMainProps {
   closeSettings: () => void;
@@ -21,6 +24,24 @@ const SettingsMain = ({
   closeSettings,
   setPage,
 }:SettingsMainProps) => {
+
+  const aboutPage = () => {
+    Linking.openURL(ABOUT_PAGE_URL)
+  };
+  const handleLeaveReview = () => {
+    if (!InAppReview.isAvailable()) return;
+    InAppReview.RequestInAppReview()
+      .then((hasFlowFinishedSuccessfully) => {
+        console.log('In-app review flow finished:', hasFlowFinishedSuccessfully);
+        // `hasFlowFinishedSuccessfully`가 true면 리뷰를 성공적으로 요청했음을 의미
+      })
+      .catch((error) => {
+        console.log('In-app review error:', error);
+      });
+  };
+  const handleSignOut = () => {
+    //todo axios sign out
+  }
   return (
     <View style={styles.SettingsContainer}>
       <View style={styles.SettingsHeader}>
@@ -49,7 +70,9 @@ const SettingsMain = ({
 
         <View style={styles.settingGroups}>
           <Text style={styles.settingOptionTitle}>Help</Text>
-          <TouchableOpacity style={styles.settingButton}>
+          <TouchableOpacity style={styles.settingButton}
+            onPress={aboutPage}
+          >
             <Text style={styles.settingOption}>About us</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.settingButton}
@@ -61,10 +84,14 @@ const SettingsMain = ({
 
         <View style={[styles.settingGroups, {borderBottomWidth: 0}]}>
           <Text style={styles.settingOptionTitle}>More</Text>
-          <TouchableOpacity style={styles.settingButton}>
+          <TouchableOpacity style={styles.settingButton}
+            onPress={handleLeaveReview}
+          >
             <Text style={styles.settingOption}>Leave a review</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.settingButton}>
+          <TouchableOpacity style={styles.settingButton}
+            onPress={handleSignOut}
+          >
             <Text style={styles.settingOption}>Sign Out</Text>
           </TouchableOpacity>
         </View>
