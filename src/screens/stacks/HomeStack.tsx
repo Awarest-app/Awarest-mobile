@@ -33,21 +33,21 @@ export function HomeStack() {
         component={ResultScreen}
         options={{headerShown: false}}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="SettingProfile" // 새로 추가된 스크린 이름
         component={SettingProfileScreen}
         options={{headerShown: false}}
-      />
+      /> */}
       <Stack.Screen
         name="Report" // 새로 추가된 스크린 이름
         component={ReportScreen}
         options={{headerShown: false}}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Delete" // 새로 추가된 스크린 이름
         component={DeleteScreen}
         options={{headerShown: false}}
-      />
+      /> */}
     </Stack.Navigator>
   );
 }

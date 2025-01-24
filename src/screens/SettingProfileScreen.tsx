@@ -7,100 +7,149 @@ import {
   TouchableOpacity,
   StyleSheet,
   Switch,
+  Dimensions,
+  Linking,
 } from 'react-native';
 import {useState} from 'react';
 import colors from '../styles/colors';
 import {fonts} from '../styles/fonts';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {HomeStackParamList} from '../type/route.type';
 import SettingsGradient from '../components/Hooks/SettingsGradient';
-export default function SettingProfileScreen() {
+import {settingsTypes} from '../type/settings.type';
+import DeleteScreen from './DeleteScreen';
+import PrevIcon from '../assets/svg/setting-prev.svg';
+const {width, height} = Dimensions.get('window');
+interface SettingProfileScreenProps {
+  closeSettings: () => void;
+  setPage: (page: settingsTypes) => void;
+}
+
+export default function SettingProfileScreen({
+  closeSettings,
+  setPage,
+}: SettingProfileScreenProps) {
   // 시간, XP 등의 데이터를 실제 로직에 맞게 받아오거나 계산해서 표시할 수 있습니다.
+  const [isDelete, setIsDelete] = useState<boolean>(false);
   const name = 'John Doe'; // axios로 받아온 사용자 이름
   const [isEnabled, setIsEnabled] = useState(false);
-  const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
+
+  const handleDelete = () => {
+     setIsDelete(!isDelete);
+    // closeSettings(); // 모달 닫기
+  };
+
   const handleNotification = () => {
     // setIsDisabled(true); 나중에 넣어야됨
+    //todo 권한에 따라서 토글껐다켰다하기 
+    Linking.openSettings();
     setIsEnabled(!isEnabled);
   };
   return (
       <View style={styles.container}>
-        <SettingsGradient />
-        <View style={styles.contentContainer}>
-        <SafeAreaView style={styles.safeArea}>
-          <View style={styles.ReportHeader}>
-            <Text style={styles.ProfileTitle}>
-              Profile
-            </Text>
-          </View>
-          <View style={styles.imgContainer}>
-            <View style={styles.img}>
-            </View>
-            <Text style={styles.editImg}>Edit</Text>
-          </View>
-          <View style={styles.nameContainer}>
-            <Text style={styles.titles}>
-              Name
-            </Text>
-            <TextInput
-              style={styles.nameInput}
-              placeholderTextColor={colors.text_hint}
-            >
-              {name}
-            </TextInput>
-          </View>
-          <TouchableOpacity
-            style={styles.permissonContainer}
-            onPress={handleNotification}
-          >
-            <View style={styles.permissonBox}>
-              <Text style={styles.permissonTitle}>
-                Notifications
+        {isDelete && (
+          <DeleteScreen
+            // closeSettings={closeSettings}
+            setIsDelete={setIsDelete}
+          />
+        )}
+        {!isDelete && (
+          <View style={styles.contentContainer}>
+          <SafeAreaView style={styles.safeArea}>
+            <View style={styles.header}>
+              <TouchableOpacity style={styles.prevIcon}
+                onPress={() => {
+                  console.log('profileprevIcon');
+                  setPage('main')
+                }}
+              >
+                <PrevIcon/>
+              </TouchableOpacity>
+              <Text style={styles.headerTitle}>
+                Profile
               </Text>
-              <Switch
-                // style={styles.permissonSwitch}
-                trackColor={{false: 'white', true: '#93C5FD'}}
-                ios_backgroundColor={'white'}
-                thumbColor={'#0D9488'}
-                onValueChange={handleNotification}
-                value={isEnabled}
-              />
             </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button}
-            onPress={() => navigation.navigate('Delete')}
-          >
-            <Text style={styles.buttonText}>Delete Account</Text>
-          </TouchableOpacity>
-        </SafeAreaView>
-        </View>
+            <View style={styles.imgContainer}>
+              <View style={styles.img}>
+              </View>
+              <Text style={styles.editImg}>Edit</Text>
+            </View>
+            <View style={styles.settingContainer}>
+              <View style={styles.nameContainer}>
+                <Text style={styles.titles}>
+                  Name
+                </Text>
+                <TextInput
+                  style={styles.nameInput}
+                  placeholderTextColor={colors.text_hint}
+                >
+                  {name}
+                </TextInput>
+              </View>
+              <TouchableOpacity
+                style={styles.permissonContainer}
+                activeOpacity={0.9}
+                onPress={handleNotification}
+              >
+                <View style={styles.permissonBox}>
+                  <Text style={styles.permissonTitle}>
+                    Notifications
+                  </Text>
+                  <Switch
+                    // style={styles.permissonSwitch}
+                    trackColor={{false: 'white', true: '#93C5FD'}}
+                    ios_backgroundColor={'white'}
+                    thumbColor={'#0D9488'}
+                    onValueChange={handleNotification}
+                    value={isEnabled}
+                  />
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleDelete}
+              >
+                <Text style={styles.buttonText}>Delete Account</Text>
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
+          </View>
+        )}
       </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: 'transparent',
+    height: height * 0.7,
   },
   contentContainer: {
     flex: 1,
-    paddingVertical: 16,
-    paddingHorizontal: 40,
   },
   safeArea: {
     flex: 1,
   },
-  ReportHeader: {
+  header: {
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 40,
   },
-  ProfileTitle: {
+  prevIcon: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 24,
+    height: '100%',
+    left: 0,
+    top: 0,
+    zIndex: 1,
+    // padding: 8,
+  },
+  headerTitle: {
     fontFamily: fonts.roboto_semibold,
     fontSize: 22,
+    textAlign: 'center',
+    width: '100%',
     color: colors.primary,
-    marginBottom: 60,
   },
   imgContainer: {
     justifyContent: 'center',
@@ -121,7 +170,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.primary,
   },
+  settingContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
   nameContainer: {
+    width: '100%',
     gap: 14,
     marginBottom: 20,
   },
@@ -144,7 +198,7 @@ const styles = StyleSheet.create({
     boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.05)',
   },
   permissonContainer: {
-
+    width: '100%',
   },
   permissonBox: {
     flexDirection: 'row',
@@ -164,18 +218,13 @@ const styles = StyleSheet.create({
   },
   button: {
     position: 'absolute',
-    width: '100%',
-    bottom: 20,
-    backgroundColor: colors.delete_button,
+    bottom: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    height: 50,
-    paddingVertical: 12,
-    borderRadius: 8,
   },
   buttonText: {
     fontFamily: fonts.roboto_medium,
-    fontSize: 20,
+    fontSize: 18,
     color: colors.delete_text,
   },
 });

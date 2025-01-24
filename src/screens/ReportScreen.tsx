@@ -6,25 +6,62 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import colors from '../styles/colors';
 import {fonts} from '../styles/fonts';
 import SettingsGradient from '../components/Hooks/SettingsGradient';
-export default function ReportScreen() {
-  // 시간, XP 등의 데이터를 실제 로직에 맞게 받아오거나 계산해서 표시할 수 있습니다.
+import {settingsTypes} from '../type/settings.type';
+import PrevIcon from '../assets/svg/setting-prev.svg';
+
+interface ReportScreenProps {
+  closeSettings: () => void;
+  setPage: (page: settingsTypes) => void;
+}
+
+export default function ReportScreen({
+  closeSettings,
+  setPage,
+}: ReportScreenProps) {
+
+  const [contact, setContact] = React.useState<string>('');
+  const [message, setMessage] = React.useState<string>('');
+  console.log('contact', contact);
+  const handleSend = () => {
+    if (!isValidEmail(contact)) {
+      Alert.alert('Invalid Email', 'Please enter a valid email address');
+      return;
+    }
+    if (!isValidMessage(message)) return;
+    //todo axios contact, message
+  };
+  const isValidMessage = (message: string): boolean => {
+    if (message.length < 12) {
+      Alert.alert('Invalid Message', 'Please enter a message longer');
+      return false;
+    }
+    return true;
+  }
+  const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
   return (
       <View style={styles.container}>
-        <SettingsGradient />
         <View style={styles.contentContainer}>
         <SafeAreaView style={styles.safeArea}>
-          <View style={styles.ReportHeader}>
-            <Text style={styles.ReportTitle}>
+          <View style={styles.header}>
+            <TouchableOpacity style={styles.prevIcon}
+              onPress={() => {
+                console.log('reportprevIcon');
+                setPage('main')
+              }}
+            >
+              <PrevIcon/>
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>
               Report
             </Text>
-            {/* <TouchableOpacity
-              style={{padding: 10}}
-            >
-            </TouchableOpacity> */}
           </View>
 
           <View style={styles.contactContainer}>
@@ -35,6 +72,8 @@ export default function ReportScreen() {
               style={styles.contactInput}
               placeholder="Youremail@example.com"
               placeholderTextColor={colors.text_hint}
+              value={contact}
+              onChangeText={setContact}
             />
           </View>
           <View style={styles.messageContainer}>
@@ -45,11 +84,15 @@ export default function ReportScreen() {
               style={styles.messageInput}
               placeholder="report bug or issue"
               placeholderTextColor={colors.text_hint}
+              value={message}
+              onChangeText={setMessage}
               multiline
             />
           </View>
 
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button}
+            onPress={handleSend}
+          >
             <Text style={styles.buttonText}>Send Report</Text>
           </TouchableOpacity>
         </SafeAreaView>
@@ -65,22 +108,33 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    paddingVertical: 16,
-    paddingHorizontal: 40,
   },
   safeArea: {
     flex: 1,
   },
-  ReportHeader: {
+  header: {
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 40,
   },
-  ReportTitle: {
+  prevIcon: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 24,
+    height: '100%',
+    left: 0,
+    top: 0,
+    zIndex: 1,
+    // padding: 8,
+  },
+  headerTitle: {
     fontFamily: fonts.roboto_semibold,
     fontSize: 22,
+    textAlign: 'center',
+    width: '100%',
     color: colors.primary,
-    marginBottom: 16,
   },
   contactContainer: {
     gap: 14,
