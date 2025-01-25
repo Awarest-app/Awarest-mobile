@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.card_border, // 파란 테두리
     borderRadius: 10,
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     alignItems: 'center',
     marginBottom: 40,
     gap: 40,

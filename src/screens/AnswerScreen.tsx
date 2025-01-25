@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
     paddingHorizontal: 16,
     borderRadius: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backgroundColor: colors.white_80,
     opacity: 0.9,
     marginBottom: 40,
   },
@@ -184,19 +184,19 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: fonts.roboto_medium,
-    color: 'black',
+    color : colors.black,
     fontSize: 24,
   },
   question: {
     fontFamily: fonts.roboto_medium,
     fontSize: 20,
-    color: 'black',
+    color : colors.black,
   },
   answerContainer: {
     gap: 16,
   },
   inputBlock: {
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     borderWidth: 1,
     borderColor: colors.card_border,
     borderRadius: 8,
@@ -207,11 +207,12 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontFamily: fonts.roboto_medium,
     fontSize: 18,
+    color : colors.black,
   },
   input: {
     fontFamily: fonts.lato_regular,
     fontSize: 16,
-    color: 'black',
+    color : colors.black,
     minHeight: 60,
     borderWidth: 1,
     borderColor: colors.card_border,
@@ -238,7 +239,7 @@ const styles = StyleSheet.create({
   },
   draftButtonText: {
     fontFamily: fonts.roboto_regular,
-    color: colors.grey_button_text,
+    color: colors.gray_button_text,
     fontSize: 18,
   },
   submitButton: {

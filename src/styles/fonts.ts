@@ -14,6 +14,8 @@ export const fonts = {
   roboto_medium: 'Roboto-Medium',
   roboto_semibold: 'Roboto-SemiBold',
   roboto_bold: 'Roboto-Bold',
+
+  inter_semibold: 'Inter-SemiBold',
   // 폰트
   // title 폰트
   // title_font: 'Roboto-SemiBold',

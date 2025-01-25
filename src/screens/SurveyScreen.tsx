@@ -81,8 +81,11 @@ export default function SurveyScreen() {
           mainText: 'Permission Granted',
           subText: 'Notifications are enabled.',
           onPress: () => {
-            navigation.navigate('HomeStack', {
-              screen: 'Home', // HomeStack 내부의 Home 스크린
+            navigation.navigate('BottomStack', {
+              screen: 'HomeStack',
+              params: {
+                screen: 'Home',
+              },
             });
           },
         });
@@ -95,8 +98,11 @@ export default function SurveyScreen() {
           mainText: 'Permission Blocked',
           subText: 'Notifications are blocked. Please enable them in settings.',
           onPress: () => {
-            navigation.navigate('HomeStack', {
-              screen: 'Home', // HomeStack 내부의 Home 스크린
+            navigation.navigate('BottomStack', {
+              screen: 'HomeStack',
+              params: {
+                screen: 'Home',
+              },
             });
           },
         });
@@ -106,8 +112,11 @@ export default function SurveyScreen() {
           mainText: 'Permission Unavailable',
           subText: 'Notifications are not available on this device.',
           onPress: () => {
-            navigation.navigate('HomeStack', {
-              screen: 'Home', // HomeStack 내부의 Home 스크린
+            navigation.navigate('BottomStack', {
+              screen: 'HomeStack',
+              params: {
+                screen: 'Home',
+              },
             });
           },
         });
@@ -219,8 +228,8 @@ export default function SurveyScreen() {
                 <Switch
                   style={styles.permissonSwitch}
                   disabled={isDisabled}
-                  trackColor={{false: 'white', true: '#93C5FD'}}
-                  ios_backgroundColor={'white'}
+                  trackColor={{false: colors.white, true: '#93C5FD'}}
+                  ios_backgroundColor={colors.white}
                   thumbColor={'#0D9488'}
                   onValueChange={handleNoti}
                   value={isEnabled}

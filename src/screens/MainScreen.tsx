@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   //   marginVertical: 24,
   // },
   oauthButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.75)',
+    backgroundColor: colors.white_75,
     width: calculateDp(260),
     height: calculateDp(46),
     justifyContent: 'center',

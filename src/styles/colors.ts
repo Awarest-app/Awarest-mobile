@@ -5,7 +5,7 @@ const colors = {
   green_gradientEnd: '#0D9488', // 100%에 적용할 색상
 
   profile_gradientStart: '#D9EDEB', // 0%에 적용할 색상
-  profile_gradientEnd: '#FFFFFF', // 100%에 적용할 색상
+  profile_gradientEnd: '#FAFAFA', // 100%에 적용할 색상
 
   settings_gradientStart: '#E5EFED', // 40%에 적용할 색상
   settings_gradientEnd: '#82C3BD', // 100%에 적용할 색상
@@ -13,6 +13,8 @@ const colors = {
   blue_gradientStart: '#DBECF8', // 40%에 적용할 색상
   blue_gradientEnd: '#FFFFFF', // 100%에 적용할 색상
 
+  white: '#FAFAFA',
+  black: '#121212',
   // input
   input_bg: '#f5f5f5',
   input_ph: '#9CA3AF',
@@ -23,7 +25,7 @@ const colors = {
   //gray - button gray
   gray_button: '#F3F4F6',
   green_button_text: '#F0F9F8',
-  grey_button_text: '#4B5563',
+  gray_button_text: '#4B5563',
   modal_gray_button: '#4B5563',
   prev_answer: '#4B5563',
 
@@ -32,7 +34,9 @@ const colors = {
   settings_border: '#9CA3AF',
   // card_border: '#D1D5DB',
   card_border: '#E5E7EB',
-  button_color:'rgba(255,255,255,0.75)',
+  white_75: 'rgba(250, 250, 250, 0.75)',
+  white_80: 'rgba(250, 250, 250, 0.8)',
+  button_color:'rgba(250,250,250,0.75)',
   warning: '#f39c12', // 주의 색상
   success: '#DCFCE7', // 성공 색상
   textPrimary: '#333333', // 기본 텍스트 색상

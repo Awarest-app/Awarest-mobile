@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     width: '80%',
     gap: 14,
     padding: 20,
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     borderRadius: 10,
   },
   modalHeader: {

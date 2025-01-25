@@ -43,6 +43,7 @@ const Accordion = memo(
     forceClose,
     children,
   }: AccordionProps) => {
+    
     // 접힘/펼침 상태
     const [collapsed, setCollapsed] = useState(collapseOnStart);
     const [contentHeight, setContentHeight] = useState(0);
@@ -133,7 +134,7 @@ export default Accordion;
 const styles = StyleSheet.create({
   container: {
     overflow: 'hidden',
-    backgroundColor: 'rgba(255, 255, 255, 0.75)',
+    backgroundColor: white_75,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: colors.card_border,
@@ -149,6 +150,7 @@ const styles = StyleSheet.create({
   titleText: {
     fontFamily: fonts.roboto_medium,
     fontSize: 20,
+    color: colors.black
   },
   hiddenContent: {
     position: 'absolute',

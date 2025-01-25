@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   SafeAreaView,
   View,
@@ -9,14 +9,20 @@ import {
   Switch,
   Dimensions,
   Linking,
+  Alert,
+  Platform,
 } from 'react-native';
-import {useState} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 import colors from '../styles/colors';
 import {fonts} from '../styles/fonts';
 import SettingsGradient from '../components/Hooks/SettingsGradient';
 import {settingsTypes} from '../type/settings.type';
 import DeleteScreen from './DeleteScreen';
 import PrevIcon from '../assets/svg/setting-prev.svg';
+import {CustomDefaultAlert} from '../components/utils/CustomAlert';
+import {
+  checkNotifications,RESULTS
+} from 'react-native-permissions';
 const {width, height} = Dimensions.get('window');
 interface SettingProfileScreenProps {
   closeSettings: () => void;
@@ -27,6 +33,7 @@ export default function SettingProfileScreen({
   closeSettings,
   setPage,
 }: SettingProfileScreenProps) {
+
   // 시간, XP 등의 데이터를 실제 로직에 맞게 받아오거나 계산해서 표시할 수 있습니다.
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const name = 'John Doe'; // axios로 받아온 사용자 이름
@@ -38,11 +45,37 @@ export default function SettingProfileScreen({
   };
 
   const handleNotification = () => {
-    // setIsDisabled(true); 나중에 넣어야됨
-    //todo 권한에 따라서 토글껐다켰다하기 
+    //todo 권한에 따라서 토글껐다켰다하기
     Linking.openSettings();
-    setIsEnabled(!isEnabled);
   };
+   const platformCheck = (): boolean => {
+      return Platform.OS === 'ios';
+      // Platform.OS === 'android';
+    };
+    //notification on/off 함수
+  const fetchNoti = async () => {
+    if (!platformCheck()) return;
+    const {status} = await checkNotifications();
+
+    switch (status) {
+      case RESULTS.GRANTED:
+        setIsEnabled(true);
+        break;
+        case RESULTS.BLOCKED:
+        setIsEnabled(false);
+        break;
+      case RESULTS.UNAVAILABLE:
+        setIsEnabled(false);
+        break;
+      default:
+        setIsEnabled(false);
+    }
+  };
+  useFocusEffect(
+    useCallback(() => {
+      fetchNoti(); // 화면 포커스 시 상태 업데이트
+    }, [])
+  );
   return (
       <View style={styles.container}>
         {isDelete && (
@@ -95,8 +128,8 @@ export default function SettingProfileScreen({
                   </Text>
                   <Switch
                     // style={styles.permissonSwitch}
-                    trackColor={{false: 'white', true: '#93C5FD'}}
-                    ios_backgroundColor={'white'}
+                    trackColor={{false: colors.white, true: '#93C5FD'}}
+                    ios_backgroundColor={colors.white}
                     thumbColor={'#0D9488'}
                     onValueChange={handleNotification}
                     value={isEnabled}
@@ -186,6 +219,7 @@ const styles = StyleSheet.create({
   },
   nameInput: {
     fontFamily: fonts.lato_regular,
+    color: colors.black,
     fontSize: 20,
     width: '100%',
     height: 54,
@@ -194,7 +228,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#D1D5DB',
     borderRadius: 10,
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.05)',
   },
   permissonContainer: {
@@ -209,12 +243,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#D1D5DB',
     borderRadius: 10,
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.05)',
   },
   permissonTitle: {
     fontFamily: fonts.lato_regular,
     fontSize: 20,
+    color: colors.black,
   },
   button: {
     position: 'absolute',
