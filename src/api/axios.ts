@@ -35,7 +35,7 @@ export const axiosTestJwt = async () => {
   }
 };
 
-const axiosSignoutURL = '/api/auth/logout';
+const axiosSignoutURL = '/api/auth/signout';
 export const axiosSignout = async () => {
   try {
     console.log('jwt token', getToken());
