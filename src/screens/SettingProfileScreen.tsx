@@ -47,7 +47,11 @@ export default function SettingProfileScreen({
   };
    const platformCheck = (): boolean => {
       return Platform.OS === 'ios';
-    };
+  };
+  const handleName = (name: string) => {
+    if (name.length > 20) return ;
+    setName(name);
+  };
   const fetchNoti = async () => {
     //todo axios로 사용자 이름 받아오기
     if (!platformCheck()) return;
@@ -105,7 +109,7 @@ export default function SettingProfileScreen({
                     !editable && {backgroundColor: 'gray'},
                   ]}
                   value={name}
-                  onChangeText={setName}
+                  onChangeText={handleName}
                   editable={editable}
                   onSubmitEditing={handleSubmit}//enter키 눌렀을 때
                   returnKeyType="done"

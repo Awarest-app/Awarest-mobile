@@ -23,15 +23,23 @@ export default function ReportScreen({
   closeSettings,
   setPage,
 }: ReportScreenProps) {
-
   const [contact, setContact] = React.useState<string>('');
   const [message, setMessage] = React.useState<string>('');
-  console.log('contact', contact);
+
+  const handleContact = (text: string) => {
+    if (contact.length > 40) return;
+    setContact(text);
+  };
+  const handleMessage = (text: string) => {
+    if (message.length > 2000) return;
+    setMessage(text);
+  };
   const handleSend = () => {
     if (!isValidEmail(contact)) {
       Alert.alert('Invalid Email', 'Please enter a valid email address');
       return;
     }
+    if (contact.length > 40) return;
     if (!isValidMessage(message)) return;
     //todo axios contact, message
   };
@@ -63,7 +71,6 @@ export default function ReportScreen({
               Report
             </Text>
           </View>
-
           <View style={styles.contactContainer}>
             <Text style={styles.titles}>
               Contact Email
@@ -73,7 +80,7 @@ export default function ReportScreen({
               placeholder="Youremail@example.com"
               placeholderTextColor={colors.text_hint}
               value={contact}
-              onChangeText={setContact}
+              onChangeText={handleContact}
             />
           </View>
           <View style={styles.messageContainer}>
@@ -85,7 +92,7 @@ export default function ReportScreen({
               placeholder="report bug or issue"
               placeholderTextColor={colors.text_hint}
               value={message}
-              onChangeText={setMessage}
+              onChangeText={handleMessage}
               multiline
             />
           </View>

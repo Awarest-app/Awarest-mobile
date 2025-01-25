@@ -7,6 +7,12 @@ import {
   Dimensions,
   Linking,
 } from 'react-native';
+import {
+  useNavigation, 
+  NavigationProp,
+} from '@react-navigation/native';
+import { axiosSignout } from '../api/axios';
+import { removeToken } from '../api/secureStorage';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
 import XIcon from '../assets/svg/x-icon.svg';
@@ -14,6 +20,7 @@ const {width, height} = Dimensions.get('window');
 import {settingsTypes} from '../type/settings.type';
 import InAppReview from 'react-native-in-app-review';
 import {ABOUT_PAGE_URL} from '@env';
+import {RootStackParamList} from '../type/route.type';
 
 interface SettingsMainProps {
   closeSettings: () => void;
@@ -24,7 +31,7 @@ const SettingsMain = ({
   closeSettings,
   setPage,
 }:SettingsMainProps) => {
-
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const aboutPage = () => {
     Linking.openURL(ABOUT_PAGE_URL)
   };
@@ -40,7 +47,18 @@ const SettingsMain = ({
       });
   };
   const handleSignOut = () => {
-    //todo axios sign out
+    removeToken();
+    axiosSignout();
+    navigation.reset({ index: 0,
+      routes: [{
+        name: 'LoginStack',
+        params: {
+          screen: 'Welcome',
+        }}],
+    });
+
+    
+    //todo axios sign outa
   }
   return (
     <View style={styles.SettingsContainer}>
