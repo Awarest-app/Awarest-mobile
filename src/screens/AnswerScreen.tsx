@@ -15,25 +15,19 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 
-// AsyncStorage
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 // API
 import {axiosGetSubquestions, axiosPostAnswers} from '../api/axios';
-
 // 타입
 import {HomeStackParamList} from '../type/route.type';
 import {ServerResponse, SubQuestionProps} from '../type/question.type';
-
 // 컴포넌트
 import AnswerModal from '../components/modals/AnswerModal';
 import MemoGradient from '../components/Hooks/MemoGradient';
 import {Header} from '../components/Header';
-
 // 스타일, 폰트
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
-
 // 네비게이션 타입
 type AnswerScreenRouteProp = RouteProp<HomeStackParamList, 'Answer'>;
 type AnswerScreenNavProp = NavigationProp<HomeStackParamList, 'Answer'>;
@@ -41,13 +35,10 @@ type AnswerScreenNavProp = NavigationProp<HomeStackParamList, 'Answer'>;
 export default function AnswerScreen() {
   const route = useRoute<AnswerScreenRouteProp>();
   const navigation = useNavigation<AnswerScreenNavProp>();
-
   // question_id (라우트 파라미터)
   const question_id = route.params.question_id;
-
   // 서버에서 받은 데이터
   const [serverData, setServerData] = useState<ServerResponse | null>(null);
-
   // 사용자 입력 상태
   const [questions, setQuestions] = useState<SubQuestionProps>({
     question: '',
@@ -65,19 +56,17 @@ export default function AnswerScreen() {
   // 1. 서버에서 데이터 가져오기
   // -----------------------------------------------
   const fetchSubquestions = async () => {
+    console.log('asdhjkadskjadskhjadshkjahdsjhads.');
     try {
       // 서버에서 { question, subquestions: [{id, text}, ...] } 형태 받아옴
       const data: ServerResponse = await axiosGetSubquestions(question_id);
       setServerData(data);
-
-      // 사용자 답변 상태 초기화
       // subquestions 길이만큼 '' (빈 문자열) 할당
       const initialState: SubQuestionProps = {
         question: data.question,
         subquestions: Array(data.subquestions.length).fill(''),
       };
       setQuestions(initialState);
-
       // AsyncStorage에서 기존에 임시 저장된 답변이 있다면 불러오기
       await loadAnswersFromStorage(data.subquestions.length, data.question);
     } catch (err) {
@@ -104,7 +93,8 @@ export default function AnswerScreen() {
       console.error('Failed to save answers:', e);
     }
   };
-
+//1. ALL_KEY에 토큰들을 다 value로 저장하기
+//2. useEffect에서 all_key 돌아서 expired token 삭제
   const loadAnswersFromStorage = async (
     count: number,
     mainQuestion: string,
@@ -117,7 +107,6 @@ export default function AnswerScreen() {
       // 저장된 값이 있고 만료되지 않았다면
       if (saved && expiration && parseInt(expiration, 10) > now) {
         const parsed: SubQuestionProps = JSON.parse(saved);
-
         // 메인 질문/배열 길이가 일치하면 로드
         if (
           parsed.question === mainQuestion &&
@@ -135,18 +124,12 @@ export default function AnswerScreen() {
     }
   };
 
-  // -----------------------------------------------
-  // 3. Draft / Submit 로직
-  // -----------------------------------------------
-  // Draft: 현재 입력 상태 저장 후 뒤로가기
   const handleDraft = async () => {
     await saveAnswersToStorage(questions);
     navigation.goBack();
   };
 
-  // 제출 버튼
   const handleSubmit = () => {
-    // 모든 답변이 비어있는지 체크
     if (questions.subquestions.some(ans => ans.trim() === '')) {
       Alert.alert('Please fill out all the answers before submitting');
       return;
@@ -226,6 +209,7 @@ export default function AnswerScreen() {
                   multiline
                   value={questions.subquestions[index] ?? ''}
                   onChangeText={text => {
+                    if (text.length > 1000) return ;
                     setQuestions(prev => {
                       const updated = [...prev.subquestions];
                       updated[index] = text;
