@@ -6,9 +6,11 @@ import {
   TouchableOpacity,
   Modal,
   TouchableWithoutFeedback,
+  Animated,
 } from 'react-native';
 import {fonts} from '../../styles/fonts';
 import colors from '../../styles/colors';
+import LinearGradient from 'react-native-linear-gradient';
 interface LevelModalProps {
   isOpen: boolean;
   data: { levelXP: number; totalXP: number; level: number };
@@ -22,38 +24,56 @@ const LevelModal = ({
   onClose,
 }: LevelModalProps ) => {
   const levelXP = data.levelXP;  
-  const currentXP = data.totalXP;
-  const progress = Math.min(currentXP / levelXP, 1);
+  const totalXP = data.totalXP;
+  const level = data.level;
+  const progress = Math.min(totalXP / levelXP, 1);
+  const animatedWidth = useRef(new Animated.Value(0)).current;
   console.log('Progress:', progress); 
+  if (isOpen) {
+    animatedWidth.stopAnimation();
+    animatedWidth.setValue(0);
+    Animated.timing(animatedWidth, {
+      toValue: progress * 100,
+      duration: 600,
+      useNativeDriver: false,
+    }).start();
+  }
+  
   return (
     <Modal visible={isOpen} transparent={true} animationType="none">
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.modalOverlay}>
             <View style={styles.modalContent}>
-              <Text style={styles.modalText}>Are you sure?</Text>
-              <Text style={styles.modalSubText}>It cannot be undone</Text>
+              <Text style={styles.modalText}>Level {level}</Text>
+              <Text style={styles.modalSubText}>
+                You need {levelXP - totalXP} XP to reach Level {level + 1}
+              </Text>
               <View style={styles.expBar}>
                 {/* 경험치 바 */}
                 <View style={styles.barBackground}>
-                  <View style={[styles.barProgress, { width: `${progress * 100}%` }]} />
+                <Animated.View
+                  style={[
+                    styles.barProgress,
+                    {
+                      width: animatedWidth.interpolate({
+                        inputRange: [0, 100],
+                        outputRange: ['0%', '90%'], // '90%'로 바 전체 너비와 일치하게 설정
+                      }),
+                    },
+                  ]}
+                >
+                    <LinearGradient
+                      colors={['#0D9488', '#3ED2C4']} // 그라데이션 색상
+                      start={{x: 0, y: 0}} // 시작 좌표
+                      end={{x: 1, y: 0}} // 끝 좌표
+                      style={{flex: 1}}
+                    />
+                  </Animated.View>
                 </View>
-                {/* 현재 XP / 레벨 XP */}
                 <Text style={styles.text}>
-                  {currentXP} / {levelXP} XP
+                  {totalXP} / {levelXP} XP
                 </Text>
               </View>
-              {/* <View style={styles.modalButtonContainer}>
-                <TouchableOpacity style={[styles.modalButton, {backgroundColor: colors.modal_gray_button}]}
-                  onPress={onClose}
-                >
-                  <Text style={styles.modalButtonText}>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modalButton}
-                  onPress={onSubmit}
-                >
-                  <Text style={styles.modalButtonText}>Delete</Text>
-                </TouchableOpacity>
-              </View> */}
             </View>
         </View>
       </TouchableWithoutFeedback>
@@ -70,23 +90,26 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: '80%',
-    height: '40%',
+    height: 250,
     gap: 20,
     paddingVertical: 30,
     paddingHorizontal: 14,
     alignItems: 'center',
-    backgroundColor: 'white',
+    justifyContent: 'center',
+    backgroundColor: colors.white,
     borderRadius: 10,
   },
   modalText: {
-    fontSize: 22,
+    fontSize: 24,
     fontFamily: fonts.roboto_medium,
+    color: colors.black,
     textAlign: 'center',
+    marginBottom: 10,
   },
   modalSubText: {
     fontFamily: fonts.lato_regular,
     fontSize: 16,
-    color: colors.text_hint,
+    color: colors.black,
     marginBottom: 10,
   },
   modalButtonContainer: {
@@ -94,39 +117,25 @@ const styles = StyleSheet.create({
     width: '80%',
     justifyContent: 'space-between',
   },
-  modalButton: {
-    width: '40%',
-    height: 48,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.primary,
-    borderRadius: 8,
-  },
-  modalButtonText: {
-    fontFamily: fonts.roboto_regular,
-    fontSize: 18,
-    color: '#F0F9F8',
-  },
   expBar: {
     width: '100%',
     alignItems: 'center',
-    marginVertical: 10,
   },
   barBackground: {
     width: '90%', // 바의 전체 너비
-    height: 20, // 바의 높이
+    height: 25, // 바의 높이
+    borderRadius: 20, // 둥근 모서리
     backgroundColor: '#e0e0e0', // 회색 배경
-    borderRadius: 10, // 둥근 모서리
     overflow: 'hidden',
   },
   barProgress: {
     height: '100%',
-    backgroundColor: '#fbc02d', // 노란색 (진행된 부분)
   },
   text: {
-    marginTop: 5,
-    fontSize: 14,
-    color: '#333',
+    fontFamily: fonts.lato_regular,
+    marginTop: 10,
+    fontSize: 16,
+    color: colors.black,
   },
 });
 

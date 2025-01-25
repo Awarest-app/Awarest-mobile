@@ -48,19 +48,19 @@ const SettingsModal = forwardRef<Modalize, {}>((props, ref) => {
           closeSettings={closeSettings}
           setPage={handlePage}
         />
-        )}
-        {page === 'report' && (
-          <ReportScreen
-          closeSettings={closeSettings}
-          setPage={handlePage}
+      )}
+      {page === 'profile' && (
+        <SettingProfileScreen
+        closeSettings={closeSettings}
+        setPage={handlePage}
         />
-        )}
-        {page === 'profile' && (
-          <SettingProfileScreen
-          closeSettings={closeSettings}
-          setPage={handlePage}
-          />
-        )}
+      )}
+      {page === 'report' && (
+        <ReportScreen
+        closeSettings={closeSettings}
+        setPage={handlePage}
+      />
+      )}
       </View>
     </Modalize>
   );

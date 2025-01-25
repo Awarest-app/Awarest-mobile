@@ -228,8 +228,8 @@ export default function SurveyScreen() {
                 <Switch
                   style={styles.permissonSwitch}
                   disabled={isDisabled}
-                  trackColor={{false: 'white', true: '#93C5FD'}}
-                  ios_backgroundColor={'white'}
+                  trackColor={{false: colors.white, true: '#93C5FD'}}
+                  ios_backgroundColor={colors.white}
                   thumbColor={'#0D9488'}
                   onValueChange={handleNoti}
                   value={isEnabled}

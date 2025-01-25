@@ -383,7 +383,8 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontFamily: fonts.roboto_semibold,
-    fontSize: calculateDp(18),
+    fontSize: 22,
+    color: colors.black,
     paddingHorizontal: 12,
     marginBottom: 12,
     marginTop: 12,
@@ -394,16 +395,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 16,
     gap: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backgroundColor: colors.white_80,
     boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
   },
   questionText: {
     fontFamily: fonts.roboto_medium,
+    color: colors.black,
     fontSize: calculateDp(16),
   },
   tapToReflect: {
     fontFamily: fonts.lato_regular,
-    // fontFamily: fonts.roboto_regular,
     fontSize: calculateDp(14),
     color: colors.text_hint,
   },
@@ -474,6 +475,6 @@ const styles = StyleSheet.create({
   nextButtonText: {
     fontFamily: fonts.roboto_regular,
     fontSize: 18,
-    color: 'black',
+    color: colors.black,
   },
 });

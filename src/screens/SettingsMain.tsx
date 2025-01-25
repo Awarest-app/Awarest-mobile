@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
   settingOption: {
     fontFamily: fonts.lato_regular,
     fontSize: 20,
-    color: 'black',
+    color: colors.black,
   },
 });
 export default SettingsMain;

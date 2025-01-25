@@ -7,6 +7,7 @@ import Fire from '../assets/svg/fire-icon.svg';
 import Leaf from '../assets/svg/leaf-icon.svg';
 import Award from '../assets/svg/award-icon.svg';
 import {fonts} from '../styles/fonts';
+import colors from '../styles/colors';
 
 export function Header() {
   // Safe Area insets
@@ -68,5 +69,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.inter_semibold,
     fontSize: 18,
     marginLeft: 8, // 아이콘과 텍스트 사이 여백
+    color : colors.black,
   },
 });
