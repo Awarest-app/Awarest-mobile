@@ -14,6 +14,7 @@ import {BlurView} from '@react-native-community/blur';
 import {HomeStack} from '../screens/stacks/HomeStack';
 
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
+import { ProfileStack } from '../screens/stacks/ProfileStack';
 const Tab = createBottomTabNavigator();
 
 export default function BottomStack() {
@@ -56,8 +57,8 @@ export default function BottomStack() {
         })}
       />
       <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
+        name="ProfileStack"
+        component={ProfileStack}
         options={{
           title: 'Profile',
           headerShown: false, // Tab Navigator에서 자체 헤더는 숨기기

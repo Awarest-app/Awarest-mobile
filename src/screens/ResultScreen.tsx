@@ -12,7 +12,7 @@ import CheckIcon from '../assets/svg/check-icon.svg';
 import {globalStyle} from '../styles/global';
 import {Header} from '../components/Header';
 import MemoGradient from '../components/Hooks/MemoGradient';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {StackActions, NavigationProp, useNavigation} from '@react-navigation/native';
 import {HomeStackParamList} from '../type/route.type';
 
 export default function ResultScreen() {
@@ -24,7 +24,7 @@ export default function ResultScreen() {
   const handleContinue = () => {
     // ‘Continue’ 버튼 클릭 시 동작(예: 홈 화면으로 이동 등)
     console.log('Continue clicked');
-    navigation.navigate('Home');
+    navigation.dispatch(StackActions.pop(2));
   };
 
   return (
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.card_border, // 파란 테두리
     borderRadius: 10,
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     alignItems: 'center',
     marginBottom: 40,
     gap: 40,
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontFamily: fonts.roboto_medium,
     fontSize: 24,
-    color: 'black',
+    color: colors.black,
   },
   checkIconContainer: {
     width: 80,
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   evalutionMessage: {
     fontFamily: fonts.roboto_medium,
     fontSize: 22,
-    color: 'black',
+    color: colors.black,
   },
   subMessage: {
     fontFamily: fonts.roboto_regular,

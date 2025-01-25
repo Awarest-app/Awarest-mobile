@@ -189,8 +189,8 @@ const HomeScreen = () => {
             <Text style={styles.cardTitle}>Today's Questions</Text>
           </TouchableOpacity>
 
-          {answers &&
-            answers.map(question => (
+          {dummyQuestions &&//이거우너래대로 answers로 바꿔야됨
+            dummyQuestions.map(question => (
               <TouchableOpacity
                 key={question.content}
                 style={styles.questionBox}
@@ -290,14 +290,15 @@ const styles = StyleSheet.create({
     marginBottom: 50,
     paddingHorizontal: 14,
     paddingVertical: 24,
-    gap: 16,
+    gap: 10,
     boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
     borderWidth: 1,
     borderColor: colors.card_border,
   },
   cardTitle: {
     fontFamily: fonts.roboto_semibold,
-    fontSize: calculateDp(18),
+    fontSize: 22,
+    color: colors.black,
     paddingHorizontal: 12,
     marginBottom: 12,
     marginTop: 12,
@@ -307,17 +308,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     padding: 16,
-    gap: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    gap: 10,
+    backgroundColor: colors.white_80,
     boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
   },
   questionText: {
     fontFamily: fonts.roboto_medium,
+    color: colors.black,
     fontSize: calculateDp(16),
   },
   tapToReflect: {
     fontFamily: fonts.lato_regular,
-    // fontFamily: fonts.roboto_regular,
     fontSize: calculateDp(14),
     color: colors.text_hint,
   },
@@ -388,6 +389,6 @@ const styles = StyleSheet.create({
   nextButtonText: {
     fontFamily: fonts.roboto_regular,
     fontSize: 18,
-    color: 'black',
+    color: colors.black,
   },
 });

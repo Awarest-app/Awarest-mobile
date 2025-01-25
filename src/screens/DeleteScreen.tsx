@@ -115,8 +115,7 @@ const styles = StyleSheet.create({
   deleteHelp: {
     fontFamily: fonts.lato_regular,
     fontSize: 18,
-    color: 'black',
-    
+    color: colors.black,
     marginBottom: 20,
   },
   imgContainer: {
@@ -157,7 +156,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#D1D5DB',
     borderRadius: 10,
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.05)',
   },
   permissonContainer: {
@@ -172,12 +171,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#D1D5DB',
     borderRadius: 10,
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.05)',
-  },
-  permissonTitle: {
-    fontFamily: fonts.lato_regular,
-    fontSize: 20,
   },
   button: {
     position: 'absolute',

@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import {fonts} from '../../styles/fonts';
 import colors from '../../styles/colors';
-interface EditModalProps {
+interface AnswerModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: () => void;
@@ -18,7 +18,7 @@ const AnswerModal = ({
   isOpen,
   onClose,
   onSubmit,
-}: EditModalProps) => {
+}: AnswerModalProps ) => {
 
   return (
     <Modal visible={isOpen} transparent={true} animationType="none">
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
     paddingHorizontal: 14,
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     borderRadius: 10,
   },
   modalText: {

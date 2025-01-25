@@ -20,7 +20,7 @@ export default function LoginStack() {
       <Stack.Screen
         name="Survey"
         component={SurveyScreen}
-        options={{headerShown: false}}
+        options={{headerShown: false, gestureEnabled: false}}
       />
       {/* 실제 로그인 화면 */}
       <Stack.Screen

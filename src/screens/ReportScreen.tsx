@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#D1D5DB',
     borderRadius: 10,
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.05)',
   },
   messageContainer: {
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#D1D5DB',
     borderRadius: 10,
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.05)',
   },
   button: {
