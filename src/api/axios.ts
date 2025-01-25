@@ -57,6 +57,19 @@ export const axiosGetQuestions = async () => {
   }
 };
 
+// answers
+const axiosGetAnswersURL = 'api/answers/me';
+export const axiosGetAnswers = async () => {
+  try {
+    const response = await axiosInstance.get(axiosGetAnswersURL);
+    // console.log('Answers:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error getting answers:', error);
+    return [];
+  }
+};
+
 const axiosLogoutURL = '/api/auth/logout';
 export const axiosLogout = async () => {
   try {

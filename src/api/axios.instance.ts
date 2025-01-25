@@ -1,6 +1,6 @@
 // Axios 인스턴스 설정
 import axios from 'axios';
-import {getToken} from './secureStorage';
+import {getToken, removeToken} from './secureStorage';
 
 export const axiosInstance = axios.create({
   baseURL: 'http://localhost:3000', // 기본 URL 설정
@@ -36,6 +36,9 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   error => {
+    // TODO -> 나중에 jwt token logic 추가
+    // removeToken();
+
     console.error('Axios error:', error.response?.data || error.message);
     return Promise.reject(error);
   },

@@ -24,7 +24,7 @@ import NextIcon from '../assets/svg/next-icon.svg';
 import {fonts} from '../styles/fonts';
 import Accordion from '../components/Hooks/Accordion';
 import EditModal from '../components/modals/EditModal';
-import {axiosGetQuestions} from '../api/axios';
+import {axiosGetAnswers, axiosGetQuestions} from '../api/axios';
 import {QuestionProps} from '../type/question.type';
 
 //todo: 컴포넌트 쪼개기
@@ -36,23 +36,6 @@ const HomeScreen = () => {
   const [closeAccordion, setCloseAccordion] = useState<boolean>(false);
   const answersPerPage = 3;
   const [answers, setAnswers] = useState<QuestionProps[]>([]);
-  const dummyQuestions: QuestionProps[] = [
-    {
-      id: 1,
-      type: 'multiple-choice', //type는 뭐야
-      content: 'What is your favorite color?',
-    },
-    {
-      id: 2,
-      type: 'open-ended',
-      content: 'Describe your ideal vacation destination.',
-    },
-    {
-      id: 3,
-      type: 'true-false',
-      content: 'Do you enjoy working in teams?',
-    },
-  ];
 
   //todo : 이거 axios 날릴때 남은건냅두고 처음에 6개, 그뒤에 6개씩추가
   const [previousAnswers, setPreviousAnswers] = useState([
@@ -239,12 +222,22 @@ const HomeScreen = () => {
       console.error('Error getting questions:', error);
     }
   };
+  const handleGetQuestionHistory = async () => {
+    try {
+      const response = await axiosGetAnswers();
+      console.log('Answers:', response);
+      setPreviousAnswers(response);
+    } catch (error) {
+      console.error('Error getting answers:', error);
+    }
+  };
 
   // RN은 화면을 캐싱해서 다시 돌아왔을 때 다시 렌더링하지 않음
   useFocusEffect(
     React.useCallback(() => {
       // 스크린이 포커스될 때마다 실행할 함수
       handleGetQuestions();
+      handleGetQuestionHistory();
 
       return () => {
         // 필요시 정리 작업 수행
@@ -281,7 +274,7 @@ const HomeScreen = () => {
           {answers &&
             answers.map(question => (
               <TouchableOpacity
-                key={question.id}
+                key={question.content}
                 style={styles.questionBox}
                 onPress={() => {
                   navigation.navigate('Answer', {
