@@ -46,7 +46,7 @@ const HomeScreen = () => {
   const totalPages = Math.ceil(previousAnswers.length / answersPerPage);
 
   // TODO : page 로 나중에 6개씩 날리기
-  const paginatedAnswers = previousAnswers.slice(
+  const paginatedAnswers = previousAnswers && previousAnswers.slice(
     answersIndex * answersPerPage,
     (answersIndex + 1) * answersPerPage,
   );
@@ -189,8 +189,8 @@ const HomeScreen = () => {
             <Text style={styles.cardTitle}>Today's Questions</Text>
           </TouchableOpacity>
 
-          {dummyQuestions &&//이거우너래대로 answers로 바꿔야됨
-            dummyQuestions.map(question => (
+          {answers &&//이거우너래대로 answers로 바꿔야됨
+            answers.map(question => (
               <TouchableOpacity
                 key={question.content}
                 style={styles.questionBox}
@@ -212,7 +212,8 @@ const HomeScreen = () => {
           <Text style={styles.cardTitle}>Your previous Answers</Text>
           <View style={styles.prevAnsweralign}>
             <View style={styles.prevAnswerContainer}>
-              {paginatedAnswers.map((item, questionIndex) => (
+              {paginatedAnswers &&
+                paginatedAnswers.map((item, questionIndex) => (
                 <Accordion
                   title={item.question}
                   key={questionIndex}

@@ -63,7 +63,7 @@ export default function SurveyScreen() {
   };
 
   const navigationHome = (): void => {
-    console.log('navigationHome');
+    console.log('navigationHome=============');
       navigation.reset({ index: 0,
       routes: [{
         name: 'BottomStack',
@@ -91,10 +91,6 @@ export default function SurveyScreen() {
     switch (status) {
       case RESULTS.GRANTED:
         navigationHome();
-        CustomDefaultAlert({
-          mainText: 'Permission Granted',
-          subText: 'Notifications are enabled.',
-        });
         break;
       case RESULTS.DENIED:
         await requestNotificationPermission();
@@ -116,7 +112,9 @@ export default function SurveyScreen() {
       default:
         console.log('Unknown permission status:', status);
     }
-    //todo axios updatedAnswers
+    navigationHome();
+    //todo axios
+    handleSurveySubmit();
   };
   // 뒤로가기 버튼 클릭 시 이전 질문으로 돌아가는 함수
   const handleBack = () => {
@@ -221,11 +219,6 @@ export default function SurveyScreen() {
                     necessary to send motivational notifications
                   </Text>
                 </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => handleSurveySubmit()}
-                style={{width: 50, height: 50, backgroundColor: 'skyblue'}}>
-                <Text>api test</Text>
               </TouchableOpacity>
             </ScrollView>
           )}
