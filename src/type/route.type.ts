@@ -1,18 +1,13 @@
-//
+import {NavigatorScreenParams} from '@react-navigation/native';
+
 export type RootStackParamList = {
+  LoginStack: NavigatorScreenParams<LoginStackParamList>;
+  BottomStack: NavigatorScreenParams<BottomStackParamList>;
+};
 
-  LoginStack: {
-    screen: keyof LoginStackParamList;
-  }; // LoginStack 내부로 이동
-
-  MainTabs: undefined; // MainTabs로 이동
-
-  HomeStack: { screen: keyof HomeStackParamList };
-  // HomeStack: {
-  //   screen: keyof HomeStackParamList;
-  // }; // LoginStack 내부로 이동
-
-  // MainTabs: undefined; // MainTabs로 이동
+export type BottomStackParamList = {
+  HomeStack: NavigatorScreenParams<HomeStackParamList>;
+  ProfileStack: NavigatorScreenParams<ProfileStackParamList>;
 };
 
 export type LoginStackParamList = {
@@ -23,11 +18,17 @@ export type LoginStackParamList = {
 
 export type HomeStackParamList = {
   Home: undefined;
-  Answer: { mainQuestion?: string }; 
+  Answer: {mainQuestion?: string};
   Result: undefined;
+  // Profile: undefined;
+  // Setting: undefined;
+  // Report: undefined;
+  SettingProfile: undefined;
+  Delete: undefined;
+};
+
+export type ProfileStackParamList = {
   Profile: undefined;
   Setting: undefined;
   Report: undefined;
-  SettingProfile: undefined;
-  Delete: undefined;
 };

@@ -4,12 +4,12 @@ import {
   NavigationContainerRef,
 } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import Bottom from './src/components/Bottom';
 import LoginStack from './src/screens/stacks/LoginStack';
 import {Linking} from 'react-native';
 import SafariView from 'react-native-safari-view';
 import {RootStackParamList} from './src/type/route.type';
 import {getToken, removeToken, storeToken} from './src/api/secureStorage';
+import BottomStack from './src/components/Bottom';
 
 const RootStack = createNativeStackNavigator();
 
@@ -31,8 +31,11 @@ function App() {
       console.log('isToken', isToken);
       if (isToken !== null) {
         if (isSurvey === 'true') {
-          navigationRef.current?.navigate('HomeStack', {
-            screen: 'Home',
+          navigationRef.current?.navigate('BottomStack', {
+            screen: 'HomeStack',
+            params: {
+              screen: 'Home',
+            },
           });
         } else {
           navigationRef.current?.navigate('LoginStack', {
@@ -82,10 +85,17 @@ function App() {
         {/* 2) bottom navigation*/}
         {/* 3) Main Stack */}
         <RootStack.Screen
-          name="HomeStack"
-          component={Bottom}
+          name="BottomStack"
+          component={BottomStack}
           options={{headerShown: false}}
         />
+
+        {/* 이럼  Bottom을 인식 못함 */}
+        {/* <RootStack.Screen
+          name="HomeStack"
+          component={HomeStack}
+          options={{headerShown: false}}
+        /> */}
       </RootStack.Navigator>
     </NavigationContainer>
   );

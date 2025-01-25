@@ -135,6 +135,12 @@ export default function SurveyScreen() {
     }
   };
 
+  // navigationRef.current?.navigate('BottomStack', {
+  //   screen: 'HomeStack',
+  //   params: {
+  //     screen: 'Home',
+  //   },
+  // });
   const handleSurveySubmit = async () => {
     try {
       const response = await axiosSurveySumbit({
@@ -142,8 +148,11 @@ export default function SurveyScreen() {
         noti: isEnabled,
       });
       // navigation.navigate('HomeStack');
-      navigation.navigate('HomeStack', {
-        screen: 'Home', // HomeStack 내부의 Home 스크린
+      navigation.navigate('BottomStack', {
+        screen: 'HomeStack',
+        params: {
+          screen: 'Home',
+        },
       });
       console.log(response);
     } catch (error: unknown) {

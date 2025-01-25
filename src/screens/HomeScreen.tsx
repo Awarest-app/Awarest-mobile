@@ -7,7 +7,12 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {
+  NavigationProp,
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
 import {HomeStackParamList} from '../type/route.type';
 import {Header} from '../components/Header';
 import MemoGradient from '../components/Hooks/MemoGradient';
@@ -15,11 +20,12 @@ import colors from '../styles/colors';
 import EditIcon from '../assets/svg/edit-icon.svg';
 import PrevIcon from '../assets/svg/prev-icon.svg';
 import NextIcon from '../assets/svg/next-icon.svg';
-import {QuestionProps} from '../type/api.type';
+
 import {fonts} from '../styles/fonts';
 import Accordion from '../components/Hooks/Accordion';
 import EditModal from '../components/modals/EditModal';
 import {axiosGetQuestions} from '../api/axios';
+import {QuestionProps} from '../type/question.type';
 
 //todo: 컴포넌트 쪼개기
 const HomeScreen = () => {
@@ -29,10 +35,11 @@ const HomeScreen = () => {
   const [pageChanged, setPageChanged] = useState<boolean>(false);
   const [closeAccordion, setCloseAccordion] = useState<boolean>(false);
   const answersPerPage = 3;
+  const [answers, setAnswers] = useState<QuestionProps[]>([]);
   const dummyQuestions: QuestionProps[] = [
     {
       id: 1,
-      type: 'multiple-choice',
+      type: 'multiple-choice', //type는 뭐야
       content: 'What is your favorite color?',
     },
     {
@@ -221,18 +228,30 @@ const HomeScreen = () => {
     ].answer = newText;
     setPreviousAnswers(updatedAnswers);
   };
+
+  // TODO : 나중에 response type 정의하기
   const handleGetQuestions = async () => {
     try {
-      const response = await axiosGetQuestions();
-      // console.log('Questions:', response);
+      const response: any = await axiosGetQuestions();
+      console.log('Questions:', response.data);
+      setAnswers(response.data);
     } catch (error) {
       console.error('Error getting questions:', error);
     }
   };
 
-  // useEffect(() => {
-  //   handleGetQuestions();
-  // }, []);
+  // RN은 화면을 캐싱해서 다시 돌아왔을 때 다시 렌더링하지 않음
+  useFocusEffect(
+    React.useCallback(() => {
+      // 스크린이 포커스될 때마다 실행할 함수
+      handleGetQuestions();
+
+      return () => {
+        // 필요시 정리 작업 수행
+        console.log('MyScreen has lost focus');
+      };
+    }, []), // 빈 배열을 사용하여 콜백이 마운트 시 한 번만 생성되도록 함
+  );
 
   return (
     <View style={styles.container}>
@@ -259,8 +278,8 @@ const HomeScreen = () => {
             <Text style={styles.cardTitle}>Today's Questions</Text>
           </TouchableOpacity>
 
-          {dummyQuestions &&
-            dummyQuestions.map(question => (
+          {answers &&
+            answers.map(question => (
               <TouchableOpacity
                 key={question.id}
                 style={styles.questionBox}

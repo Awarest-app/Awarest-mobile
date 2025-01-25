@@ -49,8 +49,8 @@ const axiosGetQuestionsURL = '/api/questions/me';
 export const axiosGetQuestions = async () => {
   try {
     const response = await axiosInstance.get(axiosGetQuestionsURL);
-    console.log('Questions:', response.data);
-    return response.data;
+    // console.log('Questions:', response.data);
+    return response;
   } catch (error) {
     console.error('Error getting questions:', error);
     return [];

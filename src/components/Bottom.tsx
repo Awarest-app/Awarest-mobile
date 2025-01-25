@@ -16,7 +16,7 @@ import {HomeStack} from '../screens/stacks/HomeStack';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 const Tab = createBottomTabNavigator();
 
-export default function Bottom() {
+export default function BottomStack() {
   const getTabBarVisibility = (route: any) => {
     const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
     if (routeName === 'Answer' || routeName === 'Result') {
@@ -41,7 +41,7 @@ export default function Bottom() {
         ),
       }}>
       <Tab.Screen
-        name="Home"
+        name="HomeStack"
         component={HomeStack}
         options={({route}) => ({
           title: 'Home',
