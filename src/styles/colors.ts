@@ -13,6 +13,7 @@ const colors = {
   blue_gradientStart: '#DBECF8', // 40%에 적용할 색상
   blue_gradientEnd: '#FFFFFF', // 100%에 적용할 색상
 
+  disabled: '#6C7D7B',
   white: '#FAFAFA',
   black: '#121212',
   // input
