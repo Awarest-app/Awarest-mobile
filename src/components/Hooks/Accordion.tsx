@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     minHeight: 60,
+    backgroundColor: colors.white_80,
     height: 'auto',
   },
   titleText: {
@@ -158,13 +159,16 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     opacity: 0,
+    borderRadius: 10,
     paddingHorizontal: 16, //contentContainerPadding이랑 같아야됨
   },
   animateContainer: {
+    
     overflow: 'hidden',
   },
   contentContainer: {
+    
     paddingHorizontal: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white_80,
   },
 });

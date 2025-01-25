@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.card_border, // 파란 테두리
     borderRadius: 10,
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     alignItems: 'center',
     marginBottom: 40,
     gap: 40,
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontFamily: fonts.roboto_medium,
     fontSize: 24,
-    color: 'black',
+    color: colors.black,
   },
   checkIconContainer: {
     width: 80,
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   evalutionMessage: {
     fontFamily: fonts.roboto_medium,
     fontSize: 22,
-    color: 'black',
+    color: colors.black,
   },
   subMessage: {
     fontFamily: fonts.roboto_regular,

@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
   permissonName: {
     fontFamily: fonts.roboto_medium,
     fontSize: 20,
-    color: 'black',
+    color: colors.black,
   },
   permissonDiscription: {
     fontFamily: fonts.lato_regular,
