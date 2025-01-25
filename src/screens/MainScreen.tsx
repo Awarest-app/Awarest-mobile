@@ -17,7 +17,7 @@ import colors from '../styles/colors';
 import GoogleIcon from '../assets/svg/google-icon.svg';
 import AppleIcon from '../assets/svg/apple-icon.svg';
 import {handleGoogleSignup} from '../api/safariView';
-import {testServerConnection} from '../api/axios';
+import {axiosTestJwt, axiosTestServer} from '../api/axios';
 // import GoogleOauth from '../lib/googleOauth';
 
 // 화면 높이/너비 구하기 (스타일에 사용)
@@ -66,12 +66,12 @@ export default function MainScreen() {
         <View style={styles.registerSection}>
           <TouchableOpacity
             style={styles.oauthButton}
-            onPress={() =>
-              navigation.navigate('HomeStack', {
-                screen: 'Home', // HomeStack 내부의 Home 스크린
-              })
-            }
-            // onPress={() => testServerConnection()}
+            // onPress={() =>
+            //   navigation.navigate('HomeStack', {
+            //     screen: 'Home', // HomeStack 내부의 Home 스크린
+            //   })
+            // }
+            onPress={() => axiosTestJwt()}
             //
           >
             <View style={styles.oauthTextWrapper}>

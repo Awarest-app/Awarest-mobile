@@ -4,6 +4,10 @@ import * as Keychain from 'react-native-keychain';
 export const storeToken = async (token: string) => {
   try {
     await Keychain.setGenericPassword('jwt', token);
+    // WHEN_UNLOCKED_THIS_DEVICE_ONLY: 데이터가 장치에 저장되며, 앱이 삭제되면 Keychain 항목도 삭제
+    await Keychain.setGenericPassword('jwt', token, {
+      accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+    });
     console.log('Token stored securely!');
   } catch (error) {
     console.error('Failed to store token', error);

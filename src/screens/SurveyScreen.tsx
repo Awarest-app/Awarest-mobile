@@ -11,78 +11,58 @@ import {
   Platform,
 } from 'react-native';
 import MemoGradient from '../components/Hooks/MemoGradient';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {HomeStackParamList, RootStackParamList} from '../type/route.type';
-import { checkNotifications, requestNotifications, request, RESULTS, PERMISSIONS } from 'react-native-permissions';
-// import PushNotification from 'react-native-push-notification';
+import {questions} from '../constant/questions';
+import {axiosSurveySumbit} from '../api/axios';
+import {
+  checkNotifications,
+  requestNotifications,
+  RESULTS,
+} from 'react-native-permissions';
+
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
 import {CustomDefaultAlert} from '../components/utils/CustomAlert';
-import {
-  ageGroups,
-  goalOptions,
-  heardFromOptions,
-  workWordsOptions,
-} from '../constant/survey';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../type/route.type';
 
 export default function SurveyScreen() {
-  // 설문에 사용할 옵션들
-
-  // 설문 질문들을 순서대로 배열에 담기
-  const questions = [
-    {
-      title: 'What is your age group?',
-      options: ageGroups,
-    },
-    {
-      title: 'What is your goal?',
-      options: goalOptions,
-    },
-    {
-      title: 'What words can describe your work?',
-      options: workWordsOptions,
-    },
-    {
-      title: 'How did you hear about us?',
-      options: heardFromOptions,
-    },
-  ];
-
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  // 현재 어떤 질문을 보여줄지 인덱스로 관리
   const [questionIndex, setQuestionIndex] = useState(0);
-  // 사용자가 선택한 답변들을 저장
-  const [userAnswers, setUserAnswers] = useState<string[]>([]);
+  const [userAnswers, setUserAnswers] = useState<{
+    ageRange?: string;
+    goal?: string;
+    job?: string;
+    how_hear?: string;
+  }>({});
+  // 알림 모달?
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [isEnabled, setIsEnabled] = useState(false);
-
   const [isDisabled, setIsDisabled] = useState(false);
 
-  // 옵션을 선택했을 때(답변했을 때) 호출되는 함수
-  const handleOptionSelect = (option: string) => {
-    // 기존 답변 복사
-    const updatedAnswers = [...userAnswers];
-    // 현재 설문 인덱스 위치에 사용자 선택값 저장
-    updatedAnswers[questionIndex] = option;
+  const questionKeys = ['ageRange', 'goal', 'job', 'how_hear'];
 
-    console.log('updatedAnswers', updatedAnswers);
+  const handleOptionSelect = (option: string) => {
+    const key = questionKeys[questionIndex];
+    const updatedAnswers = {
+      ...userAnswers,
+      [key]: option,
+    };
+
     setUserAnswers(updatedAnswers);
 
-    // 마지막 질문이 아니라면 다음 질문으로 넘어감
     if (questionIndex < questions.length) {
       setQuestionIndex(questionIndex + 1);
     } else {
-      // 모든 설문이 끝났을 때 로직 (예: 서버 전송, 다음 화면 이동 등)
       console.log('All questions answered: ', updatedAnswers);
-      // 예: 설문 완료 페이지로 이동하거나 알람을 띄울 수 있습니다.
+      // 모든 설문 완료 후 처리 로직
     }
   };
-    const platformCheck = (): boolean => {
-      return Platform.OS === 'ios';
-      // Platform.OS === 'android';
-    }
-    //notification on/off 함수
+  const platformCheck = (): boolean => {
+    return Platform.OS === 'ios';
+    // Platform.OS === 'android';
+  };
+  //notification on/off 함수
   const requestNotificationPermission = async () => {
-    const { status } = await requestNotifications(['alert', 'sound', 'badge']);
+    const {status} = await requestNotifications(['alert', 'sound', 'badge']);
     if (status === RESULTS.GRANTED) {
       Alert.alert('Permission Granted', 'Notifications have been enabled.');
     } else {
@@ -90,16 +70,16 @@ export default function SurveyScreen() {
     }
   };
   const handleNoti = async () => {
-    if (!platformCheck()) return ;
-    setIsEnabled(!isEnabled);// toggle 모양
+    if (!platformCheck()) return;
+    setIsEnabled(!isEnabled); // toggle 모양
     setIsDisabled(true);
     const {status} = await checkNotifications();
-  
+
     switch (status) {
       case RESULTS.GRANTED:
         CustomDefaultAlert({
-          mainText:'Permission Granted',
-          subText:'Notifications are enabled.',
+          mainText: 'Permission Granted',
+          subText: 'Notifications are enabled.',
           onPress: () => {
             navigation.navigate('HomeStack', {
               screen: 'Home', // HomeStack 내부의 Home 스크린
@@ -113,7 +93,7 @@ export default function SurveyScreen() {
       case RESULTS.BLOCKED:
         CustomDefaultAlert({
           mainText: 'Permission Blocked',
-          subText:'Notifications are blocked. Please enable them in settings.',
+          subText: 'Notifications are blocked. Please enable them in settings.',
           onPress: () => {
             navigation.navigate('HomeStack', {
               screen: 'Home', // HomeStack 내부의 Home 스크린
@@ -124,23 +104,60 @@ export default function SurveyScreen() {
       case RESULTS.UNAVAILABLE:
         CustomDefaultAlert({
           mainText: 'Permission Unavailable',
-          subText:'Notifications are not available on this device.',
+          subText: 'Notifications are not available on this device.',
           onPress: () => {
             navigation.navigate('HomeStack', {
               screen: 'Home', // HomeStack 내부의 Home 스크린
             });
           },
         });
-        break ;
+        break;
       default:
         console.log('Unknown permission status:', status);
     }
     //todo axios updatedAnswers
-  }
+  };
   // 뒤로가기 버튼 클릭 시 이전 질문으로 돌아가는 함수
   const handleBack = () => {
     if (questionIndex > 0) {
+      const keyToRemove = questionKeys[
+        questionIndex
+      ] as keyof typeof userAnswers;
+
+      setUserAnswers(prevAnswers => {
+        const updatedAnswers = {...prevAnswers};
+        delete updatedAnswers[keyToRemove];
+        // console.log('뒤로가기 버튼 후', updatedAnswers);
+        return updatedAnswers;
+      });
+
       setQuestionIndex(questionIndex - 1);
+    }
+  };
+
+  // navigationRef.current?.navigate('BottomStack', {
+  //   screen: 'HomeStack',
+  //   params: {
+  //     screen: 'Home',
+  //   },
+  // });
+  const handleSurveySubmit = async () => {
+    try {
+      const response = await axiosSurveySumbit({
+        ...userAnswers,
+        noti: isEnabled,
+      });
+      // navigation.navigate('HomeStack');
+      navigation.navigate('BottomStack', {
+        screen: 'HomeStack',
+        params: {
+          screen: 'Home',
+        },
+      });
+      console.log(response);
+    } catch (error: unknown) {
+      // const {status, data} = error.response;
+      console.error('survey submit Error response:');
     }
   };
 
@@ -167,14 +184,30 @@ export default function SurveyScreen() {
             <ScrollView
               style={styles.scrollContainer}
               showsVerticalScrollIndicator={false}>
-                {Object.entries(questions[questionIndex].options).map(([key, value]) => (
+              {questions[questionIndex].options.map((item, index) => {
+                const currentKey = questionKeys[
+                  questionIndex
+                ] as keyof typeof userAnswers;
+
+                const selectedValue = userAnswers[currentKey];
+                return (
                   <TouchableOpacity
-                    key={key}
-                    style={styles.option}
-                    onPress={() => handleOptionSelect(value)}>
-                    <Text style={styles.optionText}>{value}</Text>
+                    key={index}
+                    style={[
+                      styles.option,
+                      // 선택된 값과 일치하면 배경 스타일 적용
+                      selectedValue === item ? styles.selectedOption : null,
+                    ]}
+                    onPress={() => handleOptionSelect(item)}>
+                    <Text style={styles.optionText}>{item}</Text>
                   </TouchableOpacity>
-                ))}
+                );
+              })}
+              {/* <TouchableOpacity
+                style={{width: 50, height: 50, backgroundColor: 'skyblue'}}
+                onPress={() => navigation.navigate('Login')}>
+                <Text>Go to Login</Text>
+              </TouchableOpacity> */}
             </ScrollView>
           ) : (
             <ScrollView style={styles.permissonSection} scrollEnabled={false}>
@@ -198,6 +231,11 @@ export default function SurveyScreen() {
                     necessary to send motivational notifications
                   </Text>
                 </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => handleSurveySubmit()}
+                style={{width: 50, height: 50, backgroundColor: 'skyblue'}}>
+                <Text>api test</Text>
               </TouchableOpacity>
             </ScrollView>
           )}
@@ -273,6 +311,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     justifyContent: 'center',
     boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)',
+  },
+  selectedOption: {
+    backgroundColor: '#D3D3D3',
+    // 원하는 배경색으로 변경
   },
   optionText: {
     fontFamily: fonts.lato_regular,

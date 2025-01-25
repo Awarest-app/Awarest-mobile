@@ -1,40 +1,69 @@
 import {Alert} from 'react-native';
 import {axiosInstance} from './axios.instance';
+import {UserServey} from '../type/survey.type';
+import {getToken, removeToken} from './secureStorage';
 
 // 서버 연결 테스트 함수
-export const testServerConnection = async () => {
+export const axiosTestServer = async () => {
   try {
     // GET 요청을 인스턴스를 사용해 실행
-    const response = await axiosInstance.get('/test');
+    const response = await axiosInstance.get('/test/server');
     console.log('서버 응답:', response.data);
 
     // 성공 시 Alert 표시
     Alert.alert('Success', `서버 응답: ${JSON.stringify(response.data)}`);
   } catch (error) {
     console.error('서버 요청 실패:', error);
-
     // 실패 시 Alert 표시
     Alert.alert('Error', '서버 요청 실패: ' + error);
   }
 };
 
-//
-const axiosSuper = async (answers: {key: string; value: string}[]) => {
+export const axiosTestJwt = async () => {
   try {
-    const response = await fetch('https://your-backend-api.com/submit-survey', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({answers}), // 키-값 형태로 전송
-    });
+    console.log('jwt token', getToken());
+    // GET 요청을 인스턴스를 사용해 실행
+    const response = await axiosInstance.get('/test/jwt');
+    console.log('서버 응답:', response.data);
 
-    if (response.ok) {
-      console.log('Survey submitted successfully!');
-    } else {
-      console.error('Failed to submit survey:', response.statusText);
-    }
+    // 성공 시 Alert 표시
+    Alert.alert('Success', `서버 응답: ${JSON.stringify(response.data)}`);
+  } catch (error) {
+    console.error('서버 요청 실패:', error);
+    // 실패 시 Alert 표시
+    Alert.alert('Error', '서버 요청 실패: ' + error);
+  }
+};
+
+const axiosSurveySumbitURL = '/api/survey/save-survey';
+export const axiosSurveySumbit = async (answers: UserServey) => {
+  try {
+    const response = await axiosInstance.post(axiosSurveySumbitURL, {answers});
+    console.log('Survey submitted:', response.data);
   } catch (error) {
     console.error('Error submitting survey:', error);
+  }
+};
+
+const axiosGetQuestionsURL = '/api/questions/me';
+export const axiosGetQuestions = async () => {
+  try {
+    const response = await axiosInstance.get(axiosGetQuestionsURL);
+    // console.log('Questions:', response.data);
+    return response;
+  } catch (error) {
+    console.error('Error getting questions:', error);
+    return [];
+  }
+};
+
+const axiosLogoutURL = '/api/auth/logout';
+export const axiosLogout = async () => {
+  try {
+    await removeToken();
+    const response = await axiosInstance.post(axiosLogoutURL);
+    console.log('Logout:', response.data);
+  } catch (error) {
+    console.error('Error logging out:', error);
   }
 };

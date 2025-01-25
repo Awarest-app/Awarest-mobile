@@ -4,17 +4,12 @@ import {
   NavigationContainerRef,
 } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import HomeScreen from './src/screens/HomeScreen';
-import AnswerScreen from './src/screens/AnswerScreen';
-import ProfileScreen from './src/screens/ProfileScreen';
-import ResultScreen from './src/screens/ResultScreen';
-import Bottom from './src/components/Bottom';
 import LoginStack from './src/screens/stacks/LoginStack';
 import {Linking} from 'react-native';
 import SafariView from 'react-native-safari-view';
 import {RootStackParamList} from './src/type/route.type';
-import {getToken, storeToken} from './src/api/secureStorage';
-import {HomeStack} from './src/screens/stacks/HomeStack';
+import {getToken, removeToken, storeToken} from './src/api/secureStorage';
+import BottomStack from './src/components/Bottom';
 
 const RootStack = createNativeStackNavigator();
 
@@ -23,22 +18,24 @@ function App() {
     useRef<NavigationContainerRef<RootStackParamList>>(null);
 
   useEffect(() => {
-    console.log('useEffect 내부');
-    const handleDeepLink = (event: {url: string}) => {
+    // removeToken();
+    const handleDeepLink = async (event: {url: string}) => {
       const url = event.url;
-      console.log('딥 링크 url', url);
-
-      // const isSurvey = url.match(/survey=(.*)/);
       const isSurveyMatch = url.match(/survey=(.*)/);
+      // console.log('isSurveyMatch', isSurveyMatch);
       const isSurvey = isSurveyMatch ? isSurveyMatch[1] : null;
-      // 토큰이 이미 존재 ->
-      // survey가 없다면 survey로 이동
-      // survey가 있다면 home으로 이동
-      const isToken = getToken();
+      console.log('isSurvey', isSurvey);
+      // await removeToken();
+
+      const isToken = await getToken();
+      console.log('isToken', isToken);
       if (isToken !== null) {
-        if (isSurvey === 'ture') {
-          navigationRef.current?.navigate('HomeStack', {
-            screen: 'Home',
+        if (isSurvey === 'true') {
+          navigationRef.current?.navigate('BottomStack', {
+            screen: 'HomeStack',
+            params: {
+              screen: 'Home',
+            },
           });
         } else {
           navigationRef.current?.navigate('LoginStack', {
@@ -50,11 +47,11 @@ function App() {
         return;
       }
 
-      const tokenMatch = url.match(/token=(.*)/);
+      const tokenMatch = url.match(/token=([^&]+)/);
+      // console.log('tokenMatch', tokenMatch);
       if (tokenMatch && tokenMatch[1]) {
         const token = tokenMatch[1];
-        console.log('딥 링크에서 토큰 수신:', token);
-        // 토큰 저장
+        console.log('토큰 존재없이 실행 token', token);
         storeToken(token);
       }
       navigationRef.current?.navigate('LoginStack', {
@@ -88,10 +85,17 @@ function App() {
         {/* 2) bottom navigation*/}
         {/* 3) Main Stack */}
         <RootStack.Screen
-          name="HomeStack"
-          component={Bottom}
+          name="BottomStack"
+          component={BottomStack}
           options={{headerShown: false}}
         />
+
+        {/* 이럼  Bottom을 인식 못함 */}
+        {/* <RootStack.Screen
+          name="HomeStack"
+          component={HomeStack}
+          options={{headerShown: false}}
+        /> */}
       </RootStack.Navigator>
     </NavigationContainer>
   );

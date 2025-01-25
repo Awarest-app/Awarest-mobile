@@ -15,8 +15,13 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   async config => {
     const token = await getToken(); // Secure Storage에서 토큰 가져오기
+    // console.log('token', token);
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`; // Authorization 헤더에 토큰 포함
+      // bearer eyJhbGciOiJIUzI1Ni-restofthetoken...
+      // config.headers.Authorization = `Bearer ${token}`; // Authorization 헤더에 토큰 포함
+      config.headers.set('Authorization', `Bearer ${token}`);
+
+      // config.headers['Authorization'] = `JWT ${token}`;
     }
     return config;
   },
