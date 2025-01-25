@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   Switch,
   Alert,
   Platform,
+  BackHandler,
 } from 'react-native';
 import MemoGradient from '../components/Hooks/MemoGradient';
 import {questions} from '../constant/questions';
@@ -60,6 +61,18 @@ export default function SurveyScreen() {
     return Platform.OS === 'ios';
     // Platform.OS === 'android';
   };
+
+  const navigationHome = (): void => {
+    console.log('navigationHome');
+      navigation.reset({ index: 0,
+      routes: [{
+        name: 'BottomStack',
+        params: {
+          screen: 'HomeStack',
+          params: { screen: 'Home'},
+        }}],
+    });
+  };
   //notification on/off 함수
   const requestNotificationPermission = async () => {
     const {status} = await requestNotifications(['alert', 'sound', 'badge']);
@@ -77,48 +90,27 @@ export default function SurveyScreen() {
 
     switch (status) {
       case RESULTS.GRANTED:
+        navigationHome();
         CustomDefaultAlert({
           mainText: 'Permission Granted',
           subText: 'Notifications are enabled.',
-          onPress: () => {
-            navigation.navigate('BottomStack', {
-              screen: 'HomeStack',
-              params: {
-                screen: 'Home',
-              },
-            });
-          },
         });
         break;
       case RESULTS.DENIED:
         await requestNotificationPermission();
         break;
       case RESULTS.BLOCKED:
+        navigationHome();
         CustomDefaultAlert({
           mainText: 'Permission Blocked',
           subText: 'Notifications are blocked. Please enable them in settings.',
-          onPress: () => {
-            navigation.navigate('BottomStack', {
-              screen: 'HomeStack',
-              params: {
-                screen: 'Home',
-              },
-            });
-          },
         });
         break;
       case RESULTS.UNAVAILABLE:
+        navigationHome();
         CustomDefaultAlert({
           mainText: 'Permission Unavailable',
           subText: 'Notifications are not available on this device.',
-          onPress: () => {
-            navigation.navigate('BottomStack', {
-              screen: 'HomeStack',
-              params: {
-                screen: 'Home',
-              },
-            });
-          },
         });
         break;
       default:
@@ -144,12 +136,6 @@ export default function SurveyScreen() {
     }
   };
 
-  // navigationRef.current?.navigate('BottomStack', {
-  //   screen: 'HomeStack',
-  //   params: {
-  //     screen: 'Home',
-  //   },
-  // });
   const handleSurveySubmit = async () => {
     try {
       const response = await axiosSurveySumbit({
@@ -212,11 +198,6 @@ export default function SurveyScreen() {
                   </TouchableOpacity>
                 );
               })}
-              {/* <TouchableOpacity
-                style={{width: 50, height: 50, backgroundColor: 'skyblue'}}
-                onPress={() => navigation.navigate('Login')}>
-                <Text>Go to Login</Text>
-              </TouchableOpacity> */}
             </ScrollView>
           ) : (
             <ScrollView style={styles.permissonSection} scrollEnabled={false}>
@@ -249,7 +230,6 @@ export default function SurveyScreen() {
             </ScrollView>
           )}
         </View>
-        {/* 뒤로가기 버튼 (첫 번째 질문에서는 숨길 수도 있음) */}
         {questionIndex > 0 && (
           <TouchableOpacity onPress={handleBack} style={styles.backButton}>
             <Text style={styles.backButtonText}>Back to previous</Text>
@@ -283,7 +263,6 @@ const styles = StyleSheet.create({
   logoText: {
     fontSize: 40,
     fontFamily: fonts.logo, // 로고 폰트
-    fontWeight: 'bold',
     color: colors.primary,
     marginBottom: -10,
   },
@@ -322,8 +301,7 @@ const styles = StyleSheet.create({
     boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)',
   },
   selectedOption: {
-    backgroundColor: '#D3D3D3',
-    // 원하는 배경색으로 변경
+    backgroundColor: colors.selected,
   },
   optionText: {
     fontFamily: fonts.lato_regular,

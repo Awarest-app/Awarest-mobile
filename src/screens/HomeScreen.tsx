@@ -278,8 +278,8 @@ const HomeScreen = () => {
             <Text style={styles.cardTitle}>Today's Questions</Text>
           </TouchableOpacity>
 
-          {answers &&
-            answers.map(question => (
+          {dummyQuestions &&//이거우너래대로 answers로 바꿔야됨
+            dummyQuestions.map(question => (
               <TouchableOpacity
                 key={question.id}
                 style={styles.questionBox}
@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
     marginBottom: 50,
     paddingHorizontal: 14,
     paddingVertical: 24,
-    gap: 16,
+    gap: 10,
     boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
     borderWidth: 1,
     borderColor: colors.card_border,
@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     padding: 16,
-    gap: 8,
+    gap: 10,
     backgroundColor: colors.white_80,
     boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
   },

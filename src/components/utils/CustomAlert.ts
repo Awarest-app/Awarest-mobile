@@ -3,7 +3,7 @@ import {
 } from 'react-native';
 
 interface CustomDefaultAlertProps {
-  onPress: () => void;
+  onPress?: () => void;
   mainText: string;
   subText: string;
 };

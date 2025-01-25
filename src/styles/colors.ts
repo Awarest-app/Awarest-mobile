@@ -16,6 +16,7 @@ const colors = {
   white: '#FAFAFA',
   black: '#121212',
   // input
+  selected: '#93C5FD',
   input_bg: '#f5f5f5',
   input_ph: '#9CA3AF',
   text_hint: '#9CA3AF',
