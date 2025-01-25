@@ -134,7 +134,7 @@ export default Accordion;
 const styles = StyleSheet.create({
   container: {
     overflow: 'hidden',
-    backgroundColor: white_75,
+    backgroundColor: colors.white_75,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: colors.card_border,
