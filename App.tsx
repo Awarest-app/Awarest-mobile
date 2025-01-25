@@ -31,11 +31,25 @@ function App() {
       console.log('isToken', isToken);
       if (isToken !== null) {
         if (isSurvey === 'true') {
-          navigationRef.current?.navigate('BottomStack', {
-            screen: 'HomeStack',
-            params: {
-              screen: 'Home',
-            },
+          navigationRef.current?.reset({
+            index: 0,
+            routes: [
+              {
+                name: 'BottomStack',
+                state: {
+                  routes: [
+                    {
+                      name: 'HomeStack',
+                      state: {
+                        routes: [
+                          { name: 'Home' }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           });
         } else {
           navigationRef.current?.navigate('LoginStack', {

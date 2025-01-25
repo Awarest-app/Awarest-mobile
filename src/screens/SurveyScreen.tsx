@@ -90,18 +90,18 @@ export default function SurveyScreen() {
 
     switch (status) {
       case RESULTS.GRANTED:
-        navigationHome();
+        // navigationHome();
         break;
       case RESULTS.DENIED:
         await requestNotificationPermission();
         break;
-      case RESULTS.BLOCKED:
-        navigationHome();
-        CustomDefaultAlert({
-          mainText: 'Permission Blocked',
-          subText: 'Notifications are blocked. Please enable them in settings.',
-        });
-        break;
+        case RESULTS.BLOCKED:
+          // navigationHome();
+          CustomDefaultAlert({
+            mainText: 'Permission Blocked',
+            subText: 'Notifications are blocked. Please enable them in settings.',
+          });
+          break;
       case RESULTS.UNAVAILABLE:
         navigationHome();
         CustomDefaultAlert({
@@ -113,7 +113,6 @@ export default function SurveyScreen() {
         console.log('Unknown permission status:', status);
     }
     navigationHome();
-    //todo axios
     handleSurveySubmit();
   };
   // 뒤로가기 버튼 클릭 시 이전 질문으로 돌아가는 함수

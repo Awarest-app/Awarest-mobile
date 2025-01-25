@@ -15,11 +15,9 @@ import {
 import {useFocusEffect} from '@react-navigation/native';
 import colors from '../styles/colors';
 import {fonts} from '../styles/fonts';
-import SettingsGradient from '../components/Hooks/SettingsGradient';
 import {settingsTypes} from '../type/settings.type';
 import DeleteScreen from './DeleteScreen';
 import PrevIcon from '../assets/svg/setting-prev.svg';
-import {CustomDefaultAlert} from '../components/utils/CustomAlert';
 import {
   checkNotifications,RESULTS
 } from 'react-native-permissions';
@@ -36,51 +34,54 @@ export default function SettingProfileScreen({
 
   // 시간, XP 등의 데이터를 실제 로직에 맞게 받아오거나 계산해서 표시할 수 있습니다.
   const [isDelete, setIsDelete] = useState<boolean>(false);
-  const name = 'John Doe'; // axios로 받아온 사용자 이름
+  const [editable, setEditable] = useState<boolean>(true);
+  const [name, setName] = useState<string>('John Doe'); //todo axios로 받아온 사용자 이름
   const [isEnabled, setIsEnabled] = useState(false);
 
   const handleDelete = () => {
      setIsDelete(!isDelete);
-    // closeSettings(); // 모달 닫기
   };
 
   const handleNotification = () => {
-    //todo 권한에 따라서 토글껐다켰다하기
     Linking.openSettings();
   };
    const platformCheck = (): boolean => {
       return Platform.OS === 'ios';
-      // Platform.OS === 'android';
-    };
-    //notification on/off 함수
+  };
+  const handleName = (name: string) => {
+    if (name.length > 20) return ;
+    setName(name);
+  };
   const fetchNoti = async () => {
+    //todo axios로 사용자 이름 받아오기
     if (!platformCheck()) return;
     const {status} = await checkNotifications();
 
     switch (status) {
       case RESULTS.GRANTED:
         setIsEnabled(true);
-        break;
-        case RESULTS.BLOCKED:
-        setIsEnabled(false);
-        break;
-      case RESULTS.UNAVAILABLE:
-        setIsEnabled(false);
-        break;
       default:
         setIsEnabled(false);
     }
   };
   useFocusEffect(
     useCallback(() => {
+      //axios로 사용자 이름 받아오기
       fetchNoti(); // 화면 포커스 시 상태 업데이트
     }, [])
   );
+  const handleSubmit = () => {
+    setEditable(false);
+    //todo axios로 사용자 이름 업데이트 timeout빼고 
+    setTimeout(() => {
+      setEditable(true);
+    }, 2000);
+  };
+  console.log(name);
   return (
       <View style={styles.container}>
         {isDelete && (
           <DeleteScreen
-            // closeSettings={closeSettings}
             setIsDelete={setIsDelete}
           />
         )}
@@ -89,10 +90,7 @@ export default function SettingProfileScreen({
           <SafeAreaView style={styles.safeArea}>
             <View style={styles.header}>
               <TouchableOpacity style={styles.prevIcon}
-                onPress={() => {
-                  console.log('profileprevIcon');
-                  setPage('main')
-                }}
+                onPress={() => {setPage('main')}}
               >
                 <PrevIcon/>
               </TouchableOpacity>
@@ -100,22 +98,22 @@ export default function SettingProfileScreen({
                 Profile
               </Text>
             </View>
-            <View style={styles.imgContainer}>
-              <View style={styles.img}>
-              </View>
-              <Text style={styles.editImg}>Edit</Text>
-            </View>
             <View style={styles.settingContainer}>
               <View style={styles.nameContainer}>
                 <Text style={styles.titles}>
                   Name
                 </Text>
                 <TextInput
-                  style={styles.nameInput}
-                  placeholderTextColor={colors.text_hint}
-                >
-                  {name}
-                </TextInput>
+                  style={[
+                    styles.nameInput,
+                    !editable && {backgroundColor: 'gray'},
+                  ]}
+                  value={name}
+                  onChangeText={handleName}
+                  editable={editable}
+                  onSubmitEditing={handleSubmit}//enter키 눌렀을 때
+                  returnKeyType="done"
+                />
               </View>
               <TouchableOpacity
                 style={styles.permissonContainer}
@@ -127,7 +125,6 @@ export default function SettingProfileScreen({
                     Notifications
                   </Text>
                   <Switch
-                    // style={styles.permissonSwitch}
                     trackColor={{false: colors.white, true: '#93C5FD'}}
                     ios_backgroundColor={colors.white}
                     thumbColor={'#0D9488'}
@@ -230,6 +227,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: colors.white,
     boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.05)',
+  },
+  disabledInput: {
+    backgroundColor: colors.disabled,
   },
   permissonContainer: {
     width: '100%',
