@@ -10,7 +10,6 @@ import {
 import {
   NavigationProp,
   useFocusEffect,
-  useIsFocused,
   useNavigation,
 } from '@react-navigation/native';
 import {HomeStackParamList} from '../type/route.type';
@@ -20,12 +19,17 @@ import colors from '../styles/colors';
 import EditIcon from '../assets/svg/edit-icon.svg';
 import PrevIcon from '../assets/svg/prev-icon.svg';
 import NextIcon from '../assets/svg/next-icon.svg';
-
 import {fonts} from '../styles/fonts';
 import Accordion from '../components/Hooks/Accordion';
 import EditModal from '../components/modals/EditModal';
-import {axiosGetQuestions} from '../api/axios';
+import {
+  axiosGetAnswers,
+  axiosGetQuestions,
+  axiosGetSubquestions,
+  axiosUpdateAnswers,
+} from '../api/axios';
 import {QuestionProps} from '../type/question.type';
+import {AnswerProps} from '../type/answer.type';
 
 //todo: 컴포넌트 쪼개기
 const HomeScreen = () => {
@@ -36,136 +40,12 @@ const HomeScreen = () => {
   const [closeAccordion, setCloseAccordion] = useState<boolean>(false);
   const answersPerPage = 3;
   const [answers, setAnswers] = useState<QuestionProps[]>([]);
-  const dummyQuestions: QuestionProps[] = [
-    {
-      id: 1,
-      type: 'multiple-choice', //type는 뭐야
-      content: 'What is your favorite color?',
-    },
-    {
-      id: 2,
-      type: 'open-ended',
-      content: 'Describe your ideal vacation destination.',
-    },
-    {
-      id: 3,
-      type: 'true-false',
-      content: 'Do you enjoy working in teams?',
-    },
-  ];
 
   //todo : 이거 axios 날릴때 남은건냅두고 처음에 6개, 그뒤에 6개씩추가
-  const [previousAnswers, setPreviousAnswers] = useState([
-    {
-      question:
-        'What made you feel proud todaydsasd asd asd asdasd adsasd asd asd ds?',
-      subquestions: [
-        {
-          text: 'subquestionasdhkjasdhkj1323987',
-          answer: 'answer1',
-          date: '2025-01-21 10:20 AM',
-        },
-        {
-          text: 'teystuy uasukdy ukyd wqiud2222222y ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
-          answer: 'answer2',
-          date: '2025-01-24 01:40 PM',
-        },
-      ],
-    },
-    {
-      question:
-        'What made you feel proud todaydsasd asd asd asdasd adsasd asd asd ds?',
-      subquestions: [
-        {
-          text: 'subquestionasdhkjasdhkj1323987',
-          answer: 'answer1',
-          date: '2025-01-21 10:20 AM',
-        },
-        {
-          text: 'teystuy uasukdy ukyd wqi222222uasukdy ukyd wqi5555jbadjk',
-          answer: 'answer2',
-          date: '2025-01-24 01:40 PM',
-        },
-      ],
-    },
-    {
-      question:
-        'What made you feel proud todaydsasd asd asd asdasd adsasd asd asd ds?',
-      subquestions: [
-        {
-          text: 'subquestionasdhkjasdhkj1323987',
-          answer: 'answer1',
-          date: '2025-01-21 10:20 AM',
-        },
-        {
-          text: 'teystuy uasukdy ukyd wqi2222222udy ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
-          answer: 'answer2',
-          date: '2025-01-24 01:40 PM',
-        },
-        {
-          text: 'teystuy uasukdy ukyd wqi3333333udy ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
-          answer: 'answer3',
-          date: '2025-01-24 01:40 PM',
-        },
-        {
-          text: 'teystuy uasukdy ukyd wqiu444444444dy ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
-          answer: 'answer4',
-          date: '2025-01-24 01:40 PM',
-        },
-        {
-          text: 'teystuy uasukdy ukyd wqi666udy ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
-          answer: 'answer5',
-          date: '2025-01-24 01:40 PM',
-        },
-      ],
-    },
-    {
-      question: 'next page test',
-      subquestions: [
-        {
-          text: 'subquesasdadationasdhkjasdhkj1323987',
-          answer: 'ansssswer1',
-          date: '2025-01-21 10:20 AM',
-        },
-        {
-          text: 'teystuy uasukdy ukyd wqiud2222222y ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
-          answer: 'answer2',
-          date: '2025-01-24 01:40 PM',
-        },
-      ],
-    },
-    {
-      question: 'next page test',
-      subquestions: [
-        {
-          text: 'subquestionasdhkjasdhkj1323987',
-          answer: 'answer1',
-          date: '2025-01-21 10:20 AM',
-        },
-        {
-          text: 'teystuy uasukdy ukyd wqiud2222222y ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
-          answer: 'answer2',
-          date: '2025-01-24 01:40 PM',
-        },
-      ],
-    },
-    {
-      question: 'next page test',
-      subquestions: [
-        {
-          text: 'subquestionasdhkjasdhkj1323987',
-          answer: 'answer1',
-          date: '2025-01-21 10:20 AM',
-        },
-        {
-          text: 'teystuy uasukdy ukyd wqiud2222222y ask jdba sjkcba sku Aysheduiq wDHASasdbkjasdbas kjbadjk',
-          answer: 'answer2',
-          date: '2025-01-24 01:40 PM',
-        },
-      ],
-    },
-  ]);
+  const [previousAnswers, setPreviousAnswers] = useState<AnswerProps[]>([]);
   const totalPages = Math.ceil(previousAnswers.length / answersPerPage);
+
+  // TODO : page 로 나중에 6개씩 날리기
   const paginatedAnswers = previousAnswers.slice(
     answersIndex * answersPerPage,
     (answersIndex + 1) * answersPerPage,
@@ -218,15 +98,34 @@ const HomeScreen = () => {
     setIsModalOpen(true);
     setEditingIndexes({questionIndex: questionIdx, subquestionIndex});
   };
+
   const handleSaveEdit = (newText: string) => {
     //todo 이거 백엔드로 날려야됨
-    //이거 수정이라서 백엔드
-    if (!editingIndexes) return;
-    const updatedAnswers = [...previousAnswers]; //shallow copy
-    updatedAnswers[editingIndexes.questionIndex].subquestions[
-      editingIndexes.subquestionIndex
-    ].answer = newText;
-    setPreviousAnswers(updatedAnswers);
+    try {
+      //이거 수정이라서 백엔드
+      if (!editingIndexes) return;
+      console.log('newText \n:', newText);
+      console.log(
+        '\n\n \n:',
+        previousAnswers[editingIndexes.questionIndex].subquestions[
+          editingIndexes.subquestionIndex
+        ].id,
+      );
+      const res = axiosUpdateAnswers(
+        previousAnswers[editingIndexes.questionIndex].subquestions[
+          editingIndexes.subquestionIndex
+        ].id,
+        newText,
+      );
+
+      const updatedAnswers = [...previousAnswers]; //shallow copy
+      updatedAnswers[editingIndexes.questionIndex].subquestions[
+        editingIndexes.subquestionIndex
+      ].answer = newText;
+      setPreviousAnswers(updatedAnswers);
+    } catch (error) {
+      console.error('Error updating answer:', error);
+    }
   };
 
   // TODO : 나중에 response type 정의하기
@@ -239,12 +138,24 @@ const HomeScreen = () => {
       console.error('Error getting questions:', error);
     }
   };
+  const handleGetQuestionHistory = async () => {
+    try {
+      const response = await axiosGetAnswers();
+      // console.log('Answers:', JSON.stringify(response, null, 2));
+      console.log('Answers:', response);
+      // console.log('Answers:', response.subquestions);
+      setPreviousAnswers(response);
+    } catch (error) {
+      console.error('Error getting answers:', error);
+    }
+  };
 
   // RN은 화면을 캐싱해서 다시 돌아왔을 때 다시 렌더링하지 않음
   useFocusEffect(
     React.useCallback(() => {
       // 스크린이 포커스될 때마다 실행할 함수
       handleGetQuestions();
+      handleGetQuestionHistory();
 
       return () => {
         // 필요시 정리 작업 수행
@@ -281,11 +192,14 @@ const HomeScreen = () => {
           {dummyQuestions &&//이거우너래대로 answers로 바꿔야됨
             dummyQuestions.map(question => (
               <TouchableOpacity
-                key={question.id}
+                key={question.content}
                 style={styles.questionBox}
                 onPress={() => {
+                  // handleGetSubquestions(question.id);
+                  // onPress={() => {
+                  console.log('question.id', question.questionId);
                   navigation.navigate('Answer', {
-                    mainQuestion: question.content,
+                    question_id: question.questionId,
                   });
                 }}>
                 <Text style={styles.questionText}>{question.content}</Text>

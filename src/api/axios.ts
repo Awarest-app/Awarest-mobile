@@ -57,6 +57,19 @@ export const axiosGetQuestions = async () => {
   }
 };
 
+// answers
+const axiosGetAnswersURL = 'api/answers/me';
+export const axiosGetAnswers = async () => {
+  try {
+    const response = await axiosInstance.get(axiosGetAnswersURL);
+    // console.log('Answers:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error getting answers:', error);
+    return [];
+  }
+};
+
 const axiosLogoutURL = '/api/auth/logout';
 export const axiosLogout = async () => {
   try {
@@ -65,5 +78,48 @@ export const axiosLogout = async () => {
     console.log('Logout:', response.data);
   } catch (error) {
     console.error('Error logging out:', error);
+  }
+};
+
+const axiosPostAnswersURL = '/api/answers/bulk';
+export const axiosPostAnswers = async (answers: any) => {
+  try {
+    const response = await axiosInstance.post(axiosPostAnswersURL, answers);
+    console.log('Answers saved:', response.data);
+  } catch (error) {
+    console.error('Error saving answers:', error);
+  }
+};
+
+const axiosUpdateAnswersURL = '/api/answers/update';
+export const axiosUpdateAnswers = async (
+  subQuestionId: number,
+  answer: string,
+) => {
+  try {
+    const response = await axiosInstance.put(
+      `${axiosUpdateAnswersURL}/${subQuestionId}`,
+      {
+        content: answer,
+      },
+    );
+    console.log('Answers updated:', response.data);
+  } catch (error) {
+    console.error('Error updating answers:', error);
+  }
+};
+
+// subquestions
+const axiosGetSubquestionsURL = '/api/subquestions';
+export const axiosGetSubquestions = async (questionId: number) => {
+  try {
+    const response = await axiosInstance.get(
+      `${axiosGetSubquestionsURL}/${questionId}`,
+    );
+    console.log('Subquestions:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error getting subquestions:', error);
+    return [];
   }
 };
