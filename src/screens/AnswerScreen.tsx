@@ -42,7 +42,7 @@ export default function AnswerScreen() {
   // 사용자 입력 상태
   const [questions, setQuestions] = useState<SubQuestionProps>({
     question: '',
-    subquestions: [],
+    responses: [],
   });
 
   // 모달 open/close
@@ -56,15 +56,14 @@ export default function AnswerScreen() {
   // 1. 서버에서 데이터 가져오기
   // -----------------------------------------------
   const fetchSubquestions = async () => {
-    console.log('asdhjkadskjadskhjadshkjahdsjhads.');
     try {
-      // 서버에서 { question, subquestions: [{id, text}, ...] } 형태 받아옴
+      // 서버에서 { question, subquestions: [{id, subquestion}, ...] } 형태 받아옴
       const data: ServerResponse = await axiosGetSubquestions(question_id);
       setServerData(data);
       // subquestions 길이만큼 '' (빈 문자열) 할당
       const initialState: SubQuestionProps = {
         question: data.question,
-        subquestions: Array(data.subquestions.length).fill(''),
+        responses: Array(data.subquestions.length).fill(''),
       };
       setQuestions(initialState);
       // AsyncStorage에서 기존에 임시 저장된 답변이 있다면 불러오기
@@ -73,11 +72,39 @@ export default function AnswerScreen() {
       console.error('Failed to fetch subquestions:', err);
     }
   };
+  const cleanUpExpiredKeys = async () => {
+    try {
+      const now = Date.now();
+  
+      const ALL_KEYS = await AsyncStorage.getAllKeys();
+      const expirationKeys = ALL_KEYS.filter(key => key.startsWith('answersExpiration_'));
 
+      if (expirationKeys.length === 0) return;
+
+      const keyValuePairs = await AsyncStorage.multiGet(expirationKeys);
+      const expiredKeys = [];
+  
+      for (const [key, value] of keyValuePairs) {
+        if (value && parseInt(value, 10) < now) {
+          const questionId = key.replace('answersExpiration_', '');
+          expiredKeys.push(key); // answersExpiration_1
+          expiredKeys.push(`userAnswers_${questionId}`);// userAnswers_1
+        }
+      }
+      if (expiredKeys.length === 0) return ;
+      await AsyncStorage.multiRemove(expiredKeys);
+      console.log(`Removed expired keys: ${expiredKeys}`);
+    } catch (err) {
+      console.error('Failed to clean up expired keys:', err);
+    }
+  };
   useEffect(() => {
-    fetchSubquestions();
+    const initialize = async () => {
+      await cleanUpExpiredKeys();
+      await fetchSubquestions();
+    };
+    initialize();
   }, [question_id]);
-
   // -----------------------------------------------
   // 2. AsyncStorage: 임시 저장 & 불러오기
   // -----------------------------------------------
@@ -93,24 +120,23 @@ export default function AnswerScreen() {
       console.error('Failed to save answers:', e);
     }
   };
-//1. ALL_KEY에 토큰들을 다 value로 저장하기
-//2. useEffect에서 all_key 돌아서 expired token 삭제
   const loadAnswersFromStorage = async (
     count: number,
     mainQuestion: string,
   ) => {
     try {
       const saved = await AsyncStorage.getItem(ANSWER_STORAGE_KEY);
-      const expiration = await AsyncStorage.getItem(ANSWER_EXPIRATION_KEY);
-      const now = Date.now();
-
+      // const expiration = await AsyncStorage.getItem(ANSWER_EXPIRATION_KEY);
+      // const now = Date.now();
+      // 여기서 길이랑 mainquestion으로 비교대조하는 로직이 왜필요함?----------------------------------------
       // 저장된 값이 있고 만료되지 않았다면
-      if (saved && expiration && parseInt(expiration, 10) > now) {
+      // if (saved && expiration && parseInt(expiration, 10) > now) {
+      if (saved) {
         const parsed: SubQuestionProps = JSON.parse(saved);
         // 메인 질문/배열 길이가 일치하면 로드
         if (
           parsed.question === mainQuestion &&
-          parsed.subquestions.length === count
+          parsed.responses.length === count
         ) {
           setQuestions(parsed);
           return;
@@ -118,7 +144,6 @@ export default function AnswerScreen() {
       }
       // 만료되었거나 구조가 안 맞으면 초기화
       await AsyncStorage.removeItem(ANSWER_STORAGE_KEY);
-      await AsyncStorage.removeItem(ANSWER_EXPIRATION_KEY);
     } catch (err) {
       console.error('Failed to load answers:', err);
     }
@@ -130,7 +155,7 @@ export default function AnswerScreen() {
   };
 
   const handleSubmit = () => {
-    if (questions.subquestions.some(ans => ans.trim() === '')) {
+    if (questions.responses.some(ans => ans.trim() === '')) {
       Alert.alert('Please fill out all the answers before submitting');
       return;
     }
@@ -146,7 +171,7 @@ export default function AnswerScreen() {
       }
 
       // 1) subquestions (문자열들)과 serverData.subquestions (id 정보)를 매핑
-      const payload = questions.subquestions.map((answer, index) => {
+      const payload = questions.responses.map((answer, index) => {
         const subquestionId = serverData.subquestions[index].id;
         return {
           subquestionId,
@@ -207,11 +232,11 @@ export default function AnswerScreen() {
                   placeholder="Start writing your thoughts..."
                   placeholderTextColor={colors.text_hint}
                   multiline
-                  value={questions.subquestions[index] ?? ''}
+                  value={questions.responses[index] ?? ''}
                   onChangeText={text => {
                     if (text.length > 1000) return ;
                     setQuestions(prev => {
-                      const updated = [...prev.subquestions];
+                      const updated = [...prev.responses];
                       updated[index] = text;
                       return {...prev, subquestions: updated};
                     });
