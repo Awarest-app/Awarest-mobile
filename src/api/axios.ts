@@ -1,6 +1,6 @@
 import {Alert} from 'react-native';
 import {axiosInstance} from './axios.instance';
-import {UserServey} from '../type/survey.type';
+import {UserServey, Permissions} from '../type/survey.type';
 import {getToken, removeToken} from './secureStorage';
 
 // 서버 연결 테스트 함수
@@ -56,6 +56,16 @@ const axiosSurveySumbitURL = '/api/survey/save-survey';
 export const axiosSurveySumbit = async (answers: UserServey) => {
   try {
     const response = await axiosInstance.post(axiosSurveySumbitURL, {answers});
+    console.log('Survey submitted:', response.data);
+  } catch (error) {
+    console.error('Error submitting survey:', error);
+  }
+};
+
+const axiosPermissonSubmitURL = '/api/survey/save-permisson';
+export const axiosPermissonSubmit = async (permissons: Permissions) => {
+  try {
+    const response = await axiosInstance.post(axiosPermissonSubmitURL, {permissons});
     console.log('Survey submitted:', response.data);
   } catch (error) {
     console.error('Error submitting survey:', error);

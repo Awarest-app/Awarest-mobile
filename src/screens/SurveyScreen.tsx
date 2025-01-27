@@ -13,7 +13,9 @@ import {
 } from 'react-native';
 import MemoGradient from '../components/Hooks/MemoGradient';
 import {questions} from '../constant/questions';
-import {axiosSurveySumbit} from '../api/axios';
+import {axiosPermissonSubmit, axiosSurveySumbit} from '../api/axios';
+import {UserServey, Permissions} from '../type/survey.type';
+// Permissions 
 import {
   checkNotifications,
   requestNotifications,
@@ -28,12 +30,7 @@ import {RootStackParamList} from '../type/route.type';
 
 export default function SurveyScreen() {
   const [questionIndex, setQuestionIndex] = useState(0);
-  const [userAnswers, setUserAnswers] = useState<{
-    ageRange?: string;
-    goal?: string;
-    job?: string;
-    how_hear?: string;
-  }>({});
+  const [userAnswers, setUserAnswers] = useState<UserServey>({});
   // 알림 모달?
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [isEnabled, setIsEnabled] = useState(false);
@@ -63,7 +60,6 @@ export default function SurveyScreen() {
   };
 
   const navigationHome = (): void => {
-    console.log('navigationHome=============');
       navigation.reset({ index: 0,
       routes: [{
         name: 'BottomStack',
@@ -87,7 +83,7 @@ export default function SurveyScreen() {
     setIsEnabled(!isEnabled); // toggle 모양
     setIsDisabled(true);
     const {status} = await checkNotifications();
-
+    const notificationStatus = status === RESULTS.GRANTED;
     switch (status) {
       case RESULTS.GRANTED:
         // navigationHome();
@@ -113,7 +109,8 @@ export default function SurveyScreen() {
         console.log('Unknown permission status:', status);
     }
     navigationHome();
-    handleSurveySubmit();
+    surveySubmit();
+    permissonSubmit({notification: notificationStatus});
   };
   // 뒤로가기 버튼 클릭 시 이전 질문으로 돌아가는 함수
   const handleBack = () => {
@@ -133,19 +130,21 @@ export default function SurveyScreen() {
     }
   };
 
-  const handleSurveySubmit = async () => {
+  const surveySubmit = async () => {
     try {
       const response = await axiosSurveySumbit({
         ...userAnswers,
-        noti: isEnabled,
       });
-      // navigation.navigate('HomeStack');
-      navigation.navigate('BottomStack', {
-        screen: 'HomeStack',
-        params: {
-          screen: 'Home',
-        },
-      });
+      console.log(response);
+    } catch (error: unknown) {
+      // const {status, data} = error.response;
+      console.error('survey submit Error response:');
+    }
+  };
+  const permissonSubmit = async (permisson: Permissions) => {
+    //notification status axios
+    try {
+      const response = await axiosPermissonSubmit(permisson);
       console.log(response);
     } catch (error: unknown) {
       // const {status, data} = error.response;
@@ -199,7 +198,7 @@ export default function SurveyScreen() {
           ) : (
             <ScrollView style={styles.permissonSection} scrollEnabled={false}>
               <TouchableOpacity
-                style={styles.permissonNoti}
+                style={styles.notificationButton}
                 disabled={isDisabled}
                 onPress={handleNoti}
                 activeOpacity={0.9}>
@@ -306,7 +305,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     // boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)',
   },
-  permissonNoti: {
+  notificationButton: {
     flexDirection: 'row',
     width: '100%',
     height: 100,
