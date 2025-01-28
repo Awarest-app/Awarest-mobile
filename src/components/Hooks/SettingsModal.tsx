@@ -51,7 +51,6 @@ const SettingsModal = forwardRef<Modalize, {}>((props, ref) => {
         tabBarStyle: { display: 'none' },
       });
     }}
-    // snapPoint={height * 0.86} 이거뭐야
     >
       <SettingsGradient/>
       <View style={styles.SettingsContainer}>
