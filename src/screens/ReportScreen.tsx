@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import colors from '../styles/colors';
 import {fonts} from '../styles/fonts';
-import SettingsGradient from '../components/Hooks/SettingsGradient';
+import Mailer from 'react-native-mail';
 import {settingsTypes} from '../type/settings.type';
 import PrevIcon from '../assets/svg/setting-prev.svg';
 
@@ -25,7 +25,22 @@ export default function ReportScreen({
 }: ReportScreenProps) {
   const [contact, setContact] = React.useState<string>('');
   const [message, setMessage] = React.useState<string>('');
-
+  const sendMail = () => {
+    Mailer.mail({
+        subject: 'Issue Report in App',
+        recipients: ['team@withcoura.com'], // 실제 받는 이메일 주소로 교체하세요.
+        body: `Contact: ${contact}\n\nMessage:\n${message}`,
+        isHTML: false,
+      },
+      (error) => {
+        if (error) {
+          Alert.alert('Error', 'Could not send email. Please try again later.');
+        } else {
+          Alert.alert('Success', 'Email sent successfully!');
+        }
+      }
+    );
+  }
   const handleContact = (text: string) => {
     if (contact.length > 40) return;
     setContact(text);
@@ -41,6 +56,7 @@ export default function ReportScreen({
     }
     if (contact.length > 40) return;
     if (!isValidMessage(message)) return;
+    sendMail();
     //todo axios contact, message
   };
   const isValidMessage = (message: string): boolean => {
