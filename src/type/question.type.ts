@@ -14,5 +14,5 @@ export type ServerResponse = {
 // React state에 저장할 데이터 구조
 export type SubQuestionProps = {
   question: string; // 각 subquestion의 질문 텍스트
-  subquestions: string[]; // 사용자가 입력할 답변 (초기엔 빈 문자열)
+  responses: string[]; // 사용자가 입력할 답변 (초기엔 빈 문자열)
 };

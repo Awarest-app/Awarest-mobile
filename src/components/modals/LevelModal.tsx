@@ -28,8 +28,9 @@ const LevelModal = ({
   const level = data.level;
   const progress = Math.min(totalXP / levelXP, 1);
   const animatedWidth = useRef(new Animated.Value(0)).current;
-  console.log('Progress:', progress); 
+
   if (isOpen) {
+    console.log('Progress:', progress); 
     animatedWidth.stopAnimation();
     animatedWidth.setValue(0);
     Animated.timing(animatedWidth, {
@@ -38,9 +39,9 @@ const LevelModal = ({
       useNativeDriver: false,
     }).start();
   }
-  
+
   return (
-    <Modal visible={isOpen} transparent={true} animationType="none">
+    <Modal visible={isOpen} transparent={true} animationType="fade">
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.modalOverlay}>
             <View style={styles.modalContent}>
@@ -51,22 +52,24 @@ const LevelModal = ({
               <View style={styles.expBar}>
                 {/* 경험치 바 */}
                 <View style={styles.barBackground}>
-                <Animated.View
-                  style={[
-                    styles.barProgress,
-                    {
-                      width: animatedWidth.interpolate({
-                        inputRange: [0, 100],
-                        outputRange: ['0%', '90%'], // '90%'로 바 전체 너비와 일치하게 설정
-                      }),
-                    },
-                  ]}
-                >
+                  <Animated.View
+                    style={[
+                      styles.barProgress,
+                      {
+                        width: animatedWidth.interpolate({
+                          inputRange: [0, 100],
+                          outputRange: ['0%', '100%'], // '90%'로 바 전체 너비와 일치하게 설정
+                        }),
+                        overflow: 'hidden',
+                        // backgroundColor: 'red',
+                      },
+                    ]}
+                  >
                     <LinearGradient
                       colors={['#0D9488', '#3ED2C4']} // 그라데이션 색상
                       start={{x: 0, y: 0}} // 시작 좌표
                       end={{x: 1, y: 0}} // 끝 좌표
-                      style={{flex: 1}}
+                      style={{flex: 1}} // 그라데이션 스타일
                     />
                   </Animated.View>
                 </View>

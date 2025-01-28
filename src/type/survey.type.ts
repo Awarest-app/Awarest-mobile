@@ -3,5 +3,9 @@ export type UserServey = {
   goal?: string;
   job?: string;
   how_hear?: string;
-  noti: boolean;
 };
+
+
+export type Permissions = {
+  notification: boolean;
+}

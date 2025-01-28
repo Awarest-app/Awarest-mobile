@@ -17,6 +17,8 @@ import ReportScreen from '../../screens/ReportScreen';
 import SettingsMain from '../../screens/SettingsMain';
 import {settingsTypes} from '../../type/settings.type';
 import SettingProfileScreen from '../../screens/SettingProfileScreen';
+import {HomeStackParamList, RootStackParamList} from '../../type/route.type';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 const {width, height} = Dimensions.get('window');
 
 const SettingsModal = forwardRef<Modalize, {}>((props, ref) => {
@@ -30,7 +32,7 @@ const SettingsModal = forwardRef<Modalize, {}>((props, ref) => {
   const closeSettings = () => {
     modalizeRef.current?.close()
   };
-
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <Modalize
     modalStyle={styles.container}
@@ -38,8 +40,17 @@ const SettingsModal = forwardRef<Modalize, {}>((props, ref) => {
     withHandle={false}
     modalHeight={height * 0.86}
     panGestureEnabled={false} //
-    onClose={() => {setPage('main')}}
-    // snapPoint={height * 0.86} 이거뭐야
+    onClose={() => {
+      setPage('main')
+      navigation.getParent()?.setOptions({
+        tabBarStyle: { display: 'flex' },
+      });
+    }}
+    onOpen={() => {
+      navigation.getParent()?.setOptions({
+        tabBarStyle: { display: 'none' },
+      });
+    }}
     >
       <SettingsGradient/>
       <View style={styles.SettingsContainer}>
