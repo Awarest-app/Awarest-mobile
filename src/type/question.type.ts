@@ -1,4 +1,4 @@
-export type QuestionProps = {
+export type Questiontypes = {
   questionId: number;
   type: string;
   content: string;

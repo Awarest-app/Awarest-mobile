@@ -12,24 +12,26 @@ import colors from '../../styles/colors';
 import EditIcon from '../../assets/svg/modal-edit-icon.svg';
 interface EditModalProps {
   isOpen: boolean;
-  currentText: string;
-  question: string;
+  currentValue: string;
+  subquestion: string;
+  subquestionIndex: number;
   onClose: () => void;
-  onSave: (text: string) => void;
+  handleSaveEdit: (newText: string, subquestionIndex: number) => void;
 }
 
 const EditModal = ({
   isOpen,
-  currentText,
-  question,
+  currentValue,
+  subquestion,
+  subquestionIndex,
   onClose,
-  onSave,
+  handleSaveEdit,
 }: EditModalProps) => {
-  const [text, setText] = useState<string>(currentText);
+  const [text, setText] = useState<string>(currentValue);
   
-  useEffect(() => {//처음 인식
-    setText(currentText);
-  }, [currentText]);
+  // useEffect(() => {//처음 인식
+  //   setText(currentValue);
+  // }, [currentValue]);
 
   return (
     <Modal visible={isOpen} transparent={true} animationType="fade">
@@ -37,7 +39,7 @@ const EditModal = ({
         <View style={styles.modalContent}>
           <View style={styles.modalHeader}>
             <EditIcon/>
-            <Text style={styles.modalTitle}>{question}</Text>
+            <Text style={styles.modalTitle}>{subquestion}</Text>
           </View>
           <TextInput
             style={styles.modalInput}
@@ -49,14 +51,14 @@ const EditModal = ({
             <TouchableOpacity style={[styles.modalButton, {backgroundColor: colors.modal_gray_button}]}
               onPress={() => {
                 onClose();
-                setText(currentText);
+                setText(currentValue);
               }}
             >
               <Text style={styles.modalButtonText}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.modalButton}
               onPress={() => {
-                onSave(text);
+                handleSaveEdit(text, subquestionIndex);
                 onClose();
               }}
             >

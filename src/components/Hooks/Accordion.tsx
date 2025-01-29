@@ -63,7 +63,7 @@ const Accordion = memo(
     useEffect(() => {
       Animated.timing(animeValue, {
         toValue: collapsed ? 0 : 1,
-        duration: 300,
+        duration: 150,
         easing: Easing.ease,
         useNativeDriver: false, // 높이 애니메이션은 native driver 불가
       }).start();
@@ -143,7 +143,8 @@ const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 20,
     minHeight: 60,
     backgroundColor: colors.white_80,
     height: 'auto',
@@ -163,7 +164,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16, //contentContainerPadding이랑 같아야됨
   },
   animateContainer: {
-    
     overflow: 'hidden',
   },
   contentContainer: {
