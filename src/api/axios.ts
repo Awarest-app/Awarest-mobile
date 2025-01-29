@@ -52,6 +52,19 @@ export const axiosSignout = async () => {
   }
 };
 
+const axioxAccountDeleteURL = '/api/auth/delete';
+export const axiosAccountDelete = async () => {
+  try {
+    const response = await axiosInstance.get(axioxAccountDeleteURL);
+    // 성공 시 Alert 표시
+    Alert.alert('Success', `서버 응답: ${JSON.stringify(response.data)}`);
+  } catch (error) {
+    console.error('signout서버 요청 실패:', error);
+    // 실패 시 Alert 표시
+    Alert.alert('signoutError', '서버 요청 실패: ' + error);
+  }
+};
+
 const axiosSurveySumbitURL = '/api/survey/save-survey';
 export const axiosSurveySumbit = async (answers: UserServey) => {
   try {

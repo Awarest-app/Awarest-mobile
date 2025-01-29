@@ -13,7 +13,7 @@ export const handleGoogleSignup = async () => {
     SafariView.isAvailable()
       .then(() => {
         SafariView.show({
-          url: `${SERVER_URL}/auth/google`,
+          url: `${SERVER_URL}/api/auth/google`,
           // iOS 11+부터는 엔터프라이즈 환경 아니면 기본적으로 SFSafariViewController 적용
           fromBottom: true, // 모달처럼 밑에서 올라오는 효과
         });
