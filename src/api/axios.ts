@@ -103,6 +103,7 @@ export const axiosGetProfile = async (): Promise<ProfileTypes> => {
   } catch (error) {
     console.error('Error getting profile:', error);
     return {
+      id: 0,
       profileImg: '',
       userName: '',
       memberSince: '',

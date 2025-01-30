@@ -1,5 +1,6 @@
 
 export type ProfileTypes = {
+  id: number;
   profileImg: string;
   userName: string;
   memberSince: string;

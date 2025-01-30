@@ -29,6 +29,7 @@ export default function ProfileScreen() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const settingsRef = useRef<Modalize>(null);
   const [datas, setDatas] = useState<ProfileTypes>({
+    id: 1,
     profileImg: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcKBnNMLWjTurCJvK1LQk3awXQDiM-TdAXtg&s',
     userName: 'Sarah Johnson',
     memberSince: 'January 2025',
