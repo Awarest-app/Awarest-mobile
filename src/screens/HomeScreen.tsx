@@ -29,13 +29,12 @@ import {
   axiosUpdateAnswers,
 } from '../api/axios';
 import {Questiontypes} from '../type/question.type';
-import {AnswerProps} from '../type/answer.type';
+import {AnswerTypes} from '../type/answer.type';
 import PrevAnswers from '../components/home/PrevAnswers';
 import Questions from '../components/home/Questions';
 
 //todo: 컴포넌트 쪼개기
 const HomeScreen = () => {
-  const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
   const [answersIndex, setAnswersIndex] = useState<number>(0);
   const scrollRef = useRef<ScrollView>(null);
   const [pageChanged, setPageChanged] = useState<boolean>(false);
@@ -47,7 +46,7 @@ const HomeScreen = () => {
 ]);
   
   //todo : 이거 axios 날릴때 남은건냅두고 처음에 6개, 그뒤에 6개씩추가
-  const [previousAnswers, setPreviousAnswers] = useState<AnswerProps[]>([]);
+  const [previousAnswers, setPreviousAnswers] = useState<AnswerTypes[]>([]);
   const totalPages = Math.ceil(previousAnswers.length / answersPerPage);
 
   // TODO : page 로 나중에 6개씩 날리기
@@ -89,19 +88,25 @@ const HomeScreen = () => {
     }
   }, [answersIndex, pageChanged]);
 
+  const editPrevAnswer = (subquestionId: number, newText: string) => {
+    const prevAnswerId = (subquestionId + answersIndex) * answersPerPage;
+    const updatedAnswers = [...previousAnswers]; //shallow copy
+    updatedAnswers[prevAnswerId]
+    .subquestions[subquestionId].answer = newText;
+    setPreviousAnswers(updatedAnswers);
+  };
+
   const handleSaveEdit = (newText: string, subquestionId: number) => {
     try {
       //이거 수정이라서 백엔드
       console.log('Save:', newText);
-      const res = axiosUpdateAnswers(//todo 이거 백엔드로 날리는 로직만 수정하면 됨
-        subquestionId,
-        newText,
-      );
-      const prevAnswerId = (subquestionId + answersIndex) * answersPerPage;
-      const updatedAnswers = [...previousAnswers]; //shallow copy
-      updatedAnswers[prevAnswerId]
-      .subquestions[subquestionId].answer = newText;
-      setPreviousAnswers(updatedAnswers);
+      const res = axiosUpdateAnswers(subquestionId, newText );
+      //아래 부분은 state 변경
+      editPrevAnswer(subquestionId, newText);
+      // const updatedAnswers = [...previousAnswers]; //shallow copy
+      // updatedAnswers[prevAnswerId]
+      // .subquestions[subquestionId].answer = newText;
+      // setPreviousAnswers(updatedAnswers);
     } catch (error) {
       console.error('Error updating answer:', error);
     }
@@ -178,10 +183,11 @@ const HomeScreen = () => {
                   key={subquestionId}
                   forceClose={closeAccordion}>
                   <View style={styles.prevAnswers}>
-                  {item.subquestions.map((subquestion, subquestionId) => (
+                  {item.subquestions.map((subquestion) => (
                     <PrevAnswers
+                      key = {subquestion.id}
                       subquestion={subquestion}
-                      index={subquestionId}//이거 실제 questionIndex 받아야할듯
+                      subquestionId={subquestion.id}//이거 실제 questionIndex 받아야할듯
                       handleSaveEdit={handleSaveEdit}
                       // handleEdit={handleEdit}
                     />

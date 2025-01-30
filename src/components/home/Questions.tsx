@@ -13,6 +13,7 @@ interface QuestionsProps {
 const Questions = ({
   questionId, content
 }: QuestionsProps) => {
+
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
 
   return (

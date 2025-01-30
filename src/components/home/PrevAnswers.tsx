@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { AnswerProps, SubquestionProps } from '../../type/answer.type';
+import { AnswerTypes, SubquestionTypes } from '../../type/answer.type';
 import EditIcon from '../../assets/svg/edit-icon.svg';
 import colors from '../../styles/colors';
 import { fonts } from '../../styles/fonts';
 import EditModal from '../modals/EditModal'; // ✅ EditModal 추가
 
 interface PrevAnswersProps {
-  subquestion: SubquestionProps;
-  index: number;
+  subquestion: SubquestionTypes;
+  subquestionId: number;
   handleSaveEdit: (newText: string, subquestionIndex: number) => void; // ✅ 수정 완료 후 저장하는 함수
 }
 
 const PrevAnswers = ({
   subquestion, 
-  index,
+  subquestionId,
   handleSaveEdit,
 }: PrevAnswersProps) => {
   // ✅ EditModal 상태 관리
@@ -29,7 +29,7 @@ const PrevAnswers = ({
         currentValue={editAnswer}
         subquestion={subquestion.text}
         onClose={() => setIsEditModalOpen(false)}
-        subquestionIndex={index}
+        subquestionId={subquestionId}
         handleSaveEdit={handleSaveEdit}
       />
       <View style={styles.subquestionContainer}>

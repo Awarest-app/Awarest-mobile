@@ -1,8 +1,8 @@
 import {Alert} from 'react-native';
 import {axiosInstance} from './axios.instance';
-import {UserServey, Permissions} from '../type/survey.type';
+import {UserServey, PermissionTypes} from '../type/survey.type';
 import {getToken, removeToken} from './secureStorage';
-
+import {ProfileTypes} from '../type/profile.type';
 // 서버 연결 테스트 함수
 export const axiosTestServer = async () => {
   try {
@@ -76,12 +76,32 @@ export const axiosSurveySumbit = async (answers: UserServey) => {
 };
 
 const axiosPermissonSubmitURL = '/api/survey/save-permisson';
-export const axiosPermissonSubmit = async (permissons: Permissions) => {
+export const axiosPermissonSubmit = async (permissons: PermissionTypes) => {
   try {
     const response = await axiosInstance.post(axiosPermissonSubmitURL, {permissons});
     console.log('Survey submitted:', response.data);
   } catch (error) {
     console.error('Error submitting survey:', error);
+  }
+};
+
+const axiosGetProfileURL = '/api/profile';
+export const axiosGetProfile = async (): Promise<ProfileTypes> => {
+  try {
+    const response = await axiosInstance.get<ProfileTypes>(axiosGetProfileURL);
+    return response.data;
+  } catch (error) {
+    console.error('Error getting profile:', error);
+    return {
+      profileImg: '',
+      userName: '',
+      memberSince: '',
+      dayStreak: 0,
+      totalXP: 0,
+      levelXP: 0,
+      level: 0,
+      totalAnswers: 0,
+    };
   }
 };
 
@@ -132,7 +152,7 @@ export const axiosPostAnswers = async (answers: any) => {
 };
 
 const axiosUpdateAnswersURL = '/api/answers/update';
-export const axiosUpdateAnswers = async (
+export const axiosUpdateAnswers = async (//query: id, body : content
   subQuestionId: number,
   answer: string,
 ) => {

@@ -14,16 +14,16 @@ interface EditModalProps {
   isOpen: boolean;
   currentValue: string;
   subquestion: string;
-  subquestionIndex: number;
+  subquestionId: number;
   onClose: () => void;
-  handleSaveEdit: (newText: string, subquestionIndex: number) => void;
+  handleSaveEdit: (newText: string, subquestionId: number) => void;
 }
 
 const EditModal = ({
   isOpen,
   currentValue,
   subquestion,
-  subquestionIndex,
+  subquestionId,
   onClose,
   handleSaveEdit,
 }: EditModalProps) => {
@@ -58,7 +58,7 @@ const EditModal = ({
             </TouchableOpacity>
             <TouchableOpacity style={styles.modalButton}
               onPress={() => {
-                handleSaveEdit(text, subquestionIndex);
+                handleSaveEdit(text, subquestionId);
                 onClose();
               }}
             >
