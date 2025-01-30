@@ -28,6 +28,7 @@ import {Header} from '../components/Header';
 // 스타일, 폰트
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
+
 // 네비게이션 타입
 type AnswerScreenRouteProp = RouteProp<HomeStackParamList, 'Answer'>;
 type AnswerScreenNavProp = NavigationProp<HomeStackParamList, 'Answer'>;
@@ -75,23 +76,25 @@ export default function AnswerScreen() {
   const cleanUpExpiredKeys = async () => {
     try {
       const now = Date.now();
-  
+
       const ALL_KEYS = await AsyncStorage.getAllKeys();
-      const expirationKeys = ALL_KEYS.filter(key => key.startsWith('answersExpiration_'));
+      const expirationKeys = ALL_KEYS.filter(key =>
+        key.startsWith('answersExpiration_'),
+      );
 
       if (expirationKeys.length === 0) return;
 
       const keyValuePairs = await AsyncStorage.multiGet(expirationKeys);
       const expiredKeys = [];
-  
+
       for (const [key, value] of keyValuePairs) {
         if (value && parseInt(value, 10) < now) {
           const questionId = key.replace('answersExpiration_', '');
           expiredKeys.push(key); // answersExpiration_1
-          expiredKeys.push(`userAnswers_${questionId}`);// userAnswers_1
+          expiredKeys.push(`userAnswers_${questionId}`); // userAnswers_1
         }
       }
-      if (expiredKeys.length === 0) return ;
+      if (expiredKeys.length === 0) return;
       await AsyncStorage.multiRemove(expiredKeys);
       console.log(`Removed expired keys: ${expiredKeys}`);
     } catch (err) {
@@ -225,7 +228,6 @@ export default function AnswerScreen() {
               <View style={styles.inputBlock} key={subQ.id}>
                 {/* 서브질문 텍스트 표시 */}
                 <Text style={styles.inputLabel}>{subQ.text}</Text>
-
                 {/* 사용자 입력 (questions.subquestions[index]) */}
                 <TextInput
                   style={styles.input}
@@ -234,11 +236,12 @@ export default function AnswerScreen() {
                   multiline
                   value={questions.responses[index] ?? ''}
                   onChangeText={text => {
-                    if (text.length > 1000) return ;
+                    if (text.length > 1000) return;
+                    console.log('questions:', questions);
                     setQuestions(prev => {
                       const updated = [...prev.responses];
                       updated[index] = text;
-                      return {...prev, subquestions: updated};
+                      return {...prev, responses: updated};
                     });
                   }}
                 />
@@ -290,13 +293,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: fonts.roboto_medium,
-    color : colors.black,
+    color: colors.black,
     fontSize: 24,
   },
   question: {
     fontFamily: fonts.roboto_medium,
     fontSize: 20,
-    color : colors.black,
+    color: colors.black,
   },
   answerContainer: {
     gap: 16,
@@ -312,12 +315,12 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontFamily: fonts.roboto_medium,
     fontSize: 18,
-    color : colors.black,
+    color: colors.black,
   },
   input: {
     fontFamily: fonts.lato_regular,
     fontSize: 16,
-    color : colors.black,
+    color: colors.black,
     minHeight: 60,
     borderWidth: 1,
     borderColor: colors.card_border,

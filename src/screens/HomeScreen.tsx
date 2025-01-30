@@ -7,25 +7,17 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import {
-  NavigationProp,
-  useFocusEffect,
-  useNavigation,
-} from '@react-navigation/native';
-import {HomeStackParamList} from '../type/route.type';
+import {useFocusEffect} from '@react-navigation/native';
 import {Header} from '../components/Header';
 import MemoGradient from '../components/Hooks/MemoGradient';
 import colors from '../styles/colors';
-import EditIcon from '../assets/svg/edit-icon.svg';
 import PrevIcon from '../assets/svg/prev-icon.svg';
 import NextIcon from '../assets/svg/next-icon.svg';
 import {fonts} from '../styles/fonts';
 import Accordion from '../components/Hooks/Accordion';
-import EditModal from '../components/modals/EditModal';
 import {
   axiosGetAnswers,
   axiosGetQuestions,
-  axiosGetSubquestions,
   axiosUpdateAnswers,
 } from '../api/axios';
 import {Questiontypes} from '../type/question.type';
@@ -41,19 +33,21 @@ const HomeScreen = () => {
   const [closeAccordion, setCloseAccordion] = useState<boolean>(false);
   const answersPerPage = 3;
   const [questions, setQuestions] = useState<Questiontypes[]>([
-  { questionId: 123, type: 'hi', content: 'asdasdasdasd' },
-  { questionId: 124, type: 'hi', content: 'asdasdasdasdsd' }
-]);
-  
+    {questionId: 123, type: 'hi', content: 'asdasdasdasd'},
+    {questionId: 124, type: 'hi', content: 'asdasdasdasdsd'},
+  ]);
+
   //todo : 이거 axios 날릴때 남은건냅두고 처음에 6개, 그뒤에 6개씩추가
   const [previousAnswers, setPreviousAnswers] = useState<AnswerTypes[]>([]);
   const totalPages = Math.ceil(previousAnswers.length / answersPerPage);
 
   // TODO : page 로 나중에 6개씩 날리기
-  const paginatedAnswers = previousAnswers && previousAnswers.slice(
-    answersIndex * answersPerPage,
-    (answersIndex + 1) * answersPerPage,
-  );
+  const paginatedAnswers =
+    previousAnswers &&
+    previousAnswers.slice(
+      answersIndex * answersPerPage,
+      (answersIndex + 1) * answersPerPage,
+    );
   // a = (subquestionId + answersIndex) * answersPerPage;
   // previousanswers[a].
   //previousAnswers
@@ -91,8 +85,7 @@ const HomeScreen = () => {
   const editPrevAnswer = (subquestionId: number, newText: string) => {
     const prevAnswerId = (subquestionId + answersIndex) * answersPerPage;
     const updatedAnswers = [...previousAnswers]; //shallow copy
-    updatedAnswers[prevAnswerId]
-    .subquestions[subquestionId].answer = newText;
+    updatedAnswers[prevAnswerId].subquestions[subquestionId].answer = newText;
     setPreviousAnswers(updatedAnswers);
   };
 
@@ -100,7 +93,7 @@ const HomeScreen = () => {
     try {
       //이거 수정이라서 백엔드
       console.log('Save:', newText);
-      const res = axiosUpdateAnswers(subquestionId, newText );
+      const res = axiosUpdateAnswers(subquestionId, newText);
       //아래 부분은 state 변경
       editPrevAnswer(subquestionId, newText);
       // const updatedAnswers = [...previousAnswers]; //shallow copy
@@ -140,7 +133,7 @@ const HomeScreen = () => {
     React.useCallback(() => {
       // 스크린이 포커스될 때마다 실행할 함수
       handleGetQuestions();
-      handleGetQuestionHistory();
+      // handleGetQuestionHistory();
 
       return () => {
         // 필요시 정리 작업 수행
@@ -162,10 +155,10 @@ const HomeScreen = () => {
           >
             <Text style={styles.cardTitle}>Today's Questions</Text>
           </TouchableOpacity>
-          {questions &&//이거우너래대로 answers로 바꿔야됨
+          {questions && //이거우너래대로 answers로 바꿔야됨
             questions.map(question => (
               <Questions
-                key={question.questionId} 
+                key={question.questionId}
                 questionId={question.questionId}
                 content={question.content}
               />
@@ -178,23 +171,23 @@ const HomeScreen = () => {
             <View style={styles.prevAnswerContainer}>
               {paginatedAnswers &&
                 paginatedAnswers.map((item, subquestionId) => (
-                <Accordion
-                  title={item.question}
-                  key={subquestionId}
-                  forceClose={closeAccordion}>
-                  <View style={styles.prevAnswers}>
-                  {item.subquestions.map((subquestion) => (
-                    <PrevAnswers
-                      key = {subquestion.id}
-                      subquestion={subquestion}
-                      subquestionId={subquestion.id}//이거 실제 questionIndex 받아야할듯
-                      handleSaveEdit={handleSaveEdit}
-                      // handleEdit={handleEdit}
-                    />
-                  ))}
-                  </View>
-                </Accordion>
-              ))}
+                  <Accordion
+                    title={item.question}
+                    key={subquestionId}
+                    forceClose={closeAccordion}>
+                    <View style={styles.prevAnswers}>
+                      {item.subquestions.map(subquestion => (
+                        <PrevAnswers
+                          key={subquestion.id}
+                          subquestion={subquestion}
+                          subquestionId={subquestion.id} //이거 실제 questionIndex 받아야할듯
+                          handleSaveEdit={handleSaveEdit}
+                          // handleEdit={handleEdit}
+                        />
+                      ))}
+                    </View>
+                  </Accordion>
+                ))}
             </View>
             <View style={styles.moveButtonContainer}>
               <TouchableOpacity style={styles.prevButton} onPress={handlePrev}>
@@ -247,7 +240,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     marginTop: 12,
   },
-  
+
   prevAnsweralign: {
     gap: 16,
     alignItems: 'center',

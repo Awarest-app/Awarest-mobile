@@ -7,7 +7,11 @@ import {ProfileTypes} from '../type/profile.type';
 export const axiosTestServer = async () => {
   try {
     // GET 요청을 인스턴스를 사용해 실행
-    const response = await axiosInstance.get('/test/server');
+    const response = await axiosInstance.get('/test/server', {
+      headers: {
+        'Skip-Auth': true, // 이 요청에서는 토큰을 포함하지 않음
+      },
+    });
     console.log('서버 응답:', response.data);
 
     // 성공 시 Alert 표시
@@ -65,9 +69,11 @@ export const axiosAccountDelete = async () => {
   }
 };
 
-const axiosSurveySumbitURL = '/api/survey/save-survey';
+const axiosSurveySumbitURL = '/api/survey/save';
+// const axiosSurveySumbitURL = '/api/survey/save-survey';
 export const axiosSurveySumbit = async (answers: UserServey) => {
   try {
+    console.log('answers', answers);
     const response = await axiosInstance.post(axiosSurveySumbitURL, {answers});
     console.log('Survey submitted:', response.data);
   } catch (error) {
@@ -75,10 +81,14 @@ export const axiosSurveySumbit = async (answers: UserServey) => {
   }
 };
 
-const axiosPermissonSubmitURL = '/api/survey/save-permisson';
-export const axiosPermissonSubmit = async (permissons: PermissionTypes) => {
+// 알림 저장
+const axiosPermissonSubmitURL = '/api/profile/noti-permission';
+export const axiosPermissonSubmit = async (permissons: boolean) => {
   try {
-    const response = await axiosInstance.post(axiosPermissonSubmitURL, {permissons});
+    // console.log('permissons', permissons);
+    const response = await axiosInstance.post(axiosPermissonSubmitURL, {
+      permissons,
+    });
     console.log('Survey submitted:', response.data);
   } catch (error) {
     console.error('Error submitting survey:', error);
@@ -152,7 +162,8 @@ export const axiosPostAnswers = async (answers: any) => {
 };
 
 const axiosUpdateAnswersURL = '/api/answers/update';
-export const axiosUpdateAnswers = async (//query: id, body : content
+export const axiosUpdateAnswers = async (
+  //query: id, body : content
   subQuestionId: number,
   answer: string,
 ) => {

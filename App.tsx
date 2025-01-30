@@ -8,7 +8,12 @@ import LoginStack from './src/screens/stacks/LoginStack';
 import {Linking} from 'react-native';
 import SafariView from 'react-native-safari-view';
 import {RootStackParamList} from './src/type/route.type';
-import {getToken, removeToken, storeToken} from './src/api/secureStorage';
+import {
+  getToken,
+  removeToken,
+  storeRefreshToken,
+  storeToken,
+} from './src/api/secureStorage';
 import BottomStack from './src/components/Bottom';
 
 const RootStack = createNativeStackNavigator();
@@ -18,38 +23,48 @@ function App() {
     useRef<NavigationContainerRef<RootStackParamList>>(null);
 
   useEffect(() => {
-    // removeToken();
     const handleDeepLink = async (event: {url: string}) => {
+      console.log('handleDeepLink', event);
       const url = event.url;
-      const isSurveyMatch = url.match(/survey=(.*)/);
-      // console.log('isSurveyMatch', isSurveyMatch);
-      const isSurvey = isSurveyMatch ? isSurveyMatch[1] : null;
-      console.log('isSurvey', isSurvey);
-      // await removeToken();
+
+      // accessToken, refreshToken, survey 파라미터 추출
+      const accessTokenMatch = url.match(/accessToken=([^&]+)/);
+      const refreshTokenMatch = url.match(/refreshToken=([^&]+)/);
+      const surveyMatch = url.match(/survey=([^&]+)/);
+
+      const accessToken = accessTokenMatch
+        ? decodeURIComponent(accessTokenMatch[1])
+        : null;
+      const refreshToken = refreshTokenMatch
+        ? decodeURIComponent(refreshTokenMatch[1])
+        : null;
+      const survey = surveyMatch ? decodeURIComponent(surveyMatch[1]) : null;
+
+      // console.log('accessToken:', accessToken);
+      // console.log('refreshToken:', refreshToken);
+      // console.log('survey:', survey);
+
+      if (accessToken && refreshToken) {
+        try {
+          await storeToken(accessToken);
+          await storeRefreshToken(refreshToken);
+          console.log('토큰 저장 완료');
+        } catch (error) {
+          console.error('토큰 저장 실패:', error);
+        }
+      }
 
       const isToken = await getToken();
-      console.log('isToken', isToken);
+      console.log('isToken:', isToken);
       if (isToken !== null) {
-        if (isSurvey === 'true') {
+        if (survey === 'true') {
           navigationRef.current?.reset({
             index: 0,
             routes: [
               {
                 name: 'BottomStack',
-                state: {
-                  routes: [
-                    {
-                      name: 'HomeStack',
-                      state: {
-                        routes: [
-                          { name: 'Home' }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
+              },
+            ],
           });
         } else {
           navigationRef.current?.navigate('LoginStack', {
@@ -61,15 +76,9 @@ function App() {
         return;
       }
 
-      const tokenMatch = url.match(/token=([^&]+)/);
-      // console.log('tokenMatch', tokenMatch);
-      if (tokenMatch && tokenMatch[1]) {
-        const token = tokenMatch[1];
-        console.log('토큰 존재없이 실행 token', token);
-        storeToken(token);
-      }
+      // 토큰이 없을 경우, 로그인 스택으로 이동
       navigationRef.current?.navigate('LoginStack', {
-        screen: 'Survey',
+        screen: 'Login',
       });
       SafariView.dismiss();
     };
