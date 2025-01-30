@@ -9,10 +9,12 @@ import {
   Switch,
 } from 'react-native';
 import {useState} from 'react';
+import { removeToken } from '../api/secureStorage';
+import { axiosAccountDelete } from '../api/axios';
 import colors from '../styles/colors';
 import {fonts} from '../styles/fonts';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {HomeStackParamList} from '../type/route.type';
+import {HomeStackParamList, RootStackParamList} from '../type/route.type';
 import PrevIcon from '../assets/svg/setting-prev.svg';
 
 import DeleteModal from '../components/modals/DeleteModal';
@@ -26,12 +28,23 @@ export default function DeleteScreen({
 }: DeleteScreenProps) {
   // 시간, XP 등의 데이터를 실제 로직에 맞게 받아오거나 계산해서 표시할 수 있습니다.
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const name = 'John Doe'; // axios로 받아온 사용자 이름
-  const [isEnabled, setIsEnabled] = useState(false);
-  const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const handleOnSubmit = () => {
     //axios 삭제
-    setIsModalOpen(false);
+    try {
+      removeToken();
+      axiosAccountDelete();
+      setIsModalOpen(false);
+      navigation.reset({ index: 0,
+        routes: [{
+          name: 'LoginStack',
+          params: {
+            screen: 'Welcome',
+          }}],
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
   return (
       <View style={styles.container}>

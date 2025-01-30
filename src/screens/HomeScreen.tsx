@@ -7,42 +7,38 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import {
-  NavigationProp,
-  useFocusEffect,
-  useNavigation,
-} from '@react-navigation/native';
-import {HomeStackParamList} from '../type/route.type';
+import {useFocusEffect} from '@react-navigation/native';
 import {Header} from '../components/Header';
 import MemoGradient from '../components/Hooks/MemoGradient';
 import colors from '../styles/colors';
-import EditIcon from '../assets/svg/edit-icon.svg';
 import PrevIcon from '../assets/svg/prev-icon.svg';
 import NextIcon from '../assets/svg/next-icon.svg';
 import {fonts} from '../styles/fonts';
 import Accordion from '../components/Hooks/Accordion';
-import EditModal from '../components/modals/EditModal';
 import {
   axiosGetAnswers,
   axiosGetQuestions,
-  axiosGetSubquestions,
   axiosUpdateAnswers,
 } from '../api/axios';
-import {QuestionProps} from '../type/question.type';
-import {AnswerProps} from '../type/answer.type';
+import {Questiontypes} from '../type/question.type';
+import {AnswerTypes} from '../type/answer.type';
+import PrevAnswers from '../components/home/PrevAnswers';
+import Questions from '../components/home/Questions';
 
 //todo: 컴포넌트 쪼개기
 const HomeScreen = () => {
-  const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
   const [answersIndex, setAnswersIndex] = useState<number>(0);
   const scrollRef = useRef<ScrollView>(null);
   const [pageChanged, setPageChanged] = useState<boolean>(false);
   const [closeAccordion, setCloseAccordion] = useState<boolean>(false);
   const answersPerPage = 3;
-  const [answers, setAnswers] = useState<QuestionProps[]>([]);
+  const [questions, setQuestions] = useState<Questiontypes[]>([
+    {questionId: 123, type: 'hi', content: 'asdasdasdasd'},
+    {questionId: 124, type: 'hi', content: 'asdasdasdasdsd'},
+  ]);
 
   //todo : 이거 axios 날릴때 남은건냅두고 처음에 6개, 그뒤에 6개씩추가
-  const [previousAnswers, setPreviousAnswers] = useState<AnswerProps[]>([]);
+  const [previousAnswers, setPreviousAnswers] = useState<AnswerTypes[]>([]);
   const totalPages = Math.ceil(previousAnswers.length / answersPerPage);
 
   // TODO : page 로 나중에 6개씩 날리기
@@ -52,6 +48,9 @@ const HomeScreen = () => {
       answersIndex * answersPerPage,
       (answersIndex + 1) * answersPerPage,
     );
+  // a = (subquestionId + answersIndex) * answersPerPage;
+  // previousanswers[a].
+  //previousAnswers
   const handlePrev = () => {
     if (answersIndex === 0) return;
 
@@ -60,7 +59,7 @@ const HomeScreen = () => {
       setAnswersIndex(answersIndex - 1);
       setPageChanged(true);
       setCloseAccordion(false);
-    }, 300); // Accordion에서 duration이랑 맞춰야됨
+    }, 100); // Accordion에서 duration이랑 맞춰야됨
   };
   const handleNext = () => {
     if (answersIndex === totalPages - 1) return;
@@ -70,7 +69,7 @@ const HomeScreen = () => {
       setAnswersIndex(answersIndex + 1);
       setPageChanged(true);
       setCloseAccordion(false);
-    }, 300); // Accordion에서 duration이랑 맞춰야됨
+    }, 100); // Accordion에서 duration이랑 맞춰야됨
   };
   useEffect(() => {
     if (pageChanged) {
@@ -83,48 +82,24 @@ const HomeScreen = () => {
     }
   }, [answersIndex, pageChanged]);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editAnswer, setEditAnswer] = useState<string>('');
-  const [editingIndexes, setEditingIndexes] = useState<{
-    questionIndex: number;
-    subquestionIndex: number;
-  } | null>(null);
-
-  const handleEdit = (
-    text: string,
-    questionIndex: number,
-    subquestionIndex: number,
-  ) => {
-    const questionIdx = answersIndex * answersPerPage + questionIndex;
-    setEditAnswer(text);
-    setIsModalOpen(true);
-    setEditingIndexes({questionIndex: questionIdx, subquestionIndex});
+  const editPrevAnswer = (subquestionId: number, newText: string) => {
+    const prevAnswerId = (subquestionId + answersIndex) * answersPerPage;
+    const updatedAnswers = [...previousAnswers]; //shallow copy
+    updatedAnswers[prevAnswerId].subquestions[subquestionId].answer = newText;
+    setPreviousAnswers(updatedAnswers);
   };
 
-  const handleSaveEdit = (newText: string) => {
-    //todo 이거 백엔드로 날려야됨
+  const handleSaveEdit = (newText: string, subquestionId: number) => {
     try {
       //이거 수정이라서 백엔드
-      if (!editingIndexes) return;
-      console.log('newText \n:', newText);
-      console.log(
-        '\n\n \n:',
-        previousAnswers[editingIndexes.questionIndex].subquestions[
-          editingIndexes.subquestionIndex
-        ].id,
-      );
-      const res = axiosUpdateAnswers(
-        previousAnswers[editingIndexes.questionIndex].subquestions[
-          editingIndexes.subquestionIndex
-        ].id,
-        newText,
-      );
-
-      const updatedAnswers = [...previousAnswers]; //shallow copy
-      updatedAnswers[editingIndexes.questionIndex].subquestions[
-        editingIndexes.subquestionIndex
-      ].answer = newText;
-      setPreviousAnswers(updatedAnswers);
+      console.log('Save:', newText);
+      const res = axiosUpdateAnswers(subquestionId, newText);
+      //아래 부분은 state 변경
+      editPrevAnswer(subquestionId, newText);
+      // const updatedAnswers = [...previousAnswers]; //shallow copy
+      // updatedAnswers[prevAnswerId]
+      // .subquestions[subquestionId].answer = newText;
+      // setPreviousAnswers(updatedAnswers);
     } catch (error) {
       console.error('Error updating answer:', error);
     }
@@ -135,11 +110,12 @@ const HomeScreen = () => {
     try {
       const response: any = await axiosGetQuestions();
       console.log('Questions:', response.data);
-      setAnswers(response.data);
+      setQuestions(response.data);
     } catch (error) {
       console.error('Error getting questions:', error);
     }
   };
+  //previous questions 요청axios
   const handleGetQuestionHistory = async () => {
     try {
       const response = await axiosGetAnswers();
@@ -148,7 +124,7 @@ const HomeScreen = () => {
       // console.log('Answers:', response.subquestions);
       setPreviousAnswers(response);
     } catch (error) {
-      console.error('Error getting answers:', error);
+      console.error('Error getting questions:', error);
     }
   };
 
@@ -168,45 +144,24 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <EditModal
-        isOpen={isModalOpen}
-        currentText={editAnswer}
-        question={
-          editingIndexes
-            ? previousAnswers[editingIndexes.questionIndex].subquestions[
-                editingIndexes.subquestionIndex
-              ].text
-            : 'Error'
-        }
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleSaveEdit}
-      />
       <MemoGradient />
       <ScrollView
         contentContainerStyle={styles.contentContainer}
         ref={scrollRef}>
         <Header />
         <View style={styles.card}>
-          <TouchableOpacity onPress={handleGetQuestions}>
+          <TouchableOpacity
+          //  onPress={handleGetQuestions}
+          >
             <Text style={styles.cardTitle}>Today's Questions</Text>
           </TouchableOpacity>
-
-          {answers && //이거우너래대로 answers로 바꿔야됨
-            answers.map(question => (
-              <TouchableOpacity
-                key={question.content}
-                style={styles.questionBox}
-                onPress={() => {
-                  // handleGetSubquestions(question.id);
-                  // onPress={() => {
-                  console.log('question.id', question.questionId);
-                  navigation.navigate('Answer', {
-                    question_id: question.questionId,
-                  });
-                }}>
-                <Text style={styles.questionText}>{question.content}</Text>
-                <Text style={styles.tapToReflect}>Tap to reflect</Text>
-              </TouchableOpacity>
+          {questions && //이거우너래대로 answers로 바꿔야됨
+            questions.map(question => (
+              <Questions
+                key={question.questionId}
+                questionId={question.questionId}
+                content={question.content}
+              />
             ))}
         </View>
 
@@ -215,44 +170,21 @@ const HomeScreen = () => {
           <View style={styles.prevAnsweralign}>
             <View style={styles.prevAnswerContainer}>
               {paginatedAnswers &&
-                paginatedAnswers.map((item, questionIndex) => (
+                paginatedAnswers.map((item, subquestionId) => (
                   <Accordion
                     title={item.question}
-                    key={questionIndex}
+                    key={subquestionId}
                     forceClose={closeAccordion}>
                     <View style={styles.prevAnswers}>
-                      {item.subquestions.map(
-                        (subquestion, subquestionIndex) => (
-                          <View
-                            style={styles.subquestionContainer}
-                            key={subquestionIndex}>
-                            <Text style={styles.subquestionText}>
-                              {subquestion.text}
-                            </Text>
-                            <View style={styles.answerContainer}>
-                              <Text style={styles.answerText}>
-                                {subquestion.answer}
-                              </Text>
-                              <View style={styles.answerBottom}>
-                                <Text style={styles.answerDate}>
-                                  {subquestion.date}
-                                </Text>
-                                <TouchableOpacity
-                                  style={styles.editButton}
-                                  onPress={() =>
-                                    handleEdit(
-                                      subquestion.answer,
-                                      questionIndex,
-                                      subquestionIndex,
-                                    )
-                                  }>
-                                  <EditIcon />
-                                </TouchableOpacity>
-                              </View>
-                            </View>
-                          </View>
-                        ),
-                      )}
+                      {item.subquestions.map(subquestion => (
+                        <PrevAnswers
+                          key={subquestion.id}
+                          subquestion={subquestion}
+                          subquestionId={subquestion.id} //이거 실제 questionIndex 받아야할듯
+                          handleSaveEdit={handleSaveEdit}
+                          // handleEdit={handleEdit}
+                        />
+                      ))}
                     </View>
                   </Accordion>
                 ))}
@@ -308,25 +240,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     marginTop: 12,
   },
-  questionBox: {
-    borderColor: colors.card_border,
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 16,
-    gap: 10,
-    backgroundColor: colors.white_80,
-    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
-  },
-  questionText: {
-    fontFamily: fonts.roboto_medium,
-    color: colors.black,
-    fontSize: calculateDp(16),
-  },
-  tapToReflect: {
-    fontFamily: fonts.lato_regular,
-    fontSize: calculateDp(14),
-    color: colors.text_hint,
-  },
+
   prevAnsweralign: {
     gap: 16,
     alignItems: 'center',

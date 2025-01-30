@@ -1,8 +1,8 @@
 import {Alert} from 'react-native';
 import {axiosInstance} from './axios.instance';
-import {UserServey} from '../type/survey.type';
+import {UserServey, PermissionTypes} from '../type/survey.type';
 import {getToken, removeToken} from './secureStorage';
-
+import {ProfileTypes} from '../type/profile.type';
 // 서버 연결 테스트 함수
 export const axiosTestServer = async () => {
   try {
@@ -56,7 +56,21 @@ export const axiosSignout = async () => {
   }
 };
 
+const axioxAccountDeleteURL = '/api/auth/delete';
+export const axiosAccountDelete = async () => {
+  try {
+    const response = await axiosInstance.get(axioxAccountDeleteURL);
+    // 성공 시 Alert 표시
+    Alert.alert('Success', `서버 응답: ${JSON.stringify(response.data)}`);
+  } catch (error) {
+    console.error('signout서버 요청 실패:', error);
+    // 실패 시 Alert 표시
+    Alert.alert('signoutError', '서버 요청 실패: ' + error);
+  }
+};
+
 const axiosSurveySumbitURL = '/api/survey/save';
+// const axiosSurveySumbitURL = '/api/survey/save-survey';
 export const axiosSurveySumbit = async (answers: UserServey) => {
   try {
     console.log('answers', answers);
@@ -78,6 +92,26 @@ export const axiosPermissonSubmit = async (permissons: boolean) => {
     console.log('Survey submitted:', response.data);
   } catch (error) {
     console.error('Error submitting survey:', error);
+  }
+};
+
+const axiosGetProfileURL = '/api/profile';
+export const axiosGetProfile = async (): Promise<ProfileTypes> => {
+  try {
+    const response = await axiosInstance.get<ProfileTypes>(axiosGetProfileURL);
+    return response.data;
+  } catch (error) {
+    console.error('Error getting profile:', error);
+    return {
+      profileImg: '',
+      userName: '',
+      memberSince: '',
+      dayStreak: 0,
+      totalXP: 0,
+      levelXP: 0,
+      level: 0,
+      totalAnswers: 0,
+    };
   }
 };
 
@@ -129,6 +163,7 @@ export const axiosPostAnswers = async (answers: any) => {
 
 const axiosUpdateAnswersURL = '/api/answers/update';
 export const axiosUpdateAnswers = async (
+  //query: id, body : content
   subQuestionId: number,
   answer: string,
 ) => {

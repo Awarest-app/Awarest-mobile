@@ -9,6 +9,13 @@ const calculateDp = (width: number, px: number) => {
 export const globalStyle = StyleSheet.create({
   
   // 메인 로고들
+  defaultTabBarStyle: {
+    height: 74,
+    borderTopWidth: 1,
+    borderTopColor: colors.card_border,
+    backgroundColor: 'rgba(237, 237, 237, 0.75)',
+    position: 'absolute',
+  },
   logo: {
     fontSize: 40,
     fontWeight: 'bold',
