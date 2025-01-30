@@ -184,7 +184,9 @@ export default function AnswerScreen() {
 
       // 2) 이 payload를 백엔드로 전송
       // => BE는 createAnswers([{ subQuestionId, answer }, ...]) 로 받을 수 있음
-      await axiosPostAnswers(payload);
+      // TODO, question이 아닌 question id를 넘겨주기
+      const resultProps = await axiosPostAnswers(payload, serverData?.question);
+      console.log('resultProps', resultProps.xpAdded);
       console.log('Submitted answers (with ID):', payload);
 
       // 3) 제출 성공 시 캐시 삭제
@@ -192,7 +194,7 @@ export default function AnswerScreen() {
       await AsyncStorage.removeItem(ANSWER_EXPIRATION_KEY);
 
       // 4) 결과 화면으로 이동
-      navigation.navigate('Result');
+      navigation.navigate('Result', {question_xp: resultProps.xpAdded});
       setIsModalOpen(false);
     } catch (err) {
       console.error('Submission failed:', err);

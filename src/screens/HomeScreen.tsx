@@ -133,7 +133,7 @@ const HomeScreen = () => {
     React.useCallback(() => {
       // 스크린이 포커스될 때마다 실행할 함수
       handleGetQuestions();
-      // handleGetQuestionHistory();
+      handleGetQuestionHistory();
 
       return () => {
         // 필요시 정리 작업 수행
