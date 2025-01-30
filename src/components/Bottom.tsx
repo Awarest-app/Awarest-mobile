@@ -15,6 +15,7 @@ import {HomeStack} from '../screens/stacks/HomeStack';
 
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import { ProfileStack } from '../screens/stacks/ProfileStack';
+import { globalStyle } from '../styles/global';
 const Tab = createBottomTabNavigator();
 
 export default function BottomStack() {
@@ -29,7 +30,7 @@ export default function BottomStack() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarStyle: styles.tabBarStyle, // 스타일 객체 사용
+        tabBarStyle: globalStyle.defaultTabBarStyle, // 스타일 객체 사용
         tabBarLabelStyle: styles.tabBarLabelStyle, // 라벨 스타일
         tabBarActiveTintColor: colors.primary, // 활성화 색상
         tabBarInactiveTintColor: colors.text_hint, // 비활성화 색상
@@ -76,7 +77,7 @@ export default function BottomStack() {
 
 const styles = StyleSheet.create({
   tabBarStyle: {
-    height: 78,
+    height: 74,
     borderTopWidth: 1,
     borderTopColor: colors.card_border,
     backgroundColor: 'rgba(237, 237, 237, 0.75)',

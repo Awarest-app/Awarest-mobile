@@ -20,7 +20,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {axiosGetSubquestions, axiosPostAnswers} from '../api/axios';
 // 타입
 import {HomeStackParamList} from '../type/route.type';
-import {ServerResponse, SubQuestionProps} from '../type/question.type';
+import {ServerResponse, AnswerSubquestionTypes} from '../type/question.type';
 // 컴포넌트
 import AnswerModal from '../components/modals/AnswerModal';
 import MemoGradient from '../components/Hooks/MemoGradient';
@@ -40,7 +40,7 @@ export default function AnswerScreen() {
   // 서버에서 받은 데이터
   const [serverData, setServerData] = useState<ServerResponse | null>(null);
   // 사용자 입력 상태
-  const [questions, setQuestions] = useState<SubQuestionProps>({
+  const [questions, setQuestions] = useState<AnswerSubquestionTypes>({
     question: '',
     responses: [],
   });
@@ -61,7 +61,7 @@ export default function AnswerScreen() {
       const data: ServerResponse = await axiosGetSubquestions(question_id);
       setServerData(data);
       // subquestions 길이만큼 '' (빈 문자열) 할당
-      const initialState: SubQuestionProps = {
+      const initialState: AnswerSubquestionTypes = {
         question: data.question,
         responses: Array(data.subquestions.length).fill(''),
       };
@@ -108,7 +108,7 @@ export default function AnswerScreen() {
   // -----------------------------------------------
   // 2. AsyncStorage: 임시 저장 & 불러오기
   // -----------------------------------------------
-  const saveAnswersToStorage = async (answers: SubQuestionProps) => {
+  const saveAnswersToStorage = async (answers: AnswerSubquestionTypes) => {
     try {
       const now = Date.now();
       await AsyncStorage.setItem(ANSWER_STORAGE_KEY, JSON.stringify(answers));
@@ -132,7 +132,7 @@ export default function AnswerScreen() {
       // 저장된 값이 있고 만료되지 않았다면
       // if (saved && expiration && parseInt(expiration, 10) > now) {
       if (saved) {
-        const parsed: SubQuestionProps = JSON.parse(saved);
+        const parsed: AnswerSubquestionTypes = JSON.parse(saved);
         // 메인 질문/배열 길이가 일치하면 로드
         if (
           parsed.question === mainQuestion &&

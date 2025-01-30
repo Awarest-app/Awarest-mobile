@@ -38,8 +38,11 @@ export default function ReportScreen({
         } else {
           Alert.alert('Success', 'Email sent successfully!');
         }
+        return ;
       }
     );
+    setContact('');
+    setMessage('');
   }
   const handleContact = (text: string) => {
     if (contact.length > 40) return;
@@ -93,7 +96,7 @@ export default function ReportScreen({
             </Text>
             <TextInput
               style={styles.contactInput}
-              placeholder="Youremail@example.com"
+              placeholder="your email or anything"
               placeholderTextColor={colors.text_hint}
               value={contact}
               onChangeText={handleContact}

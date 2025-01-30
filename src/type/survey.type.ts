@@ -6,6 +6,6 @@ export type UserServey = {
 };
 
 
-export type Permissions = {
+export type PermissionTypes = {
   notification: boolean;
 }

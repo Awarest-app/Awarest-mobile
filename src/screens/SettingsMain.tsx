@@ -56,9 +56,6 @@ const SettingsMain = ({
           screen: 'Welcome',
         }}],
     });
-
-    
-    //todo axios sign outa
   }
   return (
     <View style={styles.SettingsContainer}>

@@ -45,13 +45,14 @@ export default function MainScreen() {
           <Text style={styles.subTitle}>Create your Own Aura</Text>
         </View>
 
-        {/* <TouchableOpacity
+        <TouchableOpacity
           style={{width: 100, height: 50, backgroundColor: 'skyblue',
             justifyContent: 'center', alignItems: 'center'}}
-          onPress={() => navigation.navigate('Login')}
+            onPress={() => navigation.navigate('BottomStack', {
+              screen: 'HomeStack', params: { screen: 'Home' } })}
         >
           <Text>go home</Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
         <View style={styles.sloganSection}>
           <Text style={styles.mainSlogan}>
             Take a moment each day to find your path in life
@@ -61,18 +62,10 @@ export default function MainScreen() {
           </Text>
         </View>
 
-        {/* <View style={styles.divider} /> */}
-        {/* 회원가입 영역 */}
         <View style={styles.registerSection}>
           <TouchableOpacity
             style={styles.oauthButton}
-            // onPress={() =>
-            //   navigation.navigate('HomeStack', {
-            //     screen: 'Home', // HomeStack 내부의 Home 스크린
-            //   })
-            // }
             onPress={() => axiosTestJwt()}
-            //
           >
             <View style={styles.oauthTextWrapper}>
               <AppleIcon />
@@ -81,9 +74,7 @@ export default function MainScreen() {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.oauthButton}
-            // onPress={() => navigation.navigate('Survey')}
             onPress={() => handleGoogleSignup()}
-            //
           >
             <View style={styles.oauthTextWrapper}>
               <GoogleIcon />

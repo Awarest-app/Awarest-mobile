@@ -7,27 +7,28 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
+import {
+  useFocusEffect,
+} from '@react-navigation/native';
 import {Header} from '../components/Header';
 import MemoGradient from '../components/Hooks/MemoGradient';
 import ProfileGradient from '../components/Hooks/ProfileGradient';
 import SettingIcon from '../assets/svg/setting-icon.svg';
-import ShareIcon from '../assets/svg/share-icon.svg';
 import {useRef} from 'react';
-// import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {HomeStackParamList} from '../type/route.type';
+import {ProfileTypes} from '../type/profile.type';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Modalize } from 'react-native-modalize';
 import Settings from '../components/Hooks/SettingsModal';
 import LevelModal from '../components/modals/LevelModal';
-
+import {axiosGetProfile} from '../api/axios';
 // 샘플용 임시 프로필 이미지(회색 원을 Image 대신 View로 표현할 수도 있음)
 
 export default function ProfileScreen() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const settingsRef = useRef<Modalize>(null);
-  const Datas = {
+  const [datas, setDatas] = useState<ProfileTypes>({
     profileImg: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcKBnNMLWjTurCJvK1LQk3awXQDiM-TdAXtg&s',
     userName: 'Sarah Johnson',
     memberSince: 'January 2025',
@@ -36,8 +37,8 @@ export default function ProfileScreen() {
     levelXP: 1000,
     level: 1,
     totalAnswers: 12,
-  };
-  const { totalXP, levelXP, level } = Datas;
+  });
+  const { totalXP, levelXP, level } = datas;
   const levelDatas = { totalXP, levelXP, level };
   const handleLevelModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -45,9 +46,15 @@ export default function ProfileScreen() {
   const openSettings = () => {
     settingsRef.current?.open();
   };
-  useEffect(() => {
-    //todo axios
-  }, []);
+
+  useFocusEffect(() => {
+    const fetchProfile = async () => {
+      const res = await axiosGetProfile();
+      setDatas(res);
+    }
+    // fetchProfile(); todo
+  });
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <LevelModal
@@ -74,7 +81,7 @@ export default function ProfileScreen() {
                 <ProfileGradient />
                 <View style={styles.profilePlaceholder}>
                   <Image
-                    source={{uri: Datas.profileImg}}
+                    source={{uri: datas.profileImg}}
                     style={styles.profileImage}
                   />
                 </View>
@@ -83,36 +90,34 @@ export default function ProfileScreen() {
                 </TouchableOpacity> */}
                 <View style={styles.nameContainer}>
                   <Text style={styles.userName}>
-                    {Datas.userName}
+                    {datas.userName}
                   </Text>
                   <Text style={styles.userMemberSince}>
-                    Member since {Datas.memberSince}
+                    Member since {datas.memberSince}
                   </Text>
                 </View>
               </View>
-
               <View style={styles.MainDatas}>
                 <View style={styles.statBox}>
-                  <Text style={styles.statNumber}>{Datas.dayStreak}</Text>
+                  <Text style={styles.statNumber}>{datas.dayStreak}</Text>
                   <Text style={styles.statLabel}>Day Streak</Text>
                 </View>
                 <View style={styles.statBox}>
-                  <Text style={styles.statNumber}>{Datas.totalXP}</Text>
+                  <Text style={styles.statNumber}>{datas.totalXP}</Text>
                   <Text style={styles.statLabel}>Total XP</Text>
                 </View>
               </View>
-              {/* 상세 정보 목록 */}
               <View style={styles.subDatas}>
                 <TouchableOpacity style={styles.infoBox}
                   activeOpacity={0.8}
                   onPress={handleLevelModal}
                 >
                   <Text style={styles.infoItemTitle}>Level</Text>
-                  <Text style={styles.infoItemValue}>{Datas.level}</Text>
+                  <Text style={styles.infoItemValue}>{datas.level}</Text>
                 </TouchableOpacity>
                 <View style={styles.infoBox}>
                   <Text style={styles.infoItemTitle}>Total Answers</Text>
-                  <Text style={styles.infoItemValue}>{Datas.totalAnswers}</Text>
+                  <Text style={styles.infoItemValue}>{datas.totalAnswers}</Text>
                 </View>
               </View>
           </View>

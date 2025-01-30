@@ -12,6 +12,7 @@ import { Modalize } from 'react-native-modalize';
 import {forwardRef} from 'react';
 import {fonts} from '../../styles/fonts';
 import colors from '../../styles/colors';
+import {globalStyle} from '../../styles/global';
 import SettingsGradient from './SettingsGradient';
 import ReportScreen from '../../screens/ReportScreen';
 import SettingsMain from '../../screens/SettingsMain';
@@ -33,6 +34,7 @@ const SettingsModal = forwardRef<Modalize, {}>((props, ref) => {
     modalizeRef.current?.close()
   };
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
   return (
     <Modalize
     modalStyle={styles.container}
@@ -41,14 +43,14 @@ const SettingsModal = forwardRef<Modalize, {}>((props, ref) => {
     modalHeight={height * 0.86}
     panGestureEnabled={false} //
     onClose={() => {
-      setPage('main')
+      setPage('main');
       navigation.getParent()?.setOptions({
-        tabBarStyle: { display: 'flex' },
+        tabBarStyle: globalStyle.defaultTabBarStyle,
       });
     }}
     onOpen={() => {
       navigation.getParent()?.setOptions({
-        tabBarStyle: { display: 'none' },
+        tabBarStyle: { display: 'none' }
       });
     }}
     >
