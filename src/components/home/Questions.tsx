@@ -1,28 +1,25 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { HomeStackParamList } from '../../type/route.type';
+import {TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {useNavigation, NavigationProp} from '@react-navigation/native';
+import {HomeStackParamList} from '../../type/route.type';
 import colors from '../../styles/colors';
-import { fonts } from '../../styles/fonts';
+import {fonts} from '../../styles/fonts';
 
 interface QuestionsProps {
   questionId: number;
   content: string;
 }
 
-const Questions = ({
-  questionId, content
-}: QuestionsProps) => {
-
+const Questions = ({questionId, content}: QuestionsProps) => {
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
 
   return (
     <TouchableOpacity
       style={styles.questionBox}
-      onPress={() => {//todo: question_id 확인
-        navigation.navigate('Answer', { question_id: 1 });
-      }}
-    >
+      onPress={() => {
+        //todo: question_id 확인
+        navigation.navigate('Answer', {question_id: questionId});
+      }}>
       <Text style={styles.questionText}>{content}</Text>
       <Text style={styles.tapToReflect}>Tap to reflect</Text>
     </TouchableOpacity>
