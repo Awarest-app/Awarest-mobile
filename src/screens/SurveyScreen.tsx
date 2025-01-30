@@ -15,7 +15,7 @@ import MemoGradient from '../components/Hooks/MemoGradient';
 import {questions} from '../constant/questions';
 import {axiosPermissonSubmit, axiosSurveySumbit} from '../api/axios';
 import {UserServey, Permissions} from '../type/survey.type';
-// Permissions 
+// Permissions
 import {
   checkNotifications,
   requestNotifications,
@@ -27,6 +27,7 @@ import colors from '../styles/colors';
 import {CustomDefaultAlert} from '../components/utils/CustomAlert';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../type/route.type';
+import {getToken} from '../api/secureStorage';
 
 export default function SurveyScreen() {
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -60,13 +61,17 @@ export default function SurveyScreen() {
   };
 
   const navigationHome = (): void => {
-      navigation.reset({ index: 0,
-      routes: [{
-        name: 'BottomStack',
-        params: {
-          screen: 'HomeStack',
-          params: { screen: 'Home'},
-        }}],
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: 'BottomStack',
+          params: {
+            screen: 'HomeStack',
+            params: {screen: 'Home'},
+          },
+        },
+      ],
     });
   };
   //notification on/off 함수
@@ -91,15 +96,15 @@ export default function SurveyScreen() {
       case RESULTS.DENIED:
         await requestNotificationPermission();
         break;
-        case RESULTS.BLOCKED:
-          // navigationHome();
-          CustomDefaultAlert({
-            mainText: 'Permission Blocked',
-            subText: 'Notifications are blocked. Please enable them in settings.',
-          });
-          break;
+      case RESULTS.BLOCKED:
+        // navigationHome();
+        CustomDefaultAlert({
+          mainText: 'Permission Blocked',
+          subText: 'Notifications are blocked. Please enable them in settings.',
+        });
+        break;
       case RESULTS.UNAVAILABLE:
-        navigationHome();
+        // navigationHome();
         CustomDefaultAlert({
           mainText: 'Permission Unavailable',
           subText: 'Notifications are not available on this device.',
@@ -108,9 +113,12 @@ export default function SurveyScreen() {
       default:
         console.log('Unknown permission status:', status);
     }
+    let p = await getToken();
+    console.log('getToken', p);
+
+    await surveySubmit();
+    await permissonSubmit(notificationStatus);
     navigationHome();
-    surveySubmit();
-    permissonSubmit({notification: notificationStatus});
   };
   // 뒤로가기 버튼 클릭 시 이전 질문으로 돌아가는 함수
   const handleBack = () => {
@@ -137,11 +145,10 @@ export default function SurveyScreen() {
       });
       console.log(response);
     } catch (error: unknown) {
-      // const {status, data} = error.response;
       console.error('survey submit Error response:');
     }
   };
-  const permissonSubmit = async (permisson: Permissions) => {
+  const permissonSubmit = async (permisson: boolean) => {
     //notification status axios
     try {
       const response = await axiosPermissonSubmit(permisson);

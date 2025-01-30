@@ -1,13 +1,17 @@
 import {Alert} from 'react-native';
 import {axiosInstance} from './axios.instance';
-import {UserServey, Permissions} from '../type/survey.type';
+import {UserServey} from '../type/survey.type';
 import {getToken, removeToken} from './secureStorage';
 
 // 서버 연결 테스트 함수
 export const axiosTestServer = async () => {
   try {
     // GET 요청을 인스턴스를 사용해 실행
-    const response = await axiosInstance.get('/test/server');
+    const response = await axiosInstance.get('/test/server', {
+      headers: {
+        'Skip-Auth': true, // 이 요청에서는 토큰을 포함하지 않음
+      },
+    });
     console.log('서버 응답:', response.data);
 
     // 성공 시 Alert 표시
@@ -52,9 +56,10 @@ export const axiosSignout = async () => {
   }
 };
 
-const axiosSurveySumbitURL = '/api/survey/save-survey';
+const axiosSurveySumbitURL = '/api/survey/save';
 export const axiosSurveySumbit = async (answers: UserServey) => {
   try {
+    console.log('answers', answers);
     const response = await axiosInstance.post(axiosSurveySumbitURL, {answers});
     console.log('Survey submitted:', response.data);
   } catch (error) {
@@ -62,10 +67,14 @@ export const axiosSurveySumbit = async (answers: UserServey) => {
   }
 };
 
-const axiosPermissonSubmitURL = '/api/survey/save-permisson';
-export const axiosPermissonSubmit = async (permissons: Permissions) => {
+// 알림 저장
+const axiosPermissonSubmitURL = '/api/profile/noti-permission';
+export const axiosPermissonSubmit = async (permissons: boolean) => {
   try {
-    const response = await axiosInstance.post(axiosPermissonSubmitURL, {permissons});
+    // console.log('permissons', permissons);
+    const response = await axiosInstance.post(axiosPermissonSubmitURL, {
+      permissons,
+    });
     console.log('Survey submitted:', response.data);
   } catch (error) {
     console.error('Error submitting survey:', error);

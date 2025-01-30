@@ -46,10 +46,12 @@ const HomeScreen = () => {
   const totalPages = Math.ceil(previousAnswers.length / answersPerPage);
 
   // TODO : page 로 나중에 6개씩 날리기
-  const paginatedAnswers = previousAnswers && previousAnswers.slice(
-    answersIndex * answersPerPage,
-    (answersIndex + 1) * answersPerPage,
-  );
+  const paginatedAnswers =
+    previousAnswers &&
+    previousAnswers.slice(
+      answersIndex * answersPerPage,
+      (answersIndex + 1) * answersPerPage,
+    );
   const handlePrev = () => {
     if (answersIndex === 0) return;
 
@@ -155,7 +157,7 @@ const HomeScreen = () => {
     React.useCallback(() => {
       // 스크린이 포커스될 때마다 실행할 함수
       handleGetQuestions();
-      handleGetQuestionHistory();
+      // handleGetQuestionHistory();
 
       return () => {
         // 필요시 정리 작업 수행
@@ -189,7 +191,7 @@ const HomeScreen = () => {
             <Text style={styles.cardTitle}>Today's Questions</Text>
           </TouchableOpacity>
 
-          {answers &&//이거우너래대로 answers로 바꿔야됨
+          {answers && //이거우너래대로 answers로 바꿔야됨
             answers.map(question => (
               <TouchableOpacity
                 key={question.content}
@@ -214,44 +216,46 @@ const HomeScreen = () => {
             <View style={styles.prevAnswerContainer}>
               {paginatedAnswers &&
                 paginatedAnswers.map((item, questionIndex) => (
-                <Accordion
-                  title={item.question}
-                  key={questionIndex}
-                  forceClose={closeAccordion}>
-                  <View style={styles.prevAnswers}>
-                    {item.subquestions.map((subquestion, subquestionIndex) => (
-                      <View
-                        style={styles.subquestionContainer}
-                        key={subquestionIndex}>
-                        <Text style={styles.subquestionText}>
-                          {subquestion.text}
-                        </Text>
-                        <View style={styles.answerContainer}>
-                          <Text style={styles.answerText}>
-                            {subquestion.answer}
-                          </Text>
-                          <View style={styles.answerBottom}>
-                            <Text style={styles.answerDate}>
-                              {subquestion.date}
+                  <Accordion
+                    title={item.question}
+                    key={questionIndex}
+                    forceClose={closeAccordion}>
+                    <View style={styles.prevAnswers}>
+                      {item.subquestions.map(
+                        (subquestion, subquestionIndex) => (
+                          <View
+                            style={styles.subquestionContainer}
+                            key={subquestionIndex}>
+                            <Text style={styles.subquestionText}>
+                              {subquestion.text}
                             </Text>
-                            <TouchableOpacity
-                              style={styles.editButton}
-                              onPress={() =>
-                                handleEdit(
-                                  subquestion.answer,
-                                  questionIndex,
-                                  subquestionIndex,
-                                )
-                              }>
-                              <EditIcon />
-                            </TouchableOpacity>
+                            <View style={styles.answerContainer}>
+                              <Text style={styles.answerText}>
+                                {subquestion.answer}
+                              </Text>
+                              <View style={styles.answerBottom}>
+                                <Text style={styles.answerDate}>
+                                  {subquestion.date}
+                                </Text>
+                                <TouchableOpacity
+                                  style={styles.editButton}
+                                  onPress={() =>
+                                    handleEdit(
+                                      subquestion.answer,
+                                      questionIndex,
+                                      subquestionIndex,
+                                    )
+                                  }>
+                                  <EditIcon />
+                                </TouchableOpacity>
+                              </View>
+                            </View>
                           </View>
-                        </View>
-                      </View>
-                    ))}
-                  </View>
-                </Accordion>
-              ))}
+                        ),
+                      )}
+                    </View>
+                  </Accordion>
+                ))}
             </View>
             <View style={styles.moveButtonContainer}>
               <TouchableOpacity style={styles.prevButton} onPress={handlePrev}>

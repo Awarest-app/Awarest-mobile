@@ -14,7 +14,7 @@ import {BlurView} from '@react-native-community/blur';
 import {HomeStack} from '../screens/stacks/HomeStack';
 
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
-import { ProfileStack } from '../screens/stacks/ProfileStack';
+import {ProfileStack} from '../screens/stacks/ProfileStack';
 const Tab = createBottomTabNavigator();
 
 export default function BottomStack() {
@@ -28,6 +28,7 @@ export default function BottomStack() {
 
   return (
     <Tab.Navigator
+      initialRouteName="HomeStack"
       screenOptions={{
         tabBarStyle: styles.tabBarStyle, // 스타일 객체 사용
         tabBarLabelStyle: styles.tabBarLabelStyle, // 라벨 스타일

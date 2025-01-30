@@ -18,6 +18,7 @@ import GoogleIcon from '../assets/svg/google-icon.svg';
 import AppleIcon from '../assets/svg/apple-icon.svg';
 import {handleGoogleSignup} from '../api/safariView';
 import {axiosTestJwt, axiosTestServer} from '../api/axios';
+import {removeToken} from '../api/secureStorage';
 // import GoogleOauth from '../lib/googleOauth';
 
 // 화면 높이/너비 구하기 (스타일에 사용)
@@ -28,6 +29,9 @@ interface Test {
   type: string;
   content: string;
 }
+const test = async () => {
+  await removeToken();
+};
 
 export default function MainScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -71,7 +75,7 @@ export default function MainScreen() {
             //     screen: 'Home', // HomeStack 내부의 Home 스크린
             //   })
             // }
-            onPress={() => axiosTestJwt()}
+            onPress={() => test()}
             //
           >
             <View style={styles.oauthTextWrapper}>
