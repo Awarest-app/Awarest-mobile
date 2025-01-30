@@ -151,10 +151,13 @@ export const axiosLogout = async () => {
   }
 };
 
-const axiosPostAnswersURL = '/api/answers/bulk';
-export const axiosPostAnswers = async (answers: any) => {
+const axiosPostAnswersURL = '/api/questions/answer';
+export const axiosPostAnswers = async (answers: any, questionName: string) => {
   try {
-    const response = await axiosInstance.post(axiosPostAnswersURL, answers);
+    const response = await axiosInstance.post(axiosPostAnswersURL, {
+      answers,
+      questionName,
+    });
     console.log('Answers saved:', response.data);
   } catch (error) {
     console.error('Error saving answers:', error);

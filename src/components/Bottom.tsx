@@ -19,13 +19,13 @@ import {globalStyle} from '../styles/global';
 const Tab = createBottomTabNavigator();
 
 export default function BottomStack() {
-  const getTabBarVisibility = (route: any) => {
-    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
-    if (routeName === 'Answer' || routeName === 'Result') {
-      return styles.hiddenTabBarStyle;
-    }
-    return styles.tabBarStyle;
-  };
+  // const getTabBarVisibility = (route: any) => {
+  //   const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
+  //   if (routeName === 'Answer' || routeName === 'Result') {
+  //     return styles.hiddenTabBarStyle;
+  //   }
+  //   return styles.tabBarStyle;
+  // };
 
   return (
     <Tab.Navigator
@@ -46,17 +46,17 @@ export default function BottomStack() {
       <Tab.Screen
         name="HomeStack"
         component={HomeStack}
-        options={({route}) => ({
+        options={{
           title: 'Home',
           headerShown: false, // Tab Navigator에서 자체 헤더는 숨기기
-          tabBarStyle: getTabBarVisibility(route),
+          // tabBarStyle: getTabBarVisibility(route),
           tabBarIcon: ({focused, size}) =>
             focused ? (
               <GreenHomeIcon width={size} height={size} />
             ) : (
               <GrayHomeIcon width={size} height={size} />
             ), // 여기서 tabBarIcon을 사용합니다.
-        })}
+        }}
       />
       <Tab.Screen
         name="ProfileStack"

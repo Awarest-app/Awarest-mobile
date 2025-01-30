@@ -19,7 +19,6 @@ export default function ResultScreen() {
   // 시간, XP 등의 데이터를 실제 로직에 맞게 받아오거나 계산해서 표시할 수 있습니다.
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
   const xpEarned = 50;
-  const timeSpent = '3m 21s';
 
   const handleContinue = () => {
     // ‘Continue’ 버튼 클릭 시 동작(예: 홈 화면으로 이동 등)
@@ -46,7 +45,7 @@ export default function ResultScreen() {
             <Text style={styles.evalutionMessage}>Great Reflection !</Text>
             <Text style={styles.subMessage}>You've earned</Text>
             <Text style={styles.gainXp}>+ {xpEarned} XP</Text>
-            <Text style={styles.subMessage}>Time spent: {timeSpent}</Text>
+            <Text style={styles.subMessage}></Text>
 
             {/* Continue 버튼 */}
             <TouchableOpacity
