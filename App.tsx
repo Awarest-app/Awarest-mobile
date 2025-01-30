@@ -27,6 +27,7 @@ function App() {
       console.log('handleDeepLink', event);
       const url = event.url;
 
+      removeToken();
       // accessToken, refreshToken, survey 파라미터 추출
       const accessTokenMatch = url.match(/accessToken=([^&]+)/);
       const refreshTokenMatch = url.match(/refreshToken=([^&]+)/);

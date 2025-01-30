@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   SafeAreaView,
   View,
@@ -7,9 +7,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import {
-  useFocusEffect,
-} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import {Header} from '../components/Header';
 import MemoGradient from '../components/Hooks/MemoGradient';
 import ProfileGradient from '../components/Hooks/ProfileGradient';
@@ -18,18 +16,19 @@ import {useRef} from 'react';
 import {ProfileTypes} from '../type/profile.type';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Modalize } from 'react-native-modalize';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {Modalize} from 'react-native-modalize';
 import Settings from '../components/Hooks/SettingsModal';
 import LevelModal from '../components/modals/LevelModal';
 import {axiosGetProfile} from '../api/axios';
 // 샘플용 임시 프로필 이미지(회색 원을 Image 대신 View로 표현할 수도 있음)
 
-export default function ProfileScreen() {
+export default function ProfileScreesn() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const settingsRef = useRef<Modalize>(null);
   const [datas, setDatas] = useState<ProfileTypes>({
-    profileImg: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcKBnNMLWjTurCJvK1LQk3awXQDiM-TdAXtg&s',
+    profileImg:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcKBnNMLWjTurCJvK1LQk3awXQDiM-TdAXtg&s',
     userName: 'Sarah Johnson',
     memberSince: 'January 2025',
     dayStreak: 7,
@@ -38,25 +37,34 @@ export default function ProfileScreen() {
     level: 1,
     totalAnswers: 12,
   });
-  const { totalXP, levelXP, level } = datas;
-  const levelDatas = { totalXP, levelXP, level };
+  const {totalXP, levelXP, level} = datas;
+  const levelDatas = {totalXP, levelXP, level};
   const handleLevelModal = () => {
     setIsModalOpen(!isModalOpen);
-  }
+  };
   const openSettings = () => {
     settingsRef.current?.open();
   };
 
-  useFocusEffect(() => {
-    const fetchProfile = async () => {
+  const fetchProfile = useCallback(async () => {
+    try {
       const res = await axiosGetProfile();
+      console.log('profile res,', res);
       setDatas(res);
+    } catch (error) {
+      console.error('프로필 가져오기 실패:', error);
     }
-    // fetchProfile(); todo
-  });
+  }, []);
+
+  // useFocusEffect를 사용하여 화면에 집중될 때마다 fetchProfile 실행
+  useFocusEffect(
+    useCallback(() => {
+      fetchProfile();
+    }, [fetchProfile]),
+  );
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{flex: 1}}>
       <LevelModal
         data={levelDatas}
         isOpen={isModalOpen}
@@ -66,17 +74,17 @@ export default function ProfileScreen() {
       <View style={styles.container}>
         <MemoGradient />
         <View style={styles.contentContainer}>
-        <Header />
-        <SafeAreaView style={styles.safeArea}>
-          <Text style={styles.logo}>Coura</Text>
-          <TouchableOpacity style={styles.settingButton}
-            onPress={openSettings}
-          >
-            <SettingIcon />
-          </TouchableOpacity>
+          <Header />
+          <SafeAreaView style={styles.safeArea}>
+            <Text style={styles.logo}>Coura</Text>
+            <TouchableOpacity
+              style={styles.settingButton}
+              onPress={openSettings}>
+              <SettingIcon />
+            </TouchableOpacity>
 
-          {/* 메인 프로필 박스(파란색 외곽선) */}
-          <View style={styles.profileContainer}>
+            {/* 메인 프로필 박스(파란색 외곽선) */}
+            <View style={styles.profileContainer}>
               <View style={styles.imgContainer}>
                 <ProfileGradient />
                 <View style={styles.profilePlaceholder}>
@@ -89,9 +97,7 @@ export default function ProfileScreen() {
                   <ShareIcon />
                 </TouchableOpacity> */}
                 <View style={styles.nameContainer}>
-                  <Text style={styles.userName}>
-                    {datas.userName}
-                  </Text>
+                  <Text style={styles.userName}>{datas.userName}</Text>
                   <Text style={styles.userMemberSince}>
                     Member since {datas.memberSince}
                   </Text>
@@ -108,10 +114,10 @@ export default function ProfileScreen() {
                 </View>
               </View>
               <View style={styles.subDatas}>
-                <TouchableOpacity style={styles.infoBox}
+                <TouchableOpacity
+                  style={styles.infoBox}
                   activeOpacity={0.8}
-                  onPress={handleLevelModal}
-                >
+                  onPress={handleLevelModal}>
                   <Text style={styles.infoItemTitle}>Level</Text>
                   <Text style={styles.infoItemValue}>{datas.level}</Text>
                 </TouchableOpacity>
@@ -120,15 +126,14 @@ export default function ProfileScreen() {
                   <Text style={styles.infoItemValue}>{datas.totalAnswers}</Text>
                 </View>
               </View>
-          </View>
-        </SafeAreaView>
+            </View>
+          </SafeAreaView>
         </View>
-        <Settings ref={settingsRef}/>
+        <Settings ref={settingsRef} />
       </View>
     </GestureHandlerRootView>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {

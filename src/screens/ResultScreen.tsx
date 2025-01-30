@@ -28,7 +28,7 @@ export default function ResultScreen() {
   const xp = route.params.question_xp;
   // 시간, XP 등의 데이터를 실제 로직에 맞게 받아오거나 계산해서 표시할 수 있습니다.
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
-  const xpEarned = 50;
+  // const xpEarned = 50;
   const timeSpent = '3m 21s';
 
   const handleContinue = () => {

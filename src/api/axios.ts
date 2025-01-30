@@ -95,7 +95,17 @@ export const axiosPermissonSubmit = async (permissons: boolean) => {
   }
 };
 
-const axiosGetProfileURL = '/api/profile';
+// profile
+// const axiosGetProfileURL = 'api/profile/me';
+// export const axiosGetProfileMe = async () => {
+//   try {
+//     const response = await axiosInstance.get(axiosGetProfileURL);
+//   } catch (e) {
+//     console.log('error', e);
+//   }
+// };
+
+const axiosGetProfileURL = '/api/profile/me';
 export const axiosGetProfile = async (): Promise<ProfileTypes> => {
   try {
     const response = await axiosInstance.get<ProfileTypes>(axiosGetProfileURL);
