@@ -33,6 +33,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
   isDayStreak: (value) => {
     set((state) => ({ ...state, is_first_response: value }));
   },
+
   fetchProfile: async () => {
     set({ loading: true });
     try {

@@ -68,6 +68,8 @@ const HomeScreen = () => {
     }, 100); // Accordion에서 duration이랑 맞춰야됨
   };
   useEffect(() => {
+    fetchProfile();
+    console.log('useEffect pageHcanges');
     if (pageChanged) {
       const timer = setTimeout(() => {
         scrollRef.current?.scrollToEnd({animated: true});
@@ -76,23 +78,14 @@ const HomeScreen = () => {
       return () => clearTimeout(timer);
     }  
   }, [answersIndex, pageChanged]);
-
+  
   useEffect(() => {
-    fetchProfile();
+    console.log('useEffect homescreen ');
+    handleGetQuestions();
+    handleGetQuestionHistory();
     isDayStreak(isToday(profile.lastStreakDate));
   }, [profile.totalAnswers]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      // 스크린이 포커스될 때마다 실행할 함수
-      handleGetQuestions();
-      handleGetQuestionHistory();
-
-      return () => {
-        // 필요시 정리 작업 수행
-      };
-    }, []),
-  );
   const editPrevAnswer = (subquestionId: number, newText: string) => {
     const prevAnswerId = (subquestionId + answersIndex) * answersPerPage;
     const updatedAnswers = [...previousAnswers]; //shallow copy
@@ -127,7 +120,6 @@ const HomeScreen = () => {
       console.error('Error getting questions:', error);
     }
   };
-
 
   return (
     <View style={styles.container}>

@@ -31,7 +31,7 @@ export default function SettingProfileScreen({
   setPage,
 }: SettingProfileScreenProps) {
   // 시간, XP 등의 데이터를 실제 로직에 맞게 받아오거나 계산해서 표시할 수 있습니다.
-  const {fetchProfile, isDayStreak, profile} = useProfileStore();
+  const {profile} = useProfileStore();
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [editable, setEditable] = useState<boolean>(true);
   const [name, setName] = useState<string>(profile.userName); //todo axios로 받아온 사용자 이름

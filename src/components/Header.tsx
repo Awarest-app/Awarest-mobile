@@ -14,7 +14,6 @@ export function Header() {
   // Safe Area insets
   const datas = profile
   const insets = useSafeAreaInsets();
-  console.log(is_first_response)
 
   return (
     <View style={[styles.headerContainer, {paddingTop: insets.top}]}>

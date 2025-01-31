@@ -39,6 +39,7 @@ export default function ResultScreen() {
     navigation.dispatch(StackActions.pop(2));
   };
   useEffect(() => {
+    console.log('ResultScreen useEffect');
     fetchProfile();
     isDayStreak(isToday(datas.lastStreakDate));
   }, []);
