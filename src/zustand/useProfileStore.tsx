@@ -23,6 +23,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
     levelXP: 0,
     prevXP: 0,
     level: 0,
+    noti: false,
     totalAnswers: 0,
     lastStreakDate: '',
   },

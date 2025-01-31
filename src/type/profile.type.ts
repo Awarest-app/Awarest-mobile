@@ -7,6 +7,7 @@ export type ProfileTypes = {
   levelXP: number;
   prevXP: number;
   level: number;
+  noti: boolean;
   totalAnswers: number;
   lastStreakDate: string;
 }

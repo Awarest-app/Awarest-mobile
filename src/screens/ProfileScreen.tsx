@@ -25,10 +25,10 @@ export default function ProfileScreesn() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const settingsRef = useRef<Modalize>(null);
   const { profile } = useProfileStore();
-
   const datas = profile;
   const {totalXP, levelXP, prevXP, level} = datas;
   const levelDatas = {totalXP, levelXP, prevXP, level};
+  const defaultImage = require('../assets/images/logo.png');
 
   const handleLevelModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -70,10 +70,10 @@ export default function ProfileScreesn() {
               <View style={styles.imgContainer}>
                 <ProfileGradient />
                 <View style={styles.profilePlaceholder}>
-                  <Image
-                    source={{uri: datas.profileImg}}
-                    style={styles.profileImage}
-                  />
+                <Image
+                  source={datas.profileImg ? { uri: datas.profileImg } : defaultImage}
+                  style={styles.profileImage}
+                />
                 </View>
                 {/* <TouchableOpacity style={styles.shareButton}>
                   <ShareIcon />
@@ -176,15 +176,15 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    borderWidth: 2,
-    borderColor: colors.primary,
+    // borderWidth: 2,
+    // borderColor: colors.primary,
   },
   profileImage: {
     width: 100,
     height: 100,
     borderRadius: 50,
     borderWidth: 2,
-    borderColor: colors.primary,
+    borderColor: colors.card_border,
   },
   shareButton: {
     position: 'absolute',
