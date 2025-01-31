@@ -14,7 +14,7 @@ import {
 import MemoGradient from '../components/Hooks/MemoGradient';
 import {questions} from '../constant/questions';
 import {axiosPermissonSubmit, axiosSurveySumbit} from '../api/axios';
-import {UserServey, Permissions} from '../type/survey.type';
+import {UserServey, PermissionTypes} from '../type/survey.type';
 // Permissions
 import {
   checkNotifications,

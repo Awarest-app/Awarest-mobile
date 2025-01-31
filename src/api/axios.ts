@@ -95,16 +95,6 @@ export const axiosPermissonSubmit = async (permissons: boolean) => {
   }
 };
 
-// profile
-// const axiosGetProfileURL = 'api/profile/me';
-// export const axiosGetProfileMe = async () => {
-//   try {
-//     const response = await axiosInstance.get(axiosGetProfileURL);
-//   } catch (e) {
-//     console.log('error', e);
-//   }
-// };
-
 const axiosGetProfileURL = '/api/profile/me';
 export const axiosGetProfile = async (): Promise<ProfileTypes> => {
   try {
@@ -113,7 +103,6 @@ export const axiosGetProfile = async (): Promise<ProfileTypes> => {
   } catch (error) {
     console.error('Error getting profile:', error);
     return {
-      id: 0,
       profileImg: '',
       userName: '',
       memberSince: '',
@@ -122,7 +111,7 @@ export const axiosGetProfile = async (): Promise<ProfileTypes> => {
       levelXP: 0,
       level: 0,
       totalAnswers: 0,
-      lastUpdated: '',
+      lastStreakDate: '',
     };
   }
 };
@@ -156,7 +145,6 @@ const axiosGetAnswersURL = 'api/answers/me';
 export const axiosGetAnswers = async () => {
   try {
     const response = await axiosInstance.get(axiosGetAnswersURL);
-    console.log('Answers: outer', response);
     return response.data;
   } catch (error) {
     console.error('Error getting answers:', error);
@@ -175,8 +163,6 @@ export const axiosLogout = async () => {
   }
 };
 
-// TOD
-// const axiosPostAnswersURL = '/api/answers/bulk';
 const axiosPostAnswersURL = '/api/questions/answer';
 export const axiosPostAnswers = async (answers: any, questionName: string) => {
   try {

@@ -19,7 +19,7 @@ import {settingsTypes} from '../type/settings.type';
 import DeleteScreen from './DeleteScreen';
 import PrevIcon from '../assets/svg/setting-prev.svg';
 import {checkNotifications, RESULTS} from 'react-native-permissions';
-import {axiosAccountDelete, axiosUpdateUsername} from '../api/axios';
+import {useProfileStore} from '../zustand/useProfileStore';
 const {width, height} = Dimensions.get('window');
 interface SettingProfileScreenProps {
   closeSettings: () => void;
@@ -31,9 +31,10 @@ export default function SettingProfileScreen({
   setPage,
 }: SettingProfileScreenProps) {
   // 시간, XP 등의 데이터를 실제 로직에 맞게 받아오거나 계산해서 표시할 수 있습니다.
+  const {fetchProfile, isDayStreak, profile} = useProfileStore();
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [editable, setEditable] = useState<boolean>(true);
-  const [name, setName] = useState<string>('John Doe'); //todo axios로 받아온 사용자 이름
+  const [name, setName] = useState<string>(profile.userName); //todo axios로 받아온 사용자 이름
   const [isEnabled, setIsEnabled] = useState(false);
 
   const handleDelete = () => {

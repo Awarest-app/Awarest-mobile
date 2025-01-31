@@ -25,6 +25,7 @@ import {AnswerTypes} from '../type/answer.type';
 import PrevAnswers from '../components/home/PrevAnswers';
 import Questions from '../components/home/Questions';
 import { useProfileStore } from '../zustand/useProfileStore'
+import { isToday } from '../components/utils/utils';
 
 //todo: 컴포넌트 쪼개기
 const HomeScreen = () => {
@@ -36,12 +37,9 @@ const HomeScreen = () => {
   const [questions, setQuestions] = useState<Questiontypes[]>([]);
   const [previousAnswers, setPreviousAnswers] = useState<AnswerTypes[]>([]);
   const totalPages = Math.ceil(previousAnswers.length / answersPerPage);
+  const {fetchProfile, isDayStreak, profile} = useProfileStore();
   
-  const {fetchProfile, profile } = useProfileStore();
   //todo : 이거 axios 날릴때 남은건냅두고 처음에 6개, 그뒤에 6개씩추가
-
-  //todo : 이거 axios 날릴때 남은건냅두고 처음에 6개, 그뒤에 6개씩추가
-
   // TODO : page 로 나중에 6개씩 날리기
   const paginatedAnswers =
     previousAnswers &&
@@ -75,55 +73,15 @@ const HomeScreen = () => {
         scrollRef.current?.scrollToEnd({animated: true});
         setPageChanged(false);
       }, 0);
-
       return () => clearTimeout(timer);
-    }
-    fetchProfile();
+    }  
   }, [answersIndex, pageChanged]);
 
-  const editPrevAnswer = (subquestionId: number, newText: string) => {
-    const prevAnswerId = (subquestionId + answersIndex) * answersPerPage;
-    const updatedAnswers = [...previousAnswers]; //shallow copy
-    updatedAnswers[prevAnswerId].subquestions[subquestionId].answer = newText;
-    setPreviousAnswers(updatedAnswers);
-  };
+  useEffect(() => {
+    fetchProfile();
+    isDayStreak(isToday(profile.lastStreakDate));
+  }, [profile.totalAnswers]);
 
-  const handleSaveEdit = (newText: string, subquestionId: number) => {
-    try {
-      //이거 수정이라서 백엔드
-      console.log('Save:', newText);
-      const res = axiosUpdateAnswers(subquestionId, newText);
-      //아래 부분은 state 변경
-      editPrevAnswer(subquestionId, newText);
-    } catch (error) {
-      console.error('Error updating answer:', error);
-    }
-  };
-
-  // TODO : 나중에 response type 정의하기
-  const handleGetQuestions = async () => {
-    try {
-      const response: any = await axiosGetQuestions();
-      // console.log('Questions:', response.data);
-      setQuestions(response.data);
-    } catch (error) {
-      console.error('Error getting questions:', error);
-    }
-  };
-  //previous questions 요청axios
-  const handleGetQuestionHistory = async () => {
-    try {
-      const response = await axiosGetAnswers();
-      // console.log('Answers:', JSON.stringify(response, null, 2));
-      // console.log('Answers:', response);
-      // console.log('Answers:', response.subquestions);
-      setPreviousAnswers(response);
-    } catch (error) {
-      console.error('Error getting questions:', error);
-    }
-  };
-
-  // RN은 화면을 캐싱해서 다시 돌아왔을 때 다시 렌더링하지 않음
   useFocusEffect(
     React.useCallback(() => {
       // 스크린이 포커스될 때마다 실행할 함수
@@ -133,8 +91,44 @@ const HomeScreen = () => {
       return () => {
         // 필요시 정리 작업 수행
       };
-    }, []), // 빈 배열을 사용하여 콜백이 마운트 시 한 번만 생성되도록 함
+    }, []),
   );
+  const editPrevAnswer = (subquestionId: number, newText: string) => {
+    const prevAnswerId = (subquestionId + answersIndex) * answersPerPage;
+    const updatedAnswers = [...previousAnswers]; //shallow copy
+    updatedAnswers[prevAnswerId].subquestions[subquestionId].answer = newText;
+    setPreviousAnswers(updatedAnswers);
+  };
+
+  const handleSaveEdit = (newText: string, subquestionId: number) => {
+    try {
+      axiosUpdateAnswers(subquestionId, newText);
+      //아래 부분은 state 변경
+      editPrevAnswer(subquestionId, newText);
+    } catch (error) {
+      console.error('Error updating answer:', error);
+    }
+  };
+
+  const handleGetQuestions = async () => {
+    try {
+      const response: any = await axiosGetQuestions();
+      setQuestions(response.data);
+    } catch (error) {
+      console.error('Error getting questions:', error);
+    }
+  };
+  //previous questions 요청axios
+  const handleGetQuestionHistory = async () => {
+    try {
+      const response = await axiosGetAnswers();
+      setPreviousAnswers(response);
+    } catch (error) {
+      console.error('Error getting questions:', error);
+    }
+  };
+
+
   return (
     <View style={styles.container}>
       <MemoGradient />
@@ -146,7 +140,7 @@ const HomeScreen = () => {
           <View>
             <Text style={styles.cardTitle}>Today's Questions</Text>
           </View>
-          {questions.length > 0 ? ( //이거우너래대로 answers로 바꿔야됨
+          {questions.length > 0 ? ( //타입에러? 
             questions.map(question => (
               <Questions
                 key={question.questionId}
@@ -181,7 +175,6 @@ const HomeScreen = () => {
                           subquestion={subquestion}
                           subquestionId={subquestion.id} //이거 실제 questionIndex 받아야할듯
                           handleSaveEdit={handleSaveEdit}
-                          // handleEdit={handleEdit}
                         />
                       ))}
                     </View>

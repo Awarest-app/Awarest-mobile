@@ -8,31 +8,24 @@ import Leaf from '../assets/svg/leaf-icon.svg';
 import Award from '../assets/svg/award-icon.svg';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
-
+import {useProfileStore} from '../zustand/useProfileStore';
 export function Header() {
+  const {fetchProfile, is_first_response, profile} = useProfileStore();
   // Safe Area insets
-  const datas = {
-      newAnswer: true,
-      day: '7',
-      Resources: '1000',
-      level: '1',
-    };
+  const datas = profile
   const insets = useSafeAreaInsets();
-  const [isFire, setIsFire] = useState(false);
-  useEffect(() => {
-    //todo axios
-  }, []);
+  console.log(is_first_response)
 
   return (
     <View style={[styles.headerContainer, {paddingTop: insets.top}]}>
       <View style={styles.header}>
         <View style={styles.iconButton}>
-          {isFire ? <Fire/> : <UnFire/>}
-          <Text style={styles.dataText}>{datas.day} Days</Text>
+          {is_first_response ? <Fire/> : <UnFire/>}
+          <Text style={styles.dataText}>{datas.dayStreak} Days</Text>
         </View>
         <TouchableOpacity style={styles.iconButton}>
           <Leaf/>
-          <Text style={styles.dataText}>{datas.Resources}</Text>
+          <Text style={styles.dataText}>채워야돼</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.iconButton}>
           <Award/>

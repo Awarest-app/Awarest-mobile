@@ -24,7 +24,7 @@ function App() {
 
   useEffect(() => {
     const handleDeepLink = async (event: {url: string}) => {
-      console.log('handleDeepLink', event);
+      // console.log('handleDeepLink', event);
       const url = event.url;
 
       removeToken();

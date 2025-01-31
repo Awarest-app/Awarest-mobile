@@ -17,7 +17,22 @@ interface LevelModalProps {
   onClose: () => void;
   onSubmit: () => void;
 }
-
+//todo 여기서 prevXP받은거 둘다에서 뺴기
+//todo 여기서 prevXP받은거 둘다에서 뺴기
+//todo 여기서 prevXP받은거 둘다에서 뺴기
+//todo 여기서 prevXP받은거 둘다에서 뺴기
+//todo 여기서 prevXP받은거 둘다에서 뺴기
+//todo 여기서 prevXP받은거 둘다에서 뺴기
+//todo 여기서 prevXP받은거 둘다에서 뺴기
+//todo 여기서 prevXP받은거 둘다에서 뺴기
+//todo 여기서 prevXP받은거 둘다에서 뺴기
+//todo 여기서 prevXP받은거 둘다에서 뺴기
+//todo 여기서 prevXP받은거 둘다에서 뺴기
+//todo 여기서 prevXP받은거 둘다에서 뺴기
+//todo 여기서 prevXP받은거 둘다에서 뺴기
+//todo 여기서 prevXP받은거 둘다에서 뺴기
+//todo 여기서 prevXP받은거 둘다에서 뺴기
+//todo 여기서 prevXP받은거 둘다에서 뺴기
 const LevelModal = ({
   data,
   isOpen,
