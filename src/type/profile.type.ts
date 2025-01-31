@@ -9,4 +9,5 @@ export type ProfileTypes = {
   levelXP: number;
   level: number;
   totalAnswers: number;
+  lastUpdated: string;
 };
