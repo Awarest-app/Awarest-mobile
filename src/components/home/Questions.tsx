@@ -28,6 +28,7 @@ const Questions = ({questionId, content}: QuestionsProps) => {
 
 const styles = StyleSheet.create({
   questionBox: {
+    width: '100%',
     borderColor: colors.card_border,
     borderWidth: 1,
     borderRadius: 10,

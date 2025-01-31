@@ -24,6 +24,8 @@ import {Questiontypes} from '../type/question.type';
 import {AnswerTypes} from '../type/answer.type';
 import PrevAnswers from '../components/home/PrevAnswers';
 import Questions from '../components/home/Questions';
+import { useProfileStore } from '../zustand/useProfileStore'
+import { isToday } from '../components/utils/utils';
 
 //todo: 컴포넌트 쪼개기
 const HomeScreen = () => {
@@ -35,9 +37,9 @@ const HomeScreen = () => {
   const [questions, setQuestions] = useState<Questiontypes[]>([]);
   const [previousAnswers, setPreviousAnswers] = useState<AnswerTypes[]>([]);
   const totalPages = Math.ceil(previousAnswers.length / answersPerPage);
-
+  const {fetchProfile, isDayStreak, profile} = useProfileStore();
+  
   //todo : 이거 axios 날릴때 남은건냅두고 처음에 6개, 그뒤에 6개씩추가
-
   // TODO : page 로 나중에 6개씩 날리기
   const paginatedAnswers =
     previousAnswers &&
@@ -66,15 +68,23 @@ const HomeScreen = () => {
     }, 100); // Accordion에서 duration이랑 맞춰야됨
   };
   useEffect(() => {
+    fetchProfile();
+    console.log('useEffect pageHcanges');
     if (pageChanged) {
       const timer = setTimeout(() => {
         scrollRef.current?.scrollToEnd({animated: true});
         setPageChanged(false);
       }, 0);
-
       return () => clearTimeout(timer);
-    }
+    }  
   }, [answersIndex, pageChanged]);
+  
+  useEffect(() => {
+    console.log('useEffect homescreen ');
+    handleGetQuestions();
+    handleGetQuestionHistory();
+    isDayStreak(isToday(profile.lastStreakDate));
+  }, [profile.totalAnswers]);
 
   const editPrevAnswer = (subquestionId: number, newText: string) => {
     const prevAnswerId = (subquestionId + answersIndex) * answersPerPage;
@@ -85,9 +95,7 @@ const HomeScreen = () => {
 
   const handleSaveEdit = (newText: string, subquestionId: number) => {
     try {
-      //이거 수정이라서 백엔드
-      console.log('Save:', newText);
-      const res = axiosUpdateAnswers(subquestionId, newText);
+      axiosUpdateAnswers(subquestionId, newText);
       //아래 부분은 state 변경
       editPrevAnswer(subquestionId, newText);
     } catch (error) {
@@ -95,11 +103,9 @@ const HomeScreen = () => {
     }
   };
 
-  // TODO : 나중에 response type 정의하기
   const handleGetQuestions = async () => {
     try {
       const response: any = await axiosGetQuestions();
-      console.log('Questions:', response.data);
       setQuestions(response.data);
     } catch (error) {
       console.error('Error getting questions:', error);
@@ -109,28 +115,12 @@ const HomeScreen = () => {
   const handleGetQuestionHistory = async () => {
     try {
       const response = await axiosGetAnswers();
-      // console.log('Answers:', JSON.stringify(response, null, 2));
-      console.log('Answers:', response);
-      // console.log('Answers:', response.subquestions);
       setPreviousAnswers(response);
     } catch (error) {
       console.error('Error getting questions:', error);
     }
   };
 
-  // RN은 화면을 캐싱해서 다시 돌아왔을 때 다시 렌더링하지 않음
-  useFocusEffect(
-    React.useCallback(() => {
-      // 스크린이 포커스될 때마다 실행할 함수
-      handleGetQuestions();
-      handleGetQuestionHistory();
-
-      return () => {
-        // 필요시 정리 작업 수행
-        console.log('MyScreen has lost focus');
-      };
-    }, []), // 빈 배열을 사용하여 콜백이 마운트 시 한 번만 생성되도록 함
-  );
   return (
     <View style={styles.container}>
       <MemoGradient />
@@ -142,7 +132,7 @@ const HomeScreen = () => {
           <View>
             <Text style={styles.cardTitle}>Today's Questions</Text>
           </View>
-          {questions.length > 0 ? ( //이거우너래대로 answers로 바꿔야됨
+          {questions.length > 0 ? ( //타입에러? 
             questions.map(question => (
               <Questions
                 key={question.questionId}
@@ -177,7 +167,6 @@ const HomeScreen = () => {
                           subquestion={subquestion}
                           subquestionId={subquestion.id} //이거 실제 questionIndex 받아야할듯
                           handleSaveEdit={handleSaveEdit}
-                          // handleEdit={handleEdit}
                         />
                       ))}
                     </View>
@@ -217,6 +206,7 @@ const styles = StyleSheet.create({
     paddingBottom: 60,
   },
   card: {
+    width: '100%',
     backgroundColor: 'rgba(255, 255, 255, 0.75)',
     borderRadius: 10,
     marginBottom: 50,
@@ -249,43 +239,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   prevAnswerContainer: {
+    width: '100%',
     gap: 10,
   },
   prevAnswers: {
+    width: '100%',
     gap: 16,
   },
-  subquestionContainer: {
-    gap: 10,
-  },
-  subquestionText: {
-    fontFamily: fonts.roboto_medium,
-    fontSize: 18,
-    color: colors.primary,
-  },
-  answerContainer: {
-    paddingVertical: 16,
-    paddingHorizontal: 14,
-    gap: 14,
-    borderWidth: 1,
-    borderRadius: 8,
-    borderColor: colors.card_border,
-    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
-  },
-  answerText: {
-    fontFamily: fonts.lato_regular,
-    fontSize: calculateDp(14),
-    color: colors.prev_answer,
-  },
-  answerBottom: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  answerDate: {
-    fontFamily: fonts.roboto_regular,
-    fontSize: calculateDp(14),
-    color: colors.text_hint,
-  },
-  editButton: {},
   moveButtonContainer: {
     width: '90%',
     height: 50,
