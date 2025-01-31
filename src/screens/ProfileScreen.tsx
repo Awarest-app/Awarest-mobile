@@ -37,6 +37,7 @@ export default function ProfileScreesn() {
     levelXP: 1000,
     level: 1,
     totalAnswers: 12,
+    lastUpdated: '2025-01-07T00:00:00.000Z',
   });
   const {totalXP, levelXP, level} = datas;
   const levelDatas = {totalXP, levelXP, level};

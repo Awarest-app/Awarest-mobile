@@ -40,6 +40,8 @@ const HomeScreen = () => {
   const {fetchProfile, profile } = useProfileStore();
   //todo : 이거 axios 날릴때 남은건냅두고 처음에 6개, 그뒤에 6개씩추가
 
+  //todo : 이거 axios 날릴때 남은건냅두고 처음에 6개, 그뒤에 6개씩추가
+
   // TODO : page 로 나중에 6개씩 날리기
   const paginatedAnswers =
     previousAnswers &&

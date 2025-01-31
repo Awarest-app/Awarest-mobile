@@ -122,6 +122,7 @@ export const axiosGetProfile = async (): Promise<ProfileTypes> => {
       levelXP: 0,
       level: 0,
       totalAnswers: 0,
+      lastUpdated: '',
     };
   }
 };
