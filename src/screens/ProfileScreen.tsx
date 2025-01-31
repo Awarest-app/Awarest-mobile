@@ -27,8 +27,8 @@ export default function ProfileScreesn() {
   const { profile } = useProfileStore();
 
   const datas = profile;
-  const {totalXP, levelXP, level} = datas;
-  const levelDatas = {totalXP, levelXP, level};
+  const {totalXP, levelXP, prevXP, level} = datas;
+  const levelDatas = {totalXP, levelXP, prevXP, level};
 
   const handleLevelModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -52,7 +52,6 @@ export default function ProfileScreesn() {
         data={levelDatas}
         isOpen={isModalOpen}
         onClose={handleLevelModal}
-        onSubmit={() => {}}
       />
       <View style={styles.container}>
         <MemoGradient />

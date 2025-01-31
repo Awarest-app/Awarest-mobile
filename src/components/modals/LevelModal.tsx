@@ -13,33 +13,22 @@ import colors from '../../styles/colors';
 import LinearGradient from 'react-native-linear-gradient';
 interface LevelModalProps {
   isOpen: boolean;
-  data: { levelXP: number; totalXP: number; level: number };
+  data: {
+    levelXP: number;
+    totalXP: number;
+    prevXP:number;
+    level: number;
+  };
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit?: () => void;
 }
-//todo 여기서 prevXP받은거 둘다에서 뺴기
-//todo 여기서 prevXP받은거 둘다에서 뺴기
-//todo 여기서 prevXP받은거 둘다에서 뺴기
-//todo 여기서 prevXP받은거 둘다에서 뺴기
-//todo 여기서 prevXP받은거 둘다에서 뺴기
-//todo 여기서 prevXP받은거 둘다에서 뺴기
-//todo 여기서 prevXP받은거 둘다에서 뺴기
-//todo 여기서 prevXP받은거 둘다에서 뺴기
-//todo 여기서 prevXP받은거 둘다에서 뺴기
-//todo 여기서 prevXP받은거 둘다에서 뺴기
-//todo 여기서 prevXP받은거 둘다에서 뺴기
-//todo 여기서 prevXP받은거 둘다에서 뺴기
-//todo 여기서 prevXP받은거 둘다에서 뺴기
-//todo 여기서 prevXP받은거 둘다에서 뺴기
-//todo 여기서 prevXP받은거 둘다에서 뺴기
-//todo 여기서 prevXP받은거 둘다에서 뺴기
 const LevelModal = ({
   data,
   isOpen,
   onClose,
 }: LevelModalProps ) => {
-  const levelXP = data.levelXP;  
-  const totalXP = data.totalXP;
+  const levelXP = data.levelXP - data.prevXP;
+  const totalXP = data.totalXP - data.prevXP;
   const level = data.level;
   const progress = Math.min(totalXP / levelXP, 1);
   const animatedWidth = useRef(new Animated.Value(0)).current;
@@ -50,7 +39,7 @@ const LevelModal = ({
     animatedWidth.setValue(0);
     Animated.timing(animatedWidth, {
       toValue: progress * 100,
-      duration: 600,
+      duration: 500,
       useNativeDriver: false,
     }).start();
   }
