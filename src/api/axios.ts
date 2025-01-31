@@ -39,10 +39,10 @@ export const axiosTestJwt = async () => {
   }
 };
 
-const axiosSignoutURL = '/api/auth/signout';
+const axiosSignoutURL = '/api/auth/logout';
 export const axiosSignout = async () => {
   try {
-    console.log('jwt token', getToken());
+    // console.log('jwt token', getToken());
     // GET 요청을 인스턴스를 사용해 실행
     const response = await axiosInstance.get(axiosSignoutURL);
     console.log('signout서버 응답: ', response.data);
@@ -59,7 +59,7 @@ export const axiosSignout = async () => {
 const axioxAccountDeleteURL = '/api/auth/delete';
 export const axiosAccountDelete = async () => {
   try {
-    const response = await axiosInstance.get(axioxAccountDeleteURL);
+    const response = await axiosInstance.delete(axioxAccountDeleteURL);
     // 성공 시 Alert 표시
     Alert.alert('Success', `서버 응답: ${JSON.stringify(response.data)}`);
   } catch (error) {
@@ -95,7 +95,17 @@ export const axiosPermissonSubmit = async (permissons: boolean) => {
   }
 };
 
-const axiosGetProfileURL = '/api/profile';
+// profile
+// const axiosGetProfileURL = 'api/profile/me';
+// export const axiosGetProfileMe = async () => {
+//   try {
+//     const response = await axiosInstance.get(axiosGetProfileURL);
+//   } catch (e) {
+//     console.log('error', e);
+//   }
+// };
+
+const axiosGetProfileURL = '/api/profile/me';
 export const axiosGetProfile = async (): Promise<ProfileTypes> => {
   try {
     const response = await axiosInstance.get<ProfileTypes>(axiosGetProfileURL);
@@ -103,6 +113,7 @@ export const axiosGetProfile = async (): Promise<ProfileTypes> => {
   } catch (error) {
     console.error('Error getting profile:', error);
     return {
+      id: 0,
       profileImg: '',
       userName: '',
       memberSince: '',
@@ -111,7 +122,20 @@ export const axiosGetProfile = async (): Promise<ProfileTypes> => {
       levelXP: 0,
       level: 0,
       totalAnswers: 0,
+      lastUpdated: '',
     };
+  }
+};
+
+const axiosUpdateUsernameURL = '/api/profile/username';
+export const axiosUpdateUsername = async (newUsername: string) => {
+  try {
+    const response = await axiosInstance.patch(axiosUpdateUsernameURL, {
+      newUsername,
+    });
+    console.log('response', response);
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -132,7 +156,7 @@ const axiosGetAnswersURL = 'api/answers/me';
 export const axiosGetAnswers = async () => {
   try {
     const response = await axiosInstance.get(axiosGetAnswersURL);
-    // console.log('Answers:', response.data);
+    console.log('Answers: outer', response);
     return response.data;
   } catch (error) {
     console.error('Error getting answers:', error);
@@ -151,14 +175,18 @@ export const axiosLogout = async () => {
   }
 };
 
+// TOD
+// const axiosPostAnswersURL = '/api/answers/bulk';
 const axiosPostAnswersURL = '/api/questions/answer';
 export const axiosPostAnswers = async (answers: any, questionName: string) => {
   try {
+    console.log('answer', answers);
     const response = await axiosInstance.post(axiosPostAnswersURL, {
       answers,
       questionName,
     });
     console.log('Answers saved:', response.data);
+    return response.data;
   } catch (error) {
     console.error('Error saving answers:', error);
   }
@@ -191,6 +219,18 @@ export const axiosGetSubquestions = async (questionId: number) => {
       `${axiosGetSubquestionsURL}/${questionId}`,
     );
     console.log('Subquestions:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error getting subquestions:', error);
+    return [];
+  }
+};
+
+const axiosGetResultURL = '/api/result';
+export const axiosGetResult = async () => {
+  try {
+    const response = await axiosInstance.get(axiosGetResultURL);
+    console.log('result:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error getting subquestions:', error);

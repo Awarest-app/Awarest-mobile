@@ -43,9 +43,9 @@ const SettingsMain = ({closeSettings, setPage}: SettingsMainProps) => {
         console.log('In-app review error:', error);
       });
   };
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     removeToken();
-    axiosSignout();
+    await axiosSignout();
     navigation.reset({
       index: 0,
       routes: [

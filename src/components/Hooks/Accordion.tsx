@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useCallback, memo } from 'react';
+import React, {useRef, useState, useEffect, useCallback, memo} from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   Easing,
 } from 'react-native';
 
-import { fonts } from '../../styles/fonts';
+import {fonts} from '../../styles/fonts';
 import colors from '../../styles/colors';
 
 interface AccordionProps {
@@ -26,24 +26,14 @@ interface AccordionTitleProps {
   title: string;
   onPress: () => void;
 }
-const AccordionTitle = memo(({
-    title,
-    onPress,
-  }: AccordionTitleProps) => (
-    <TouchableOpacity onPress={onPress} style={styles.titleContainer}>
-      <Text style={styles.titleText}>{title}</Text>
-    </TouchableOpacity>
-  )
-);
+const AccordionTitle = memo(({title, onPress}: AccordionTitleProps) => (
+  <TouchableOpacity onPress={onPress} style={styles.titleContainer}>
+    <Text style={styles.titleText}>{title}</Text>
+  </TouchableOpacity>
+));
 
 const Accordion = memo(
-  ({
-    collapseOnStart = true,
-    title,
-    forceClose,
-    children,
-  }: AccordionProps) => {
-    
+  ({collapseOnStart = true, title, forceClose, children}: AccordionProps) => {
     // 접힘/펼침 상태
     const [collapsed, setCollapsed] = useState(collapseOnStart);
     const [contentHeight, setContentHeight] = useState(0);
@@ -51,7 +41,9 @@ const Accordion = memo(
     const contentContainerPadding = 20;
 
     // 하나의 Animated.Value로 높이 / 투명도
-    const animeValue = useRef(new Animated.Value(collapseOnStart ? 0 : 1)).current;
+    const animeValue = useRef(
+      new Animated.Value(collapseOnStart ? 0 : 1),
+    ).current;
 
     // 접힘/펼침 상태가 바뀔 때마다 애니메이션 실행
     useEffect(() => {
@@ -59,7 +51,7 @@ const Accordion = memo(
         setCollapsed(true);
       }
     }, [forceClose, collapsed]);
-  
+
     useEffect(() => {
       Animated.timing(animeValue, {
         toValue: collapsed ? 0 : 1,
@@ -69,10 +61,9 @@ const Accordion = memo(
       }).start();
     }, [collapsed, animeValue]);
 
-    const MemoizedContent = memo(({ children }: MemoizedContentProps) => (
+    const MemoizedContent = memo(({children}: MemoizedContentProps) => (
       <View style={styles.contentContainer}>{children}</View>
     ));
-
 
     // 높이 애니메이션
     const height = animeValue.interpolate({
@@ -97,20 +88,16 @@ const Accordion = memo(
     }, []);
     // 토글 함수
     const toggleAccordion = useCallback(() => {
-      setCollapsed((prev) => !prev);
+      setCollapsed(prev => !prev);
     }, []);
 
     return (
       <View style={styles.container}>
-        <AccordionTitle
-          title={title}
-          onPress={toggleAccordion}
-        />
+        <AccordionTitle title={title} onPress={toggleAccordion} />
         <View
           style={styles.hiddenContent}
           onLayout={handleContentLayout}
-          pointerEvents="none"
-        >
+          pointerEvents="none">
           {children}
         </View>
         <Animated.View
@@ -120,13 +107,12 @@ const Accordion = memo(
               height,
               opacity,
             },
-          ]}
-        >
+          ]}>
           <MemoizedContent>{children}</MemoizedContent>
         </Animated.View>
       </View>
     );
-  }
+  },
 );
 
 export default Accordion;
@@ -152,7 +138,7 @@ const styles = StyleSheet.create({
   titleText: {
     fontFamily: fonts.roboto_medium,
     fontSize: 20,
-    color: colors.black
+    color: colors.black,
   },
   hiddenContent: {
     position: 'absolute',
@@ -167,7 +153,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   contentContainer: {
-    
     paddingHorizontal: 16,
     backgroundColor: colors.white_80,
   },

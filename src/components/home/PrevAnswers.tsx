@@ -20,7 +20,25 @@ const PrevAnswers = ({
   // ✅ EditModal 상태 관리
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editAnswer, setEditAnswer] = useState<string>(subquestion.answer);
-
+  const parseDate = (dateString: string) => {
+    const date = new Date(dateString);
+    
+    // 로케일을 명시적으로 지정하고 하이픈 처리
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  
+    // 포매팅 후 문자열 가공
+    return formatter.format(date)
+      .replace(/\//g, '-') // 슬래시 → 하이픈
+      .replace(', ', ' '); // 날짜/시간 구분자 제거
+  };
+  const parsedDate = parseDate(subquestion.date);
   return (
     <View style={styles.prevAnswers}>
       {/* ✅ EditModal 추가 */}
@@ -37,7 +55,7 @@ const PrevAnswers = ({
         <View style={styles.answerContainer}>
           <Text style={styles.answerText}>{subquestion.answer}</Text>
           <View style={styles.answerBottom}>
-            <Text style={styles.answerDate}>{subquestion.date}</Text>
+            <Text style={styles.answerDate}>{parsedDate}</Text>
             <TouchableOpacity
               style={styles.editButton}
               onPress={() => setIsEditModalOpen(true)}

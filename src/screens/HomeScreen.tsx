@@ -32,14 +32,11 @@ const HomeScreen = () => {
   const [pageChanged, setPageChanged] = useState<boolean>(false);
   const [closeAccordion, setCloseAccordion] = useState<boolean>(false);
   const answersPerPage = 3;
-  const [questions, setQuestions] = useState<Questiontypes[]>([
-    {questionId: 123, type: 'hi', content: 'asdasdasdasd'},
-    {questionId: 124, type: 'hi', content: 'asdasdasdasdsd'},
-  ]);
-
-  //todo : 이거 axios 날릴때 남은건냅두고 처음에 6개, 그뒤에 6개씩추가
+  const [questions, setQuestions] = useState<Questiontypes[]>([]);
   const [previousAnswers, setPreviousAnswers] = useState<AnswerTypes[]>([]);
   const totalPages = Math.ceil(previousAnswers.length / answersPerPage);
+
+  //todo : 이거 axios 날릴때 남은건냅두고 처음에 6개, 그뒤에 6개씩추가
 
   // TODO : page 로 나중에 6개씩 날리기
   const paginatedAnswers =
@@ -48,9 +45,6 @@ const HomeScreen = () => {
       answersIndex * answersPerPage,
       (answersIndex + 1) * answersPerPage,
     );
-  // a = (subquestionId + answersIndex) * answersPerPage;
-  // previousanswers[a].
-  //previousAnswers
   const handlePrev = () => {
     if (answersIndex === 0) return;
 
@@ -96,10 +90,6 @@ const HomeScreen = () => {
       const res = axiosUpdateAnswers(subquestionId, newText);
       //아래 부분은 state 변경
       editPrevAnswer(subquestionId, newText);
-      // const updatedAnswers = [...previousAnswers]; //shallow copy
-      // updatedAnswers[prevAnswerId]
-      // .subquestions[subquestionId].answer = newText;
-      // setPreviousAnswers(updatedAnswers);
     } catch (error) {
       console.error('Error updating answer:', error);
     }
@@ -133,7 +123,7 @@ const HomeScreen = () => {
     React.useCallback(() => {
       // 스크린이 포커스될 때마다 실행할 함수
       handleGetQuestions();
-      // handleGetQuestionHistory();
+      handleGetQuestionHistory();
 
       return () => {
         // 필요시 정리 작업 수행
@@ -141,7 +131,6 @@ const HomeScreen = () => {
       };
     }, []), // 빈 배열을 사용하여 콜백이 마운트 시 한 번만 생성되도록 함
   );
-
   return (
     <View style={styles.container}>
       <MemoGradient />
@@ -150,23 +139,29 @@ const HomeScreen = () => {
         ref={scrollRef}>
         <Header />
         <View style={styles.card}>
-          <TouchableOpacity
-          //  onPress={handleGetQuestions}
-          >
+          <View>
             <Text style={styles.cardTitle}>Today's Questions</Text>
-          </TouchableOpacity>
-          {questions && //이거우너래대로 answers로 바꿔야됨
+          </View>
+          {questions.length > 0 ? ( //이거우너래대로 answers로 바꿔야됨
             questions.map(question => (
               <Questions
                 key={question.questionId}
                 questionId={question.questionId}
                 content={question.content}
               />
-            ))}
+            ))
+          ) : (
+            <View style={styles.questionDone}>
+              <Text style={styles.questionDoneText}>🎊 Great job! 🎊</Text>
+              <Text style={styles.questionDoneText}>
+                You've answered all of today's questions!
+              </Text>
+            </View>
+          )}
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Your previous Answers</Text>
+          <Text style={styles.cardTitle}>Your previous Responses</Text>
           <View style={styles.prevAnsweralign}>
             <View style={styles.prevAnswerContainer}>
               {paginatedAnswers &&
@@ -240,7 +235,15 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     marginTop: 12,
   },
-
+  questionDone: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  questionDoneText: {
+    fontFamily: fonts.roboto_medium,
+    textAlign: 'center',
+    fontSize: 22,
+  },
   prevAnsweralign: {
     gap: 16,
     alignItems: 'center',

@@ -21,7 +21,7 @@ export type HomeStackParamList = {
   // Answer: {mainQuestion?: string};
   Answer: {question_id: number};
 
-  Result: undefined;
+  Result: {question_xp: number};
   // Profile: undefined;
   // Setting: undefined;
   // Report: undefined;
