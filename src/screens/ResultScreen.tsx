@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   View,
@@ -36,7 +36,7 @@ export default function ResultScreen() {
     console.log('Continue clicked');
     navigation.dispatch(StackActions.pop(2));
   };
-
+  useEffect(() => {}, []);
   return (
     <View style={styles.container}>
       <MemoGradient />

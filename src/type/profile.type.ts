@@ -1,4 +1,5 @@
 export type ProfileTypes = {
+  id: number;
   profileImg: string;
   userName: string;
   memberSince: string;
@@ -7,4 +8,5 @@ export type ProfileTypes = {
   levelXP: number;
   level: number;
   totalAnswers: number;
+  lastUpdated: string;
 };

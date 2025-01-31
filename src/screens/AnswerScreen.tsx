@@ -50,12 +50,34 @@ export default function AnswerScreen() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // AsyncStorage Key
+  const ANSWER_ALL_KEYS = 'answer_all_keys';
   const ANSWER_STORAGE_KEY = `userAnswers_${question_id}`;
   const ANSWER_EXPIRATION_KEY = `answersExpiration_${question_id}`;
 
   // -----------------------------------------------
   // 1. 서버에서 데이터 가져오기
   // -----------------------------------------------
+  const removeKeyFromAnswerAllKeys = async (keyToRemove: string) => {
+    try {
+      const existingKeys = await AsyncStorage.getItem(ANSWER_ALL_KEYS);
+      if (existingKeys) {
+        let keysArray: string[] = JSON.parse(existingKeys);
+
+        // keyToRemove와 일치하는 항목을 찾아 삭제
+        const index = keysArray.indexOf(keyToRemove);
+        if (index !== -1) {
+          keysArray.splice(index, 1);
+          // 수정된 배열을 다시 저장
+          await AsyncStorage.setItem(
+            ANSWER_ALL_KEYS,
+            JSON.stringify(keysArray),
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Error removing key from ANSWER_ALL_KEYS:', error);
+    }
+  };
   const fetchSubquestions = async () => {
     try {
       // 서버에서 { question, subquestions: [{id, subquestion}, ...] } 형태 받아옴
@@ -77,11 +99,15 @@ export default function AnswerScreen() {
     try {
       const now = Date.now();
 
-      const ALL_KEYS = await AsyncStorage.getAllKeys();
+      const answerAllKeys = await AsyncStorage.getItem(ANSWER_ALL_KEYS);
+      const ALL_KEYS: string[] = answerAllKeys ? JSON.parse(answerAllKeys) : [];
+      // const ALL_KEYS = await AsyncStorage.getAllKeys();
+
+      //리스트로 받아옴
+      // console.log('All keys:', ALL_KEYS);
       const expirationKeys = ALL_KEYS.filter(key =>
         key.startsWith('answersExpiration_'),
       );
-
       if (expirationKeys.length === 0) return;
 
       const keyValuePairs = await AsyncStorage.multiGet(expirationKeys);
@@ -111,6 +137,34 @@ export default function AnswerScreen() {
   // -----------------------------------------------
   // 2. AsyncStorage: 임시 저장 & 불러오기
   // -----------------------------------------------
+  const addKeyToAnswerAllKeys = async (newKey: string) => {
+    try {
+      // 기존 키 가져오기
+      const existingKeys = await AsyncStorage.getItem(ANSWER_ALL_KEYS);
+      // 기존 값이 있다면 JSON 파싱, 없으면 빈 배열로 초기화
+      let keysArray: string[] = [];
+      if (existingKeys) {
+        try {
+          const parsed = JSON.parse(existingKeys);
+          keysArray = Array.isArray(parsed) ? parsed : []; // 배열 검증
+        } catch (error) {
+          console.warn('Invalid JSON format, resetting to empty array.');
+          keysArray = []; // JSON 오류 발생 시 초기화
+        }
+      }
+
+      // 새로운 키가 존재하지 않는 경우에만 추가
+      if (!keysArray.includes(newKey)) {
+        keysArray.push(newKey);
+        await AsyncStorage.setItem(ANSWER_ALL_KEYS, JSON.stringify(keysArray));
+        // 저장된 값 확인 (디버깅용)
+        const storedKeys = await AsyncStorage.getItem(ANSWER_ALL_KEYS);
+        console.log('Updated ANSWER_ALL_KEYS:', storedKeys);
+      }
+    } catch (error) {
+      console.error('Error saving key:', error);
+    }
+  };
   const saveAnswersToStorage = async (answers: AnswerSubquestionTypes) => {
     try {
       const now = Date.now();
@@ -119,8 +173,10 @@ export default function AnswerScreen() {
         ANSWER_EXPIRATION_KEY,
         (now + 24 * 60 * 60 * 1000).toString(), // 24시간
       );
+      await addKeyToAnswerAllKeys(ANSWER_STORAGE_KEY);
+      await addKeyToAnswerAllKeys(ANSWER_EXPIRATION_KEY);
     } catch (e) {
-      console.error('Failed to save answers:', e);
+      Alert.alert('Failed to draft answers');
     }
   };
   const loadAnswersFromStorage = async (
@@ -129,11 +185,6 @@ export default function AnswerScreen() {
   ) => {
     try {
       const saved = await AsyncStorage.getItem(ANSWER_STORAGE_KEY);
-      // const expiration = await AsyncStorage.getItem(ANSWER_EXPIRATION_KEY);
-      // const now = Date.now();
-      // 여기서 길이랑 mainquestion으로 비교대조하는 로직이 왜필요함?----------------------------------------
-      // 저장된 값이 있고 만료되지 않았다면
-      // if (saved && expiration && parseInt(expiration, 10) > now) {
       if (saved) {
         const parsed: AnswerSubquestionTypes = JSON.parse(saved);
         // 메인 질문/배열 길이가 일치하면 로드
@@ -172,7 +223,6 @@ export default function AnswerScreen() {
         Alert.alert('No question data loaded.');
         return;
       }
-
       // 1) subquestions (문자열들)과 serverData.subquestions (id 정보)를 매핑
       const payload = questions.responses.map((answer, index) => {
         const subquestionId = serverData.subquestions[index].id;
@@ -181,18 +231,17 @@ export default function AnswerScreen() {
           answer,
         };
       });
-
       // 2) 이 payload를 백엔드로 전송
       // => BE는 createAnswers([{ subQuestionId, answer }, ...]) 로 받을 수 있음
       // TODO, question이 아닌 question id를 넘겨주기
       const resultProps = await axiosPostAnswers(payload, serverData?.question);
       console.log('resultProps', resultProps.xpAdded);
       console.log('Submitted answers (with ID):', payload);
-
       // 3) 제출 성공 시 캐시 삭제
       await AsyncStorage.removeItem(ANSWER_STORAGE_KEY);
       await AsyncStorage.removeItem(ANSWER_EXPIRATION_KEY);
-
+      await removeKeyFromAnswerAllKeys(ANSWER_STORAGE_KEY);
+      await removeKeyFromAnswerAllKeys(ANSWER_EXPIRATION_KEY);
       // 4) 결과 화면으로 이동
       navigation.navigate('Result', {question_xp: resultProps.xpAdded});
       setIsModalOpen(false);
@@ -239,7 +288,6 @@ export default function AnswerScreen() {
                   value={questions.responses[index] ?? ''}
                   onChangeText={text => {
                     if (text.length > 1000) return;
-                    console.log('questions:', questions);
                     setQuestions(prev => {
                       const updated = [...prev.responses];
                       updated[index] = text;

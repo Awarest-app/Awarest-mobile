@@ -113,6 +113,7 @@ export const axiosGetProfile = async (): Promise<ProfileTypes> => {
   } catch (error) {
     console.error('Error getting profile:', error);
     return {
+      id: 0,
       profileImg: '',
       userName: '',
       memberSince: '',
@@ -121,6 +122,7 @@ export const axiosGetProfile = async (): Promise<ProfileTypes> => {
       levelXP: 0,
       level: 0,
       totalAnswers: 0,
+      lastUpdated: '',
     };
   }
 };
@@ -205,6 +207,18 @@ export const axiosGetSubquestions = async (questionId: number) => {
       `${axiosGetSubquestionsURL}/${questionId}`,
     );
     console.log('Subquestions:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error getting subquestions:', error);
+    return [];
+  }
+};
+
+const axiosGetResultURL = '/api/result';
+export const axiosGetResult = async () => {
+  try {
+    const response = await axiosInstance.get(axiosGetResultURL);
+    console.log('result:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error getting subquestions:', error);
