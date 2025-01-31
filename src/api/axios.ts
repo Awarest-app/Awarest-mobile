@@ -39,10 +39,10 @@ export const axiosTestJwt = async () => {
   }
 };
 
-const axiosSignoutURL = '/api/auth/signout';
+const axiosSignoutURL = '/api/auth/logout';
 export const axiosSignout = async () => {
   try {
-    console.log('jwt token', getToken());
+    // console.log('jwt token', getToken());
     // GET 요청을 인스턴스를 사용해 실행
     const response = await axiosInstance.get(axiosSignoutURL);
     console.log('signout서버 응답: ', response.data);
@@ -59,7 +59,7 @@ export const axiosSignout = async () => {
 const axioxAccountDeleteURL = '/api/auth/delete';
 export const axiosAccountDelete = async () => {
   try {
-    const response = await axiosInstance.get(axioxAccountDeleteURL);
+    const response = await axiosInstance.delete(axioxAccountDeleteURL);
     // 성공 시 Alert 표시
     Alert.alert('Success', `서버 응답: ${JSON.stringify(response.data)}`);
   } catch (error) {
@@ -127,6 +127,18 @@ export const axiosGetProfile = async (): Promise<ProfileTypes> => {
   }
 };
 
+const axiosUpdateUsernameURL = '/api/profile/username';
+export const axiosUpdateUsername = async (newUsername: string) => {
+  try {
+    const response = await axiosInstance.patch(axiosUpdateUsernameURL, {
+      newUsername,
+    });
+    console.log('response', response);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const axiosGetQuestionsURL = '/api/questions/me';
 export const axiosGetQuestions = async () => {
   try {
@@ -144,7 +156,7 @@ const axiosGetAnswersURL = 'api/answers/me';
 export const axiosGetAnswers = async () => {
   try {
     const response = await axiosInstance.get(axiosGetAnswersURL);
-    // console.log('Answers:', response.data);
+    console.log('Answers: outer', response);
     return response.data;
   } catch (error) {
     console.error('Error getting answers:', error);

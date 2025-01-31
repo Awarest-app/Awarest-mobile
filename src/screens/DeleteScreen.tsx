@@ -9,8 +9,8 @@ import {
   Switch,
 } from 'react-native';
 import {useState} from 'react';
-import { removeToken } from '../api/secureStorage';
-import { axiosAccountDelete } from '../api/axios';
+import {removeToken} from '../api/secureStorage';
+import {axiosAccountDelete} from '../api/axios';
 import colors from '../styles/colors';
 import {fonts} from '../styles/fonts';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
@@ -23,65 +23,65 @@ interface DeleteScreenProps {
   setIsDelete: (isDelete: boolean) => void;
 }
 
-export default function DeleteScreen({
-  setIsDelete,
-}: DeleteScreenProps) {
+export default function DeleteScreen({setIsDelete}: DeleteScreenProps) {
   // 시간, XP 등의 데이터를 실제 로직에 맞게 받아오거나 계산해서 표시할 수 있습니다.
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const handleOnSubmit = () => {
+  const handleOnSubmit = async () => {
     //axios 삭제
     try {
       removeToken();
-      axiosAccountDelete();
+      await axiosAccountDelete();
       setIsModalOpen(false);
-      navigation.reset({ index: 0,
-        routes: [{
-          name: 'LoginStack',
-          params: {
-            screen: 'Welcome',
-          }}],
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'LoginStack',
+            params: {
+              screen: 'Welcome',
+            },
+          },
+        ],
       });
     } catch (error) {
       console.log(error);
     }
-  }
+  };
   return (
-      <View style={styles.container}>
+    <View style={styles.container}>
       <DeleteModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleOnSubmit}
       />
-        <View style={styles.contentContainer}>
+      <View style={styles.contentContainer}>
         <SafeAreaView style={styles.safeArea}>
           <View style={styles.header}>
-            <TouchableOpacity style={styles.prevIcon}
+            <TouchableOpacity
+              style={styles.prevIcon}
               onPress={() => {
                 console.log('profileprevIcon');
                 setIsDelete(false);
-              }}
-            >
-              <PrevIcon/>
+              }}>
+              <PrevIcon />
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>
-              Delete Account
-            </Text>
+            <Text style={styles.headerTitle}>Delete Account</Text>
           </View>
           <View style={styles.deleteInfo}>
             <Text style={styles.deleteHelp}>
-              By proceeding, you will delete your account
-              Once the process is complete, it cannot be undone.
+              By proceeding, you will delete your account Once the process is
+              complete, it cannot be undone.
             </Text>
-            <TouchableOpacity style={styles.button}
-              onPress={() => setIsModalOpen(true)}
-              >
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => setIsModalOpen(true)}>
               <Text style={styles.buttonText}>Delete Account</Text>
             </TouchableOpacity>
-        </View>
+          </View>
         </SafeAreaView>
-        </View>
       </View>
+    </View>
   );
 }
 
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
     backgroundColor: '#cccccc', // 회색 배경(임시)
   },
-  editImg:{
+  editImg: {
     fontFamily: fonts.roboto_medium,
     fontSize: 14,
     color: colors.primary,
@@ -172,9 +172,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.05)',
   },
-  permissonContainer: {
-
-  },
+  permissonContainer: {},
   permissonBox: {
     flexDirection: 'row',
     justifyContent: 'space-between',
