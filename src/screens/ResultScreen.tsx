@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   View,
@@ -12,13 +12,23 @@ import CheckIcon from '../assets/svg/check-icon.svg';
 import {globalStyle} from '../styles/global';
 import {Header} from '../components/Header';
 import MemoGradient from '../components/Hooks/MemoGradient';
-import {StackActions, NavigationProp, useNavigation} from '@react-navigation/native';
+import {
+  StackActions,
+  NavigationProp,
+  useNavigation,
+  useRoute,
+  RouteProp,
+} from '@react-navigation/native';
 import {HomeStackParamList} from '../type/route.type';
 
+type AnswerScreenRouteProp = RouteProp<HomeStackParamList, 'Result'>;
+
 export default function ResultScreen() {
+  const route = useRoute<AnswerScreenRouteProp>();
+  const xp = route.params.question_xp;
   // 시간, XP 등의 데이터를 실제 로직에 맞게 받아오거나 계산해서 표시할 수 있습니다.
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
-  const xpEarned = 50;
+  // const xpEarned = 50;
   const timeSpent = '3m 21s';
 
   const handleContinue = () => {
@@ -26,37 +36,37 @@ export default function ResultScreen() {
     console.log('Continue clicked');
     navigation.dispatch(StackActions.pop(2));
   };
-
+  useEffect(() => {}, []);
   return (
     <View style={styles.container}>
       <MemoGradient />
       <View style={styles.contentContainer}>
-      <Header />
-      <SafeAreaView style={styles.safeArea}>
-        {/* 상단 상태 표시 영역 */}
-        {/* 가운데 메인 카드(파란색 테두리 박스) */}
-        <View style={styles.cardContainer}>
-          <Text style={styles.cardTitle}>Response complete !</Text>
+        <Header />
+        <SafeAreaView style={styles.safeArea}>
+          {/* 상단 상태 표시 영역 */}
+          {/* 가운데 메인 카드(파란색 테두리 박스) */}
+          <View style={styles.cardContainer}>
+            <Text style={styles.cardTitle}>Response complete !</Text>
 
-          {/* 체크 아이콘 예시(단순 텍스트 이모지 사용) */}
-          <View style={styles.resultContainer}>
-            <View style={styles.checkIconContainer}>
-              <CheckIcon />
+            {/* 체크 아이콘 예시(단순 텍스트 이모지 사용) */}
+            <View style={styles.resultContainer}>
+              <View style={styles.checkIconContainer}>
+                <CheckIcon />
+              </View>
+              <Text style={styles.evalutionMessage}>Great Reflection !</Text>
+              <Text style={styles.subMessage}>You've earned</Text>
+              <Text style={styles.gainXp}>+ {xp} XP</Text>
+              <Text style={styles.subMessage}>Time spent: {timeSpent}</Text>
+
+              {/* Continue 버튼 */}
+              <TouchableOpacity
+                style={styles.continueButton}
+                onPress={handleContinue}>
+                <Text style={styles.continueButtonText}>Continue</Text>
+              </TouchableOpacity>
             </View>
-            <Text style={styles.evalutionMessage}>Great Reflection !</Text>
-            <Text style={styles.subMessage}>You've earned</Text>
-            <Text style={styles.gainXp}>+ {xpEarned} XP</Text>
-            <Text style={styles.subMessage}>Time spent: {timeSpent}</Text>
-
-            {/* Continue 버튼 */}
-            <TouchableOpacity
-              style={styles.continueButton}
-              onPress={handleContinue}>
-              <Text style={styles.continueButtonText}>Continue</Text>
-            </TouchableOpacity>
           </View>
-        </View>
-      </SafeAreaView>
+        </SafeAreaView>
       </View>
     </View>
   );
@@ -98,7 +108,7 @@ const styles = StyleSheet.create({
   },
   checkIconContainer: {
     width: 80,
-    height: 80, 
+    height: 80,
     borderRadius: 100,
     alignItems: 'center',
     justifyContent: 'center',

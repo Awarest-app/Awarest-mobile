@@ -24,6 +24,7 @@ import {Questiontypes} from '../type/question.type';
 import {AnswerTypes} from '../type/answer.type';
 import PrevAnswers from '../components/home/PrevAnswers';
 import Questions from '../components/home/Questions';
+import { useProfileStore } from '../zustand/useProfileStore'
 
 //todo: 컴포넌트 쪼개기
 const HomeScreen = () => {
@@ -32,14 +33,12 @@ const HomeScreen = () => {
   const [pageChanged, setPageChanged] = useState<boolean>(false);
   const [closeAccordion, setCloseAccordion] = useState<boolean>(false);
   const answersPerPage = 3;
-  const [questions, setQuestions] = useState<Questiontypes[]>([
-    {questionId: 123, type: 'hi', content: 'asdasdasdasd'},
-    {questionId: 124, type: 'hi', content: 'asdasdasdasdsd'},
-  ]);
-
-  //todo : 이거 axios 날릴때 남은건냅두고 처음에 6개, 그뒤에 6개씩추가
+  const [questions, setQuestions] = useState<Questiontypes[]>([]);
   const [previousAnswers, setPreviousAnswers] = useState<AnswerTypes[]>([]);
   const totalPages = Math.ceil(previousAnswers.length / answersPerPage);
+  
+  const {fetchProfile, profile } = useProfileStore();
+  //todo : 이거 axios 날릴때 남은건냅두고 처음에 6개, 그뒤에 6개씩추가
 
   // TODO : page 로 나중에 6개씩 날리기
   const paginatedAnswers =
@@ -48,9 +47,6 @@ const HomeScreen = () => {
       answersIndex * answersPerPage,
       (answersIndex + 1) * answersPerPage,
     );
-  // a = (subquestionId + answersIndex) * answersPerPage;
-  // previousanswers[a].
-  //previousAnswers
   const handlePrev = () => {
     if (answersIndex === 0) return;
 
@@ -80,6 +76,7 @@ const HomeScreen = () => {
 
       return () => clearTimeout(timer);
     }
+    fetchProfile();
   }, [answersIndex, pageChanged]);
 
   const editPrevAnswer = (subquestionId: number, newText: string) => {
@@ -96,10 +93,6 @@ const HomeScreen = () => {
       const res = axiosUpdateAnswers(subquestionId, newText);
       //아래 부분은 state 변경
       editPrevAnswer(subquestionId, newText);
-      // const updatedAnswers = [...previousAnswers]; //shallow copy
-      // updatedAnswers[prevAnswerId]
-      // .subquestions[subquestionId].answer = newText;
-      // setPreviousAnswers(updatedAnswers);
     } catch (error) {
       console.error('Error updating answer:', error);
     }
@@ -109,7 +102,7 @@ const HomeScreen = () => {
   const handleGetQuestions = async () => {
     try {
       const response: any = await axiosGetQuestions();
-      console.log('Questions:', response.data);
+      // console.log('Questions:', response.data);
       setQuestions(response.data);
     } catch (error) {
       console.error('Error getting questions:', error);
@@ -120,7 +113,7 @@ const HomeScreen = () => {
     try {
       const response = await axiosGetAnswers();
       // console.log('Answers:', JSON.stringify(response, null, 2));
-      console.log('Answers:', response);
+      // console.log('Answers:', response);
       // console.log('Answers:', response.subquestions);
       setPreviousAnswers(response);
     } catch (error) {
@@ -133,15 +126,13 @@ const HomeScreen = () => {
     React.useCallback(() => {
       // 스크린이 포커스될 때마다 실행할 함수
       handleGetQuestions();
-      // handleGetQuestionHistory();
+      handleGetQuestionHistory();
 
       return () => {
         // 필요시 정리 작업 수행
-        console.log('MyScreen has lost focus');
       };
     }, []), // 빈 배열을 사용하여 콜백이 마운트 시 한 번만 생성되도록 함
   );
-
   return (
     <View style={styles.container}>
       <MemoGradient />
@@ -150,23 +141,29 @@ const HomeScreen = () => {
         ref={scrollRef}>
         <Header />
         <View style={styles.card}>
-          <TouchableOpacity
-          //  onPress={handleGetQuestions}
-          >
+          <View>
             <Text style={styles.cardTitle}>Today's Questions</Text>
-          </TouchableOpacity>
-          {questions && //이거우너래대로 answers로 바꿔야됨
+          </View>
+          {questions.length > 0 ? ( //이거우너래대로 answers로 바꿔야됨
             questions.map(question => (
               <Questions
                 key={question.questionId}
                 questionId={question.questionId}
                 content={question.content}
               />
-            ))}
+            ))
+          ) : (
+            <View style={styles.questionDone}>
+              <Text style={styles.questionDoneText}>🎊 Great job! 🎊</Text>
+              <Text style={styles.questionDoneText}>
+                You've answered all of today's questions!
+              </Text>
+            </View>
+          )}
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Your previous Answers</Text>
+          <Text style={styles.cardTitle}>Your previous Responses</Text>
           <View style={styles.prevAnsweralign}>
             <View style={styles.prevAnswerContainer}>
               {paginatedAnswers &&
@@ -222,6 +219,7 @@ const styles = StyleSheet.create({
     paddingBottom: 60,
   },
   card: {
+    width: '100%',
     backgroundColor: 'rgba(255, 255, 255, 0.75)',
     borderRadius: 10,
     marginBottom: 50,
@@ -240,49 +238,27 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     marginTop: 12,
   },
-
+  questionDone: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  questionDoneText: {
+    fontFamily: fonts.roboto_medium,
+    textAlign: 'center',
+    fontSize: 22,
+  },
   prevAnsweralign: {
     gap: 16,
     alignItems: 'center',
   },
   prevAnswerContainer: {
+    width: '100%',
     gap: 10,
   },
   prevAnswers: {
+    width: '100%',
     gap: 16,
   },
-  subquestionContainer: {
-    gap: 10,
-  },
-  subquestionText: {
-    fontFamily: fonts.roboto_medium,
-    fontSize: 18,
-    color: colors.primary,
-  },
-  answerContainer: {
-    paddingVertical: 16,
-    paddingHorizontal: 14,
-    gap: 14,
-    borderWidth: 1,
-    borderRadius: 8,
-    borderColor: colors.card_border,
-    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
-  },
-  answerText: {
-    fontFamily: fonts.lato_regular,
-    fontSize: calculateDp(14),
-    color: colors.prev_answer,
-  },
-  answerBottom: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  answerDate: {
-    fontFamily: fonts.roboto_regular,
-    fontSize: calculateDp(14),
-    color: colors.text_hint,
-  },
-  editButton: {},
   moveButtonContainer: {
     width: '90%',
     height: 50,

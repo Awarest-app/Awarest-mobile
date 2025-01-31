@@ -53,7 +53,7 @@ axiosInstance.interceptors.response.use(
     // 헤더 접근 방식 개선 (타입 안전)
     // const newRefreshToken = response.headers.get('x-refresh-token');
     const newRefreshToken = response.headers['x-refresh-token'];
-    console.log('newRefreshToken', newRefreshToken);
+    // console.log('newRefreshToken', newRefreshToken);
     if (newRefreshToken) {
       await storeRefreshToken(newRefreshToken.toString());
     }

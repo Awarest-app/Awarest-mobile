@@ -18,9 +18,8 @@ import {fonts} from '../styles/fonts';
 import {settingsTypes} from '../type/settings.type';
 import DeleteScreen from './DeleteScreen';
 import PrevIcon from '../assets/svg/setting-prev.svg';
-import {
-  checkNotifications,RESULTS
-} from 'react-native-permissions';
+import {checkNotifications, RESULTS} from 'react-native-permissions';
+import {axiosAccountDelete, axiosUpdateUsername} from '../api/axios';
 const {width, height} = Dimensions.get('window');
 interface SettingProfileScreenProps {
   closeSettings: () => void;
@@ -31,7 +30,6 @@ export default function SettingProfileScreen({
   closeSettings,
   setPage,
 }: SettingProfileScreenProps) {
-
   // 시간, XP 등의 데이터를 실제 로직에 맞게 받아오거나 계산해서 표시할 수 있습니다.
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [editable, setEditable] = useState<boolean>(true);
@@ -39,17 +37,17 @@ export default function SettingProfileScreen({
   const [isEnabled, setIsEnabled] = useState(false);
 
   const handleDelete = () => {
-     setIsDelete(!isDelete);
+    setIsDelete(!isDelete);
   };
 
   const handleNotification = () => {
     Linking.openSettings();
   };
-   const platformCheck = (): boolean => {
-      return Platform.OS === 'ios';
+  const platformCheck = (): boolean => {
+    return Platform.OS === 'ios';
   };
   const handleName = (name: string) => {
-    if (name.length > 20) return ;
+    if (name.length > 20) return;
     setName(name);
   };
   const fetchNoti = async () => {
@@ -68,41 +66,35 @@ export default function SettingProfileScreen({
     useCallback(() => {
       //axios로 사용자 이름 받아오기
       fetchNoti(); // 화면 포커스 시 상태 업데이트
-    }, [])
+    }, []),
   );
   const handleSubmit = () => {
     setEditable(false);
-    //todo axios로 사용자 이름 업데이트 timeout빼고 
+    //todo axios로 사용자 이름 업데이트 timeout빼고
     setTimeout(() => {
       setEditable(true);
     }, 2000);
   };
-  console.log(name);
+
   return (
-      <View style={styles.container}>
-        {isDelete && (
-          <DeleteScreen
-            setIsDelete={setIsDelete}
-          />
-        )}
-        {!isDelete && (
-          <View style={styles.contentContainer}>
+    <View style={styles.container}>
+      {isDelete && <DeleteScreen setIsDelete={setIsDelete} />}
+      {!isDelete && (
+        <View style={styles.contentContainer}>
           <SafeAreaView style={styles.safeArea}>
             <View style={styles.header}>
-              <TouchableOpacity style={styles.prevIcon}
-                onPress={() => {setPage('main')}}
-              >
-                <PrevIcon/>
+              <TouchableOpacity
+                style={styles.prevIcon}
+                onPress={() => {
+                  setPage('main');
+                }}>
+                <PrevIcon />
               </TouchableOpacity>
-              <Text style={styles.headerTitle}>
-                Profile
-              </Text>
+              <Text style={styles.headerTitle}>Profile</Text>
             </View>
             <View style={styles.settingContainer}>
               <View style={styles.nameContainer}>
-                <Text style={styles.titles}>
-                  Name
-                </Text>
+                <Text style={styles.titles}>Name</Text>
                 <TextInput
                   style={[
                     styles.nameInput,
@@ -111,19 +103,16 @@ export default function SettingProfileScreen({
                   value={name}
                   onChangeText={handleName}
                   editable={editable}
-                  onSubmitEditing={handleSubmit}//enter키 눌렀을 때
+                  onSubmitEditing={handleSubmit} //enter키 눌렀을 때
                   returnKeyType="done"
                 />
               </View>
               <TouchableOpacity
                 style={styles.permissonContainer}
                 activeOpacity={0.9}
-                onPress={handleNotification}
-              >
+                onPress={handleNotification}>
                 <View style={styles.permissonBox}>
-                  <Text style={styles.permissonTitle}>
-                    Notifications
-                  </Text>
+                  <Text style={styles.permissonTitle}>Notifications</Text>
                   <Switch
                     trackColor={{false: colors.white, true: '#93C5FD'}}
                     ios_backgroundColor={colors.white}
@@ -133,17 +122,14 @@ export default function SettingProfileScreen({
                   />
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={handleDelete}
-              >
+              <TouchableOpacity style={styles.button} onPress={handleDelete}>
                 <Text style={styles.buttonText}>Delete Account</Text>
               </TouchableOpacity>
             </View>
           </SafeAreaView>
-          </View>
-        )}
-      </View>
+        </View>
+      )}
+    </View>
   );
 }
 
@@ -195,7 +181,7 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
     backgroundColor: '#cccccc', // 회색 배경(임시)
   },
-  editImg:{
+  editImg: {
     fontFamily: fonts.roboto_medium,
     fontSize: 14,
     color: colors.primary,
