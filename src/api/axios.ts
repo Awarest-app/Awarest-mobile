@@ -89,9 +89,9 @@ export const axiosPermissonSubmit = async (permissons: boolean) => {
     const response = await axiosInstance.post(axiosPermissonSubmitURL, {
       permissons,
     });
-    console.log('Survey submitted:', response.data);
+    console.log('permisson submitted:', response.data);
   } catch (error) {
-    console.error('Error submitting survey:', error);
+    console.error('Error submitting permisson:', error);
   }
 };
 
@@ -109,7 +109,9 @@ export const axiosGetProfile = async (): Promise<ProfileTypes> => {
       dayStreak: 0,
       totalXP: 0,
       levelXP: 0,
+      prevXP: 0,
       level: 0,
+      noti: false,
       totalAnswers: 0,
       lastStreakDate: '',
     };
@@ -122,7 +124,7 @@ export const axiosUpdateUsername = async (newUsername: string) => {
     const response = await axiosInstance.patch(axiosUpdateUsernameURL, {
       newUsername,
     });
-    console.log('response', response);
+    console.log('response', response.data);
   } catch (error) {
     console.log(error);
   }

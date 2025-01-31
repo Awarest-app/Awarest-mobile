@@ -22,11 +22,15 @@ export function Header() {
           {is_first_response ? <Fire/> : <UnFire/>}
           <Text style={styles.dataText}>{datas.dayStreak} Days</Text>
         </View>
-        <TouchableOpacity style={styles.iconButton}>
+        <TouchableOpacity style={styles.iconButton}
+          disabled={true}
+        >
           <Leaf/>
           <Text style={styles.dataText}>채워야돼</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton}>
+        <TouchableOpacity style={styles.iconButton}
+          disabled={true}
+        >
           <Award/>
           <Text style={styles.dataText}>level {datas.level}</Text>
         </TouchableOpacity>
