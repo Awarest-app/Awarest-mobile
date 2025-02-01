@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   Linking,
+  Alert,
 } from 'react-native';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {axiosSignout} from '../api/axios';
@@ -81,7 +82,9 @@ const SettingsMain = ({closeSettings, setPage}: SettingsMainProps) => {
             onPress={() => setPage('profile')}>
             <Text style={styles.settingOption}>Profile</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.settingButton}>
+          <TouchableOpacity style={styles.settingButton}
+            onPress={() => {Alert.alert('Coming soon!', 'This feature is not available yet. Please try again later. Thank you!')}}
+          >
             <Text style={styles.settingOption}>Subscriptions</Text>
           </TouchableOpacity>
         </View>
@@ -89,7 +92,10 @@ const SettingsMain = ({closeSettings, setPage}: SettingsMainProps) => {
         <View style={styles.settingGroups}>
           <Text style={styles.settingOptionTitle}>Help</Text>
           <TouchableOpacity style={styles.settingButton} onPress={aboutPage}>
-            <Text style={styles.settingOption}>About us</Text>
+            <Text style={styles.settingOption}>
+              {/* todo 배포한 웹페이지로 가게하기 */}
+              About us
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.settingButton}

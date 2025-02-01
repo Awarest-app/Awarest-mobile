@@ -13,17 +13,21 @@ import EditIcon from '../../assets/svg/modal-edit-icon.svg';
 interface EditModalProps {
   isOpen: boolean;
   currentValue: string;
+  questionIndex: number;
   subquestion: string;
   subquestionId: number;
+  subquestionIndex: number;
   onClose: () => void;
-  handleSaveEdit: (newText: string, subquestionId: number) => void;
+  handleSaveEdit: (newText: string, questionIndex:number, subquestionId:number ,subquestionIndex: number) => void; // ✅ 수정 완료 후 저장하는 함수
 }
 
 const EditModal = ({
   isOpen,
   currentValue,
+  questionIndex,
   subquestion,
   subquestionId,
+  subquestionIndex,
   onClose,
   handleSaveEdit,
 }: EditModalProps) => {
@@ -58,7 +62,7 @@ const EditModal = ({
             </TouchableOpacity>
             <TouchableOpacity style={styles.modalButton}
               onPress={() => {
-                handleSaveEdit(text, subquestionId);
+                handleSaveEdit(text, questionIndex, subquestionId, subquestionIndex);
                 onClose();
               }}
             >
