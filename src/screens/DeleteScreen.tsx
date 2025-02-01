@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Switch,
+  Linking,
 } from 'react-native';
 import {useState} from 'react';
 import {removeToken} from '../api/secureStorage';
@@ -30,8 +31,11 @@ export default function DeleteScreen({setIsDelete}: DeleteScreenProps) {
   const handleOnSubmit = async () => {
     //axios 삭제
     try {
-      removeToken();
       await axiosAccountDelete();
+      // ✅ 2. Google 로그아웃 페이지로 이동하여 계정 세션 초기화
+      // Linking.openURL('https://accounts.google.com/logout');
+
+      removeToken();
       setIsModalOpen(false);
       navigation.reset({
         index: 0,

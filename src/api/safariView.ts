@@ -1,3 +1,4 @@
+import {Linking} from 'react-native';
 import SafariView from 'react-native-safari-view';
 
 export const handleGoogleSignup = async () => {
@@ -6,21 +7,29 @@ export const handleGoogleSignup = async () => {
     // 실제 기기면 IP 혹은 도메인을 사용
     const SERVER_URL = 'http://localhost:3000';
 
-    // 이미 로그인 되어 있는 사람 -> 토큰이 있다고 바로 넘겨? -> BE에 인증 처리 api필요할듯
-    // if (token) {
+    // getToken으로 ac token 자체가 없다면 google oauth 모든 전략
+    // const token = await getToken();
+    // let url = token
+    //   ? `${SERVER_URL}/api/auth/google?prompt=select_account`
+    //   : `https://accounts.google.com/logout`;
+    // await clearWebViewCookies();
 
-    // SafariView로 열기
     SafariView.isAvailable()
       .then(() => {
         SafariView.show({
           url: `${SERVER_URL}/api/auth/google`,
-          // iOS 11+부터는 엔터프라이즈 환경 아니면 기본적으로 SFSafariViewController 적용
-          fromBottom: true, // 모달처럼 밑에서 올라오는 효과
+          // url: url,
+          // url: 'https://accounts.google.com/logout',
+          fromBottom: true,
         });
       })
       .catch(error => {
         console.error('SafariView not available:', error);
+        // ✅ SafariView가 없을 경우 기본 브라우저에서 열기 (Android 지원)
+        Linking.openURL(`${SERVER_URL}/api/auth/google?prompt=select_account`);
       });
+    // setTimeout(() => {
+    // }, 500); // Safari 세션이 닫힐 시간을 줌 (0.5초)
   } catch (error) {
     console.error('Failed to open Google OAuth:', error);
   }

@@ -56,7 +56,7 @@ function App() {
       }
 
       const isToken = await getToken();
-      console.log('isToken:', isToken);
+      // console.log('isToken:', isToken);
       if (isToken !== null) {
         if (survey === 'true') {
           navigationRef.current?.reset({
