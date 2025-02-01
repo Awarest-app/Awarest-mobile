@@ -18,6 +18,7 @@ import {settingsTypes} from '../type/settings.type';
 import InAppReview from 'react-native-in-app-review';
 import {ABOUT_PAGE_URL} from '@env';
 import {RootStackParamList} from '../type/route.type';
+import {googleLogout} from '../api/logoutSafariView';
 
 interface SettingsMainProps {
   closeSettings: () => void;
@@ -44,21 +45,25 @@ const SettingsMain = ({closeSettings, setPage}: SettingsMainProps) => {
       });
   };
   const handleSignOut = async () => {
-    removeToken();
-    await axiosSignout();
-    navigation.reset({
-      index: 0,
-      routes: [
-        {
-          name: 'LoginStack',
-          params: {
-            screen: 'Welcome',
-          },
-        },
-      ],
-    });
-
     //todo axios sign outa
+    try {
+      await axiosSignout();
+      await googleLogout();
+      removeToken();
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'LoginStack',
+            params: {
+              screen: 'Welcome',
+            },
+          },
+        ],
+      });
+    } catch (error) {
+      console.log('logout error', error);
+    }
   };
   return (
     <View style={styles.SettingsContainer}>

@@ -24,8 +24,8 @@ import {Questiontypes} from '../type/question.type';
 import {AnswerTypes} from '../type/answer.type';
 import PrevAnswers from '../components/home/PrevAnswers';
 import Questions from '../components/home/Questions';
-import { useProfileStore } from '../zustand/useProfileStore'
-import { isToday } from '../components/utils/utils';
+import {useProfileStore} from '../zustand/useProfileStore';
+import {isToday} from '../components/utils/utils';
 
 //todo: 컴포넌트 쪼개기
 const HomeScreen = () => {
@@ -38,7 +38,7 @@ const HomeScreen = () => {
   const [previousAnswers, setPreviousAnswers] = useState<AnswerTypes[]>([]);
   const totalPages = Math.ceil(previousAnswers.length / answersPerPage);
   const {fetchProfile, isDayStreak, profile} = useProfileStore();
-  
+
   //todo : 이거 axios 날릴때 남은건냅두고 처음에 6개, 그뒤에 6개씩추가
   // TODO : page 로 나중에 6개씩 날리기
   const paginatedAnswers =
@@ -76,9 +76,9 @@ const HomeScreen = () => {
         setPageChanged(false);
       }, 0);
       return () => clearTimeout(timer);
-    }  
+    }
   }, [answersIndex, pageChanged]);
-  
+
   useEffect(() => {
     console.log('useEffect homescreen ');
     handleGetQuestions();
@@ -93,9 +93,11 @@ const HomeScreen = () => {
     setPreviousAnswers(updatedAnswers);
   };
 
-  const handleSaveEdit = (newText: string, subquestionId: number) => {
+  const handleSaveEdit = async (newText: string, subquestionId: number) => {
     try {
-      axiosUpdateAnswers(subquestionId, newText);
+      //이거 수정이라서 백엔드
+      console.log('Save:', newText);
+      await axiosUpdateAnswers(subquestionId, newText);
       //아래 부분은 state 변경
       editPrevAnswer(subquestionId, newText);
     } catch (error) {
@@ -132,7 +134,7 @@ const HomeScreen = () => {
           <View>
             <Text style={styles.cardTitle}>Today's Questions</Text>
           </View>
-          {questions.length > 0 ? ( //타입에러? 
+          {questions.length > 0 ? ( //타입에러?
             questions.map(question => (
               <Questions
                 key={question.questionId}

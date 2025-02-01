@@ -44,11 +44,12 @@ export const axiosSignout = async () => {
   try {
     // console.log('jwt token', getToken());
     // GET 요청을 인스턴스를 사용해 실행
-    const response = await axiosInstance.get(axiosSignoutURL);
+    console.log('logout');
+    const response = await axiosInstance.post(axiosSignoutURL);
     console.log('signout서버 응답: ', response.data);
 
     // 성공 시 Alert 표시
-    Alert.alert('Success', `서버 응답: ${JSON.stringify(response.data)}`);
+    // Alert.alert('Success', `서버 응답: ${JSON.stringify(response.data)}`);
   } catch (error) {
     console.error('signout서버 요청 실패:', error);
     // 실패 시 Alert 표시
@@ -154,6 +155,8 @@ export const axiosGetAnswers = async () => {
   }
 };
 
+// TOD
+// const axiosPostAnswersURL = '/api/answers/bulk';
 const axiosLogoutURL = '/api/auth/logout';
 export const axiosLogout = async () => {
   try {
@@ -168,7 +171,7 @@ export const axiosLogout = async () => {
 const axiosPostAnswersURL = '/api/questions/answer';
 export const axiosPostAnswers = async (answers: any, questionName: string) => {
   try {
-    console.log('answer', answers);
+    console.log('\n answer', answers);
     const response = await axiosInstance.post(axiosPostAnswersURL, {
       answers,
       questionName,

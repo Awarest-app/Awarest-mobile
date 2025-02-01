@@ -19,6 +19,8 @@ import AppleIcon from '../assets/svg/apple-icon.svg';
 import {handleGoogleSignup} from '../api/safariView';
 import {axiosTestJwt, axiosTestServer} from '../api/axios';
 import {removeToken} from '../api/secureStorage';
+import Test from '../api/logoutSafariView';
+import SafariViewModal from '../api/logoutSafariView';
 // import GoogleOauth from '../lib/googleOauth';
 
 // 화면 높이/너비 구하기 (스타일에 사용)
@@ -92,7 +94,10 @@ export default function MainScreen() {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.oauthButton}
-            onPress={() => handleGoogleSignup()}>
+            onPress={() => handleGoogleSignup()}
+            // onPress={() => handleGoogleSignup()}
+          >
+            {/* <SafariViewModal /> */}
             <View style={styles.oauthTextWrapper}>
               <GoogleIcon />
               <Text style={styles.oauthButtonText}>Sign in with Google</Text>
