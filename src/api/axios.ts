@@ -186,19 +186,19 @@ export const axiosPostAnswers = async (answers: any, questionName: string) => {
 const axiosUpdateAnswersURL = '/api/answers/update';
 export const axiosUpdateAnswers = async (
   //query: id, body : content
-  subQuestionId: number,
+  subquestionId: number,
   answer: string,
 ) => {
   try {
     const response = await axiosInstance.put(
-      `${axiosUpdateAnswersURL}/${subQuestionId}`,
+      `${axiosUpdateAnswersURL}/${subquestionId}`,
       {
         content: answer,
       },
     );
-    console.log('Answers updated:', response.data);
+    console.log('1111Answers updated:', response.data);
   } catch (error) {
-    console.error('Error updating answers:', error);
+    console.error('1111Error updating answers:', error);
   }
 };
 

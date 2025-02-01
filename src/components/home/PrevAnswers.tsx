@@ -9,12 +9,16 @@ import EditModal from '../modals/EditModal'; // ✅ EditModal 추가
 interface PrevAnswersProps {
   subquestion: SubquestionTypes;
   subquestionId: number;
-  handleSaveEdit: (newText: string, subquestionIndex: number) => void; // ✅ 수정 완료 후 저장하는 함수
+  questionIndex: number;
+  subquestionIndex: number;
+  handleSaveEdit: (newText: string, questionIndex:number, subquestionId:number ,subquestionIndex: number) => void; // ✅ 수정 완료 후 저장하는 함수
 }
 
 const PrevAnswers = ({
   subquestion, 
   subquestionId,
+  questionIndex,
+  subquestionIndex,
   handleSaveEdit,
 }: PrevAnswersProps) => {
   // ✅ EditModal 상태 관리
@@ -45,9 +49,11 @@ const PrevAnswers = ({
       <EditModal
         isOpen={isEditModalOpen}
         currentValue={editAnswer}
+        questionIndex={questionIndex}
         subquestion={subquestion.text}
-        onClose={() => setIsEditModalOpen(false)}
         subquestionId={subquestionId}
+        subquestionIndex={subquestionIndex}
+        onClose={() => setIsEditModalOpen(false)}
         handleSaveEdit={handleSaveEdit}
       />
       <View style={styles.subquestionContainer}>

@@ -29,7 +29,7 @@ import {isToday} from '../components/utils/utils';
 
 //todo: 컴포넌트 쪼개기
 const HomeScreen = () => {
-  const [answersIndex, setAnswersIndex] = useState<number>(0);
+  const [answersPageIndex, setAnswerPageIndex] = useState<number>(0);
   const scrollRef = useRef<ScrollView>(null);
   const [pageChanged, setPageChanged] = useState<boolean>(false);
   const [closeAccordion, setCloseAccordion] = useState<boolean>(false);
@@ -44,25 +44,25 @@ const HomeScreen = () => {
   const paginatedAnswers =
     previousAnswers &&
     previousAnswers.slice(
-      answersIndex * answersPerPage,
-      (answersIndex + 1) * answersPerPage,
-    );
+      answersPageIndex * answersPerPage,
+      (answersPageIndex + 1) * answersPerPage,
+    );//0~2, 3~5, 6~8
   const handlePrev = () => {
-    if (answersIndex === 0) return;
+    if (answersPageIndex === 0) return;
 
     setCloseAccordion(true);
     setTimeout(() => {
-      setAnswersIndex(answersIndex - 1);
+      setAnswerPageIndex(answersPageIndex - 1);
       setPageChanged(true);
       setCloseAccordion(false);
     }, 100); // Accordion에서 duration이랑 맞춰야됨
   };
   const handleNext = () => {
-    if (answersIndex === totalPages - 1) return;
+    if (answersPageIndex === totalPages - 1) return;
 
     setCloseAccordion(true);
     setTimeout(() => {
-      setAnswersIndex(answersIndex + 1);
+      setAnswerPageIndex(answersPageIndex + 1);
       setPageChanged(true);
       setCloseAccordion(false);
     }, 100); // Accordion에서 duration이랑 맞춰야됨
@@ -77,7 +77,7 @@ const HomeScreen = () => {
       }, 0);
       return () => clearTimeout(timer);
     }
-  }, [answersIndex, pageChanged]);
+  }, [answersPageIndex, pageChanged]);
 
   useEffect(() => {
     console.log('useEffect homescreen ');
@@ -86,22 +86,25 @@ const HomeScreen = () => {
     isDayStreak(isToday(profile.lastStreakDate));
   }, [profile.totalAnswers]);
 
-  const editPrevAnswer = (subquestionId: number, newText: string) => {
-    const prevAnswerId = (subquestionId + answersIndex) * answersPerPage;
+    //subquestionId가 달라져서 ㄱ수정
+  const editPrevAnswer = (questionIndex:number, subquestionIndex: number, newText: string) => {
+    console.log(answersPageIndex, subquestionIndex)
+    const prevAnswerId = answersPageIndex * answersPerPage + questionIndex;
     const updatedAnswers = [...previousAnswers]; //shallow copy
-    updatedAnswers[prevAnswerId].subquestions[subquestionId].answer = newText;
-    setPreviousAnswers(updatedAnswers);
+    // updatedAnswers[대질문index].subquestions[subquestions].answer = newText;
+    console.log('333prevAnswer:', updatedAnswers[0]);
+      updatedAnswers[prevAnswerId].subquestions[subquestionIndex].answer = newText;
+      setPreviousAnswers(updatedAnswers);
   };
 
-  const handleSaveEdit = async (newText: string, subquestionId: number) => {
+  const handleSaveEdit = async (newText: string, questionIndex:number, subquestionId: number, subquestionIndex: number) => {
     try {
       //이거 수정이라서 백엔드
-      console.log('Save:', newText);
-      await axiosUpdateAnswers(subquestionId, newText);
+      await axiosUpdateAnswers(subquestionId, newText);//subquestionId로 날리고
+      editPrevAnswer(questionIndex, subquestionIndex, newText);//subquestionIndex로 변경
       //아래 부분은 state 변경
-      editPrevAnswer(subquestionId, newText);
     } catch (error) {
-      console.error('Error updating answer:', error);
+      console.error('handleSaveEdit answer:', error);
     }
   };
 
@@ -157,17 +160,19 @@ const HomeScreen = () => {
           <View style={styles.prevAnsweralign}>
             <View style={styles.prevAnswerContainer}>
               {paginatedAnswers &&
-                paginatedAnswers.map((item, subquestionId) => (
+                paginatedAnswers.map((item, questionIndex) => (
                   <Accordion
                     title={item.question}
-                    key={subquestionId}
+                    key={questionIndex}
                     forceClose={closeAccordion}>
                     <View style={styles.prevAnswers}>
-                      {item.subquestions.map(subquestion => (
+                      {item.subquestions.map((subquestion, subquestionIndex) => (
                         <PrevAnswers
                           key={subquestion.id}
+                          questionIndex={questionIndex}
                           subquestion={subquestion}
-                          subquestionId={subquestion.id} //이거 실제 questionIndex 받아야할듯
+                          subquestionId={subquestion.id}
+                          subquestionIndex={subquestionIndex}
                           handleSaveEdit={handleSaveEdit}
                         />
                       ))}
