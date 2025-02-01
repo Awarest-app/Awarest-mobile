@@ -83,11 +83,11 @@ const HomeScreen = () => {
     setPreviousAnswers(updatedAnswers);
   };
 
-  const handleSaveEdit = (newText: string, subquestionId: number) => {
+  const handleSaveEdit = async (newText: string, subquestionId: number) => {
     try {
       //이거 수정이라서 백엔드
       console.log('Save:', newText);
-      const res = axiosUpdateAnswers(subquestionId, newText);
+      await axiosUpdateAnswers(subquestionId, newText);
       //아래 부분은 state 변경
       editPrevAnswer(subquestionId, newText);
     } catch (error) {

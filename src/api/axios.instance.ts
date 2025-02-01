@@ -39,6 +39,7 @@ axiosInstance.interceptors.request.use(
 
     // 토큰 주입
     const token = await getToken();
+    // console.log('token', token);
     if (token) {
       config.headers.set('Authorization', `Bearer ${token}`); // ✅ 올바른 방식
     }

@@ -24,7 +24,7 @@ function App() {
 
   useEffect(() => {
     const handleDeepLink = async (event: {url: string}) => {
-      console.log('handleDeepLink', event);
+      // console.log('handleDeepLink', event);
       const url = event.url;
 
       removeToken();
@@ -56,7 +56,7 @@ function App() {
       }
 
       const isToken = await getToken();
-      console.log('isToken:', isToken);
+      // console.log('isToken:', isToken);
       if (isToken !== null) {
         if (survey === 'true') {
           navigationRef.current?.reset({
