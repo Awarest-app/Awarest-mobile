@@ -7,71 +7,51 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import {useFocusEffect} from '@react-navigation/native';
 import {Header} from '../components/Header';
 import MemoGradient from '../components/Hooks/MemoGradient';
 import ProfileGradient from '../components/Hooks/ProfileGradient';
 import SettingIcon from '../assets/svg/setting-icon.svg';
 import {useRef} from 'react';
-import {ProfileTypes} from '../type/profile.type';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Modalize} from 'react-native-modalize';
 import Settings from '../components/Hooks/SettingsModal';
 import LevelModal from '../components/modals/LevelModal';
-import {axiosGetProfile} from '../api/axios';
+import { useProfileStore } from '../zustand/useProfileStore'
 // 샘플용 임시 프로필 이미지(회색 원을 Image 대신 View로 표현할 수도 있음)
 
 export default function ProfileScreesn() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const settingsRef = useRef<Modalize>(null);
-  const [datas, setDatas] = useState<ProfileTypes>({
-    id: 1,
-    profileImg:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcKBnNMLWjTurCJvK1LQk3awXQDiM-TdAXtg&s',
-    userName: 'Sarah Johnson',
-    memberSince: 'January 2025',
-    dayStreak: 7,
-    totalXP: 420,
-    levelXP: 1000,
-    level: 1,
-    totalAnswers: 12,
-    lastUpdated: '2025-01-07T00:00:00.000Z',
-  });
-  const {totalXP, levelXP, level} = datas;
-  const levelDatas = {totalXP, levelXP, level};
+  const { profile } = useProfileStore();
+  const datas = profile;
+  const {totalXP, levelXP, prevXP, level} = datas;
+  const levelDatas = {totalXP, levelXP, prevXP, level};
+  const defaultImage = require('../assets/images/logo.png');
+
   const handleLevelModal = () => {
     setIsModalOpen(!isModalOpen);
   };
   const openSettings = () => {
     settingsRef.current?.open();
   };
-
-  const fetchProfile = useCallback(async () => {
-    try {
-      const res = await axiosGetProfile();
-      console.log('profile res,', res);
-      setDatas(res);
-    } catch (error) {
-      console.error('프로필 가져오기 실패:', error);
-    }
-  }, []);
-
+  
+  const formatDate = (dateString: string) => {
+    const [year, month, day] = dateString.split('-'); // 문자열을 '-' 기준으로 분할
+  
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const monthAbbr = monthNames[parseInt(month, 10) - 1];
+    return `${monthAbbr} ${day}, ${year}`;
+  };
+  const memberSince = formatDate(datas.memberSince);
   // useFocusEffect를 사용하여 화면에 집중될 때마다 fetchProfile 실행
-  useFocusEffect(
-    useCallback(() => {
-      fetchProfile();
-    }, [fetchProfile]),
-  );
-
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <LevelModal
         data={levelDatas}
         isOpen={isModalOpen}
         onClose={handleLevelModal}
-        onSubmit={() => {}}
       />
       <View style={styles.container}>
         <MemoGradient />
@@ -90,10 +70,10 @@ export default function ProfileScreesn() {
               <View style={styles.imgContainer}>
                 <ProfileGradient />
                 <View style={styles.profilePlaceholder}>
-                  <Image
-                    source={{uri: datas.profileImg}}
-                    style={styles.profileImage}
-                  />
+                <Image
+                  source={datas.profileImg ? { uri: datas.profileImg } : defaultImage}
+                  style={styles.profileImage}
+                />
                 </View>
                 {/* <TouchableOpacity style={styles.shareButton}>
                   <ShareIcon />
@@ -101,7 +81,7 @@ export default function ProfileScreesn() {
                 <View style={styles.nameContainer}>
                   <Text style={styles.userName}>{datas.userName}</Text>
                   <Text style={styles.userMemberSince}>
-                    Member since {datas.memberSince}
+                    Member since {memberSince}
                   </Text>
                 </View>
               </View>
@@ -184,7 +164,7 @@ const styles = StyleSheet.create({
   imgContainer: {
     gap: 6,
     width: '100%',
-    height: 180,
+    minHeight: 180,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 16,
@@ -196,15 +176,15 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    borderWidth: 2,
-    borderColor: colors.primary,
+    // borderWidth: 2,
+    // borderColor: colors.primary,
   },
   profileImage: {
     width: 100,
     height: 100,
     borderRadius: 50,
     borderWidth: 2,
-    borderColor: colors.primary,
+    borderColor: colors.card_border,
   },
   shareButton: {
     position: 'absolute',

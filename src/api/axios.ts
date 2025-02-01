@@ -90,21 +90,11 @@ export const axiosPermissonSubmit = async (permissons: boolean) => {
     const response = await axiosInstance.post(axiosPermissonSubmitURL, {
       permissons,
     });
-    console.log('Survey submitted:', response.data);
+    console.log('permisson submitted:', response.data);
   } catch (error) {
-    console.error('Error submitting survey:', error);
+    console.error('Error submitting permisson:', error);
   }
 };
-
-// profile
-// const axiosGetProfileURL = 'api/profile/me';
-// export const axiosGetProfileMe = async () => {
-//   try {
-//     const response = await axiosInstance.get(axiosGetProfileURL);
-//   } catch (e) {
-//     console.log('error', e);
-//   }
-// };
 
 const axiosGetProfileURL = '/api/profile/me';
 export const axiosGetProfile = async (): Promise<ProfileTypes> => {
@@ -114,16 +104,17 @@ export const axiosGetProfile = async (): Promise<ProfileTypes> => {
   } catch (error) {
     console.error('Error getting profile:', error);
     return {
-      id: 0,
       profileImg: '',
       userName: '',
       memberSince: '',
       dayStreak: 0,
       totalXP: 0,
       levelXP: 0,
+      prevXP: 0,
       level: 0,
+      noti: false,
       totalAnswers: 0,
-      lastUpdated: '',
+      lastStreakDate: '',
     };
   }
 };
@@ -134,7 +125,7 @@ export const axiosUpdateUsername = async (newUsername: string) => {
     const response = await axiosInstance.patch(axiosUpdateUsernameURL, {
       newUsername,
     });
-    console.log('response', response);
+    console.log('response', response.data);
   } catch (error) {
     console.log(error);
   }
@@ -157,7 +148,6 @@ const axiosGetAnswersURL = 'api/answers/me';
 export const axiosGetAnswers = async () => {
   try {
     const response = await axiosInstance.get(axiosGetAnswersURL);
-    console.log('Answers: outer', response);
     return response.data;
   } catch (error) {
     console.error('Error getting answers:', error);
@@ -167,6 +157,17 @@ export const axiosGetAnswers = async () => {
 
 // TOD
 // const axiosPostAnswersURL = '/api/answers/bulk';
+const axiosLogoutURL = '/api/auth/logout';
+export const axiosLogout = async () => {
+  try {
+    await removeToken();
+    const response = await axiosInstance.post(axiosLogoutURL);
+    console.log('Logout:', response.data);
+  } catch (error) {
+    console.error('Error logging out:', error);
+  }
+};
+
 const axiosPostAnswersURL = '/api/questions/answer';
 export const axiosPostAnswers = async (answers: any, questionName: string) => {
   try {

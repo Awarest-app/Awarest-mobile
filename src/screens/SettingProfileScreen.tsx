@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   SafeAreaView,
   View,
@@ -12,17 +12,18 @@ import {
   Alert,
   Platform,
 } from 'react-native';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import colors from '../styles/colors';
 import {fonts} from '../styles/fonts';
 import {settingsTypes} from '../type/settings.type';
 import DeleteScreen from './DeleteScreen';
 import PrevIcon from '../assets/svg/setting-prev.svg';
 import {checkNotifications, RESULTS} from 'react-native-permissions';
-import {axiosAccountDelete, axiosUpdateUsername} from '../api/axios';
+import {useProfileStore} from '../zustand/useProfileStore';
+import {axiosPermissonSubmit, axiosUpdateUsername} from '../api/axios';
 const {width, height} = Dimensions.get('window');
 interface SettingProfileScreenProps {
-  closeSettings: () => void;
+  closeSettings?: () => void;
   setPage: (page: settingsTypes) => void;
 }
 
@@ -31,10 +32,11 @@ export default function SettingProfileScreen({
   setPage,
 }: SettingProfileScreenProps) {
   // 시간, XP 등의 데이터를 실제 로직에 맞게 받아오거나 계산해서 표시할 수 있습니다.
+  const {updateProfile, fetchProfile, profile} = useProfileStore();
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [editable, setEditable] = useState<boolean>(true);
-  const [name, setName] = useState<string>('John Doe'); //todo axios로 받아온 사용자 이름
-  const [isEnabled, setIsEnabled] = useState(false);
+  const [name, setName] = useState<string>(profile.userName); //todo axios로 받아온 사용자 이름
+  const [isNoti, setIsNoti] = useState(profile.noti);
 
   const handleDelete = () => {
     setIsDelete(!isDelete);
@@ -51,29 +53,40 @@ export default function SettingProfileScreen({
     setName(name);
   };
   const fetchNoti = async () => {
-    //todo axios로 사용자 이름 받아오기
     if (!platformCheck()) return;
     const {status} = await checkNotifications();
 
-    switch (status) {
-      case RESULTS.GRANTED:
-        setIsEnabled(true);
-      default:
-        setIsEnabled(false);
-    }
+    const newNotiState = (status === RESULTS.GRANTED);
+
+    if (newNotiState !== isNoti) setIsNoti(newNotiState)
   };
+  useEffect(() => {
+    if (profile.noti === isNoti) return;
+    console.log('isNoti:', isNoti, 'profile.noti:', profile.noti);
+    axiosPermissonSubmit(isNoti);
+    updateProfile({ noti: isNoti });
+    //todo 잘한거같은데 나중에 백엔드랑 통신 확인
+  }, [isNoti]);
+
   useFocusEffect(
     useCallback(() => {
-      //axios로 사용자 이름 받아오기
-      fetchNoti(); // 화면 포커스 시 상태 업데이트
-    }, []),
+      fetchNoti();
+    }, [])
   );
-  const handleSubmit = () => {
-    setEditable(false);
-    //todo axios로 사용자 이름 업데이트 timeout빼고
-    setTimeout(() => {
-      setEditable(true);
-    }, 2000);
+
+  const handleSubmit = async () => {
+    setEditable(false); // 입력 비활성화
+    console.log('submit');
+    try {
+      await axiosUpdateUsername(name);
+      updateProfile({ userName: name });
+      setTimeout(() => {
+        setEditable(true); // 입력 다시 활성화
+      }, 1000);
+    } catch (error) {
+      Alert.alert("Error", "An error occurred while updating username.");
+      setEditable(true); // 오류 발생 시 입력 다시 활성화
+    }
   };
 
   return (
@@ -118,7 +131,7 @@ export default function SettingProfileScreen({
                     ios_backgroundColor={colors.white}
                     thumbColor={'#0D9488'}
                     onValueChange={handleNotification}
-                    value={isEnabled}
+                    value={isNoti}
                   />
                 </View>
               </TouchableOpacity>

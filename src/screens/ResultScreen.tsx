@@ -20,23 +20,29 @@ import {
   RouteProp,
 } from '@react-navigation/native';
 import {HomeStackParamList} from '../type/route.type';
-
+import {useProfileStore} from '../zustand/useProfileStore';
+import {isToday} from '../components/utils/utils';
 type AnswerScreenRouteProp = RouteProp<HomeStackParamList, 'Result'>;
 
 export default function ResultScreen() {
   const route = useRoute<AnswerScreenRouteProp>();
   const xp = route.params.question_xp;
+  const {fetchProfile, isDayStreak, profile} = useProfileStore();
+  const datas = profile;
   // 시간, XP 등의 데이터를 실제 로직에 맞게 받아오거나 계산해서 표시할 수 있습니다.
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
   // const xpEarned = 50;
-  const timeSpent = '3m 21s';
 
   const handleContinue = () => {
     // ‘Continue’ 버튼 클릭 시 동작(예: 홈 화면으로 이동 등)
     console.log('Continue clicked');
     navigation.dispatch(StackActions.pop(2));
   };
-  useEffect(() => {}, []);
+  useEffect(() => {
+    console.log('ResultScreen useEffect');
+    fetchProfile();
+    isDayStreak(isToday(datas.lastStreakDate));
+  }, []);
   return (
     <View style={styles.container}>
       <MemoGradient />
@@ -56,7 +62,8 @@ export default function ResultScreen() {
               <Text style={styles.evalutionMessage}>Great Reflection !</Text>
               <Text style={styles.subMessage}>You've earned</Text>
               <Text style={styles.gainXp}>+ {xp} XP</Text>
-              <Text style={styles.subMessage}>Time spent: {timeSpent}</Text>
+              <Text style={styles.subMessage}></Text>
+              {/* <Text style={styles.subMessage}>Time spent: {timeSpent}</Text> */}
 
               {/* Continue 버튼 */}
               <TouchableOpacity
