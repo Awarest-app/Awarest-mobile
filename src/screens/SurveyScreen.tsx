@@ -28,6 +28,7 @@ import {CustomDefaultAlert} from '../components/utils/CustomAlert';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../type/route.type';
 import {getToken} from '../api/secureStorage';
+import Logo from '../components/Logo';
 
 export default function SurveyScreen() {
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -165,8 +166,7 @@ export default function SurveyScreen() {
       <View style={styles.contentContainer}>
         {/* 상단 로고/타이틀 영역 */}
         <View style={styles.logoSection}>
-          <Text style={styles.logoText}>Coura</Text>
-          <Text style={styles.subTitle}>Create your Own Aura</Text>
+          <Logo />
         </View>
         {/* 현재 질문 표시 */}
         <View style={styles.surveySection}>
@@ -257,17 +257,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: calculateDp(60),
     marginBottom: calculateDp(24),
-  },
-  logoText: {
-    fontSize: 40,
-    fontFamily: fonts.logo, // 로고 폰트
-    color: colors.primary,
-    marginBottom: -10,
-  },
-  subTitle: {
-    fontSize: 14,
-    fontFamily: fonts.lato_regular,
-    color: colors.textSubtle,
   },
   surveySection: {},
   questionSection: {

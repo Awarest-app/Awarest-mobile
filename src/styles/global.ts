@@ -17,10 +17,11 @@ export const globalStyle = StyleSheet.create({
     position: 'absolute',
   },
   logo: {
-    fontSize: 40,
-    fontWeight: 'bold',
+    fontSize: 42,
     color: colors.primary,
     fontFamily: fonts.logo,
+    height: 52,
+    letterSpacing: -2,
   },
 
   // 그레디언트

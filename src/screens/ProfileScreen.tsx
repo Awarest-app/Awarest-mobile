@@ -58,7 +58,7 @@ export default function ProfileScreesn() {
         <View style={styles.contentContainer}>
           <Header />
           <SafeAreaView style={styles.safeArea}>
-            <Text style={styles.logo}>Coura</Text>
+            <Text style={styles.logo}>Awarest</Text>
             <TouchableOpacity
               style={styles.settingButton}
               onPress={openSettings}>

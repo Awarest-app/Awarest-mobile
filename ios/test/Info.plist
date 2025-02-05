@@ -35,11 +35,11 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>coura</string>
+				<string>awarest</string>
 			</array>
 			<key>LSApplicationQueriesSchemes</key>
 			<array>
-				<string>coura</string>
+				<string>awarest</string>
 			</array>
 		</dict>
 	</array>

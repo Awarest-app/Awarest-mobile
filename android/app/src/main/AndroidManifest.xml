@@ -22,7 +22,7 @@
             <category android:name="android.intent.category.LAUNCHER" />
             <!-- host는 나중에 수정 -->
             <data
-              android:scheme="coura"
+              android:scheme="awarest"
               android:host="login" />
         </intent-filter>
       </activity>

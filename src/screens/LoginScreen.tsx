@@ -15,6 +15,7 @@ import colors from '../styles/colors';
 import {globalStyle} from '../styles/global';
 import GoogleIcon from '../assets/svg/google-circle.svg';
 import AppleIcon from '../assets/svg/apple-circle.svg';
+import Logo from '../components/Logo';
 
 export default function LoginScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -30,8 +31,7 @@ export default function LoginScreen() {
     >
       <View style={styles.container}>
         {/* 로고 영역 */}
-        <Text style={globalStyle.logo}>Coura</Text>
-        <Text style={styles.subtitle}>Create your Own Aura</Text>
+        <Logo />
 
         {/* 안내 문구 */}
         <Text style={styles.enterDetails}>Enter your details</Text>
@@ -93,13 +93,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-
-  subtitle: {
-    fontSize: 14,
-    color: '#666',
-    marginTop: 4,
-    marginBottom: 24,
   },
   enterDetails: {
     fontSize: 18,

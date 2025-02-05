@@ -19,18 +19,12 @@ import AppleIcon from '../assets/svg/apple-icon.svg';
 import {handleGoogleSignup} from '../api/safariView';
 import {axiosTestJwt, axiosTestServer} from '../api/axios';
 import {removeToken} from '../api/secureStorage';
-import Test from '../api/logoutSafariView';
-import SafariViewModal from '../api/logoutSafariView';
+import Logo from '../components/Logo';
 // import GoogleOauth from '../lib/googleOauth';
 
 // 화면 높이/너비 구하기 (스타일에 사용)
 const {width, height} = Dimensions.get('window');
 
-interface Test {
-  id: number;
-  type: string;
-  content: string;
-}
 const test = async () => {
   await removeToken();
 };
@@ -47,8 +41,7 @@ export default function MainScreen() {
       <View style={styles.container}>
         {/* 로고 영역 */}
         <View style={styles.logoSection}>
-          <Text style={styles.logoText}>Coura</Text>
-          <Text style={styles.subTitle}>Create your Own Aura</Text>
+          <Logo />
         </View>
 
         <TouchableOpacity
@@ -128,28 +121,17 @@ const styles = StyleSheet.create({
     marginTop: calculateDp(60),
     marginBottom: calculateDp(120),
   },
-  logoText: {
-    fontSize: calculateDp(34),
-    fontFamily: fonts.logo, // 로고 폰트
-    fontWeight: 'bold',
-    color: colors.primary,
-    marginBottom: -10,
-  },
-  subTitle: {
-    fontSize: calculateDp(12),
-    fontFamily: fonts.lato_regular,
-    color: colors.textSubtle,
-  },
   sloganSection: {
     alignItems: 'center',
   },
   mainSlogan: {
     fontSize: calculateDp(22),
-    fontFamily: fonts.lato_regular,
+    fontFamily: fonts.lato_bold,
     color: colors.primary,
     textAlign: 'center',
     width: calculateDp(242),
     marginBottom: calculateDp(6),
+    letterSpacing: -0.6,
   },
   subSlogan: {
     fontSize: calculateDp(14),
@@ -157,6 +139,7 @@ const styles = StyleSheet.create({
     color: colors.textSubtle,
     textAlign: 'center',
     width: '100%',
+    letterSpacing: -1,
   },
   registerSection: {
     gap: calculateDp(10),

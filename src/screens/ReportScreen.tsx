@@ -28,7 +28,7 @@ export default function ReportScreen({
   const sendMail = () => {
     Mailer.mail({
         subject: 'Issue Report in App',
-        recipients: ['team@withcoura.com'], // 실제 받는 이메일 주소로 교체하세요.
+        recipients: ['team@getawarest.com'], // 실제 받는 이메일 주소로 교체하세요.
         body: `Contact: ${contact}\n\nMessage:\n${message}`,
         isHTML: false,
       },

@@ -5,7 +5,7 @@ export const fonts = {
   poppins_bold: 'Poppins-Bold',
 
   // 로고 폰트 Alkatra-Regular
-  logo: 'Alkatra-Regular',
+  logo: 'Alkatra-SemiBold',
 
   lato_regular: 'Lato-Regular',
   lato_bold: 'Lato-Bold',
