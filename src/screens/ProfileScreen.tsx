@@ -58,15 +58,12 @@ export default function ProfileScreesn() {
         <View style={styles.contentContainer}>
           <Header />
           <SafeAreaView style={styles.safeArea}>
-            <Text style={styles.logo}>Awarest</Text>
-            <TouchableOpacity
-              style={styles.settingButton}
-              onPress={openSettings}>
-              <SettingIcon />
-            </TouchableOpacity>
-
-            {/* 메인 프로필 박스(파란색 외곽선) */}
             <View style={styles.profileContainer}>
+              <TouchableOpacity
+                style={styles.settingButton}
+                onPress={openSettings}>
+                <SettingIcon />
+              </TouchableOpacity>
               <View style={styles.imgContainer}>
                 <ProfileGradient />
                 <View style={styles.profilePlaceholder}>
@@ -148,13 +145,16 @@ const styles = StyleSheet.create({
     top: 5,
     right: 0,
     padding: 16,
+    marginTop: 10,
+    marginRight: 10,
     boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
   },
   profileContainer: {
     gap: 24,
+    paddingTop: 80,
     backgroundColor: colors.white,
     alignItems: 'center',
-    paddingHorizontal: 22,
+    paddingHorizontal: 18,
     paddingVertical: 28,
     borderWidth: 1,
     borderColor: colors.card_border,

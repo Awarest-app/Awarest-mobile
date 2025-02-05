@@ -63,7 +63,7 @@ export default function ReportScreen({
     //todo axios contact, message
   };
   const isValidMessage = (message: string): boolean => {
-    if (message.length < 12) {
+    if (message.length > 1500) {
       Alert.alert('Invalid Message', 'Please enter a message longer');
       return false;
     }

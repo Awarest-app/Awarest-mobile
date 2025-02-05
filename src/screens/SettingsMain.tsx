@@ -4,8 +4,6 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
-  Linking,
   Alert,
 } from 'react-native';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
@@ -14,12 +12,12 @@ import {removeToken} from '../api/secureStorage';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
 import XIcon from '../assets/svg/x-icon.svg';
-const {width, height} = Dimensions.get('window');
 import {settingsTypes} from '../type/settings.type';
 import InAppReview from 'react-native-in-app-review';
 import {ABOUT_PAGE_URL} from '@env';
 import {RootStackParamList} from '../type/route.type';
 import {googleLogout} from '../api/logoutSafariView';
+import SafariView from 'react-native-safari-view';
 
 interface SettingsMainProps {
   closeSettings: () => void;
@@ -29,7 +27,14 @@ interface SettingsMainProps {
 const SettingsMain = ({closeSettings, setPage}: SettingsMainProps) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const aboutPage = () => {
-    Linking.openURL(ABOUT_PAGE_URL);
+    console.log('about page', ABOUT_PAGE_URL);
+    SafariView.isAvailable()
+      .then(() => {
+        SafariView.show({
+          url: `${ABOUT_PAGE_URL}`,
+          fromBottom: true,
+        });
+      })
   };
   const handleLeaveReview = () => {
     if (!InAppReview.isAvailable()) return;
@@ -39,7 +44,6 @@ const SettingsMain = ({closeSettings, setPage}: SettingsMainProps) => {
           'In-app review flow finished:',
           hasFlowFinishedSuccessfully,
         );
-        // `hasFlowFinishedSuccessfully`가 true면 리뷰를 성공적으로 요청했음을 의미
       })
       .catch(error => {
         console.log('In-app review error:', error);
