@@ -12,11 +12,11 @@ import {
   removeToken,
   storeRefreshToken,
 } from './secureStorage';
-
+import {API_URL} from '@env';
 // export const SERVER_URL = 'http://localhost:3000';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000', // 기본 URL 설정
+  baseURL: API_URL, // 기본 URL 설정
   //   timeout: 5000, // 요청 타임아웃 설정 (ms 단위)
   headers: {
     'Content-Type': 'application/json', // 기본 헤더

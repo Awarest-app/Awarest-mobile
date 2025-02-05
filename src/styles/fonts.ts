@@ -4,8 +4,8 @@ export const fonts = {
   poppins_semiBold: 'Poppins-SemiBold',
   poppins_bold: 'Poppins-Bold',
 
-  // 로고 폰트
-  logo: 'Pacifico-Regular',
+  // 로고 폰트 Alkatra-Regular
+  logo: 'Alkatra-Regular',
 
   lato_regular: 'Lato-Regular',
   lato_bold: 'Lato-Bold',
