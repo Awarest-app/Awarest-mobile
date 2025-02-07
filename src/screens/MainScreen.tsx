@@ -17,7 +17,6 @@ import colors from '../styles/colors';
 import GoogleIcon from '../assets/svg/google-icon.svg';
 import AppleIcon from '../assets/svg/apple-icon.svg';
 import {handleGoogleSignup} from '../api/safariView';
-import {axiosTestJwt, axiosTestServer} from '../api/axios';
 import {removeToken} from '../api/secureStorage';
 import Logo from '../components/Logo';
 // import GoogleOauth from '../lib/googleOauth';

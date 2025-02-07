@@ -19,6 +19,7 @@ import {HomeStackParamList, RootStackParamList} from '../type/route.type';
 import PrevIcon from '../assets/svg/setting-prev.svg';
 
 import DeleteModal from '../components/modals/DeleteModal';
+import { googleLogout } from '../api/logoutSafariView';
 
 interface DeleteScreenProps {
   setIsDelete: (isDelete: boolean) => void;
@@ -34,9 +35,8 @@ export default function DeleteScreen({
     //axios 삭제
     try {
       await axiosAccountDelete();
-      // ✅ 2. Google 로그아웃 페이지로 이동하여 계정 세션 초기화
       // Linking.openURL('https://accounts.google.com/logout');
-
+      await googleLogout();
       removeToken();
       setIsModalOpen(false);
       navigation.reset({
