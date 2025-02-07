@@ -116,6 +116,7 @@ const SettingsMain = ({closeSettings, setPage}: SettingsMainProps) => {
             onPress={handleSignOut}>
             <Text style={styles.settingOption}>Sign Out</Text>
           </TouchableOpacity>
+          {/* todo terms, privacy policy */}
         </View>
       </View>
     </View>
