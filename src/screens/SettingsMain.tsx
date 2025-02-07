@@ -24,7 +24,10 @@ interface SettingsMainProps {
   setPage: (page: settingsTypes) => void;
 }
 
-const SettingsMain = ({closeSettings, setPage}: SettingsMainProps) => {
+export default function SettingsMain({
+  closeSettings,
+  setPage,
+}: SettingsMainProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const aboutPage = () => {
     console.log('about page', ABOUT_PAGE_URL);
@@ -52,7 +55,7 @@ const SettingsMain = ({closeSettings, setPage}: SettingsMainProps) => {
   const handleSignOut = async () => {
     //todo axios sign outa
     try {
-      await axiosSignout();
+      axiosSignout();
       await googleLogout();
       removeToken();
       navigation.reset({
@@ -120,6 +123,7 @@ const SettingsMain = ({closeSettings, setPage}: SettingsMainProps) => {
             onPress={handleSignOut}>
             <Text style={styles.settingOption}>Sign Out</Text>
           </TouchableOpacity>
+          {/* todo terms, privacy policy */}
         </View>
       </View>
     </View>
@@ -161,4 +165,3 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
 });
-export default SettingsMain;

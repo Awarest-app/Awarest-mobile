@@ -14,12 +14,11 @@ interface AnswerModalProps {
   onSubmit: () => void;
 }
 
-const AnswerModal = ({
+export default function AnswerModal ({
   isOpen,
   onClose,
   onSubmit,
-}: AnswerModalProps ) => {
-
+}: AnswerModalProps ){
   return (
     <Modal visible={isOpen} transparent={true} animationType="none">
       <View style={styles.modalOverlay}>
@@ -94,5 +93,3 @@ const styles = StyleSheet.create({
     color: '#F0F9F8',
   },
 });
-
-export default AnswerModal;

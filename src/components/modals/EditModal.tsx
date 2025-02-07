@@ -21,7 +21,7 @@ interface EditModalProps {
   handleSaveEdit: (newText: string, questionIndex:number, subquestionId:number ,subquestionIndex: number) => void; // ✅ 수정 완료 후 저장하는 함수
 }
 
-const EditModal = ({
+export default function  EditModal ({
   isOpen,
   currentValue,
   questionIndex,
@@ -30,12 +30,9 @@ const EditModal = ({
   subquestionIndex,
   onClose,
   handleSaveEdit,
-}: EditModalProps) => {
+}: EditModalProps) {
   const [text, setText] = useState<string>(currentValue);
   
-  // useEffect(() => {//처음 인식
-  //   setText(currentValue);
-  // }, [currentValue]);
 
   return (
     <Modal visible={isOpen} transparent={true} animationType="fade">
@@ -130,5 +127,3 @@ const styles = StyleSheet.create({
     color: '#F0F9F8',
   },
 });
-
-export default EditModal;

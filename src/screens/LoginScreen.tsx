@@ -21,7 +21,7 @@ export default function LoginScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  console.log('LoginScreen');
   return (
     <LinearGradient
       colors={[colors.green_gradientStart, colors.green_gradientEnd]} // 그라디언트 색상 설정

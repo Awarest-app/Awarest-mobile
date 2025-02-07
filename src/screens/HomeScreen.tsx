@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import {useFocusEffect} from '@react-navigation/native';
 import {Header} from '../components/Header';
 import MemoGradient from '../components/Hooks/MemoGradient';
 import colors from '../styles/colors';
@@ -26,9 +25,11 @@ import PrevAnswers from '../components/home/PrevAnswers';
 import Questions from '../components/home/Questions';
 import {useProfileStore} from '../zustand/useProfileStore';
 import {isToday} from '../components/utils/utils';
+import HomeLoading from '../components/modals/HomeLoading';
 
 //todo: 컴포넌트 쪼개기
-const HomeScreen = () => {
+export default function HomeScreen(){ 
+  const [isFirst, setIsFirst] = useState<boolean>(true);
   const [answersPageIndex, setAnswerPageIndex] = useState<number>(0);
   const scrollRef = useRef<ScrollView>(null);
   const [pageChanged, setPageChanged] = useState<boolean>(false);
@@ -55,7 +56,7 @@ const HomeScreen = () => {
       setAnswerPageIndex(answersPageIndex - 1);
       setPageChanged(true);
       setCloseAccordion(false);
-    }, 100); // Accordion에서 duration이랑 맞춰야됨
+    }, 100);
   };
   const handleNext = () => {
     if (answersPageIndex === totalPages - 1) return;
@@ -65,11 +66,10 @@ const HomeScreen = () => {
       setAnswerPageIndex(answersPageIndex + 1);
       setPageChanged(true);
       setCloseAccordion(false);
-    }, 100); // Accordion에서 duration이랑 맞춰야됨
+    }, 100);
   };
   useEffect(() => {
     fetchProfile();
-    console.log('useEffect pageHcanges');
     if (pageChanged) {
       const timer = setTimeout(() => {
         scrollRef.current?.scrollToEnd({animated: true});
@@ -112,6 +112,7 @@ const HomeScreen = () => {
     try {
       const response: any = await axiosGetQuestions();
       setQuestions(response.data);
+      // setIsFirst(false);
     } catch (error) {
       console.error('Error getting questions:', error);
     }
@@ -129,78 +130,78 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <MemoGradient />
-      <ScrollView
-        contentContainerStyle={styles.contentContainer}
-        ref={scrollRef}>
-        <Header />
-        <View style={styles.card}>
-          <View>
-            <Text style={styles.cardTitle}>Today's Questions</Text>
-          </View>
-          {questions.length > 0 ? ( //타입에러?
-            questions.map(question => (
-              <Questions
-                key={question.questionId}
-                questionId={question.questionId}
-                content={question.content}
-              />
-            ))
-          ) : (
-            <View style={styles.questionDone}>
-              <Text style={styles.questionDoneText}>🎊 Great job! 🎊</Text>
-              <Text style={styles.questionDoneText}>
-                You've answered all of today's questions!
-              </Text>
+      <HomeLoading isOpen={isFirst}
+        setIsOpen={setIsFirst}
+      />
+      {!isFirst &&
+        <ScrollView
+          contentContainerStyle={styles.contentContainer}
+          ref={scrollRef}>
+          <Header />
+          <View style={styles.card}>
+            <View>
+              <Text style={styles.cardTitle}>Today's Questions</Text>
             </View>
-          )}
-        </View>
+            {questions && questions.length > 0 ? ( //타입에러?
+              questions.map(question => (
+                <Questions
+                  key={question.questionId}
+                  questionId={question.questionId}
+                  content={question.content}
+                />
+              ))
+            ) : (
+              <View style={styles.questionDone}>
+                <Text style={styles.questionDoneText}>🎊 Great job! 🎊</Text>
+                <Text style={styles.questionDoneText}>
+                  You've answered all of today's questions!
+                </Text>
+              </View>
+            )}
+          </View>
 
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Your previous Responses</Text>
-          <View style={styles.prevAnsweralign}>
-            <View style={styles.prevAnswerContainer}>
-              {paginatedAnswers &&
-                paginatedAnswers.map((item, questionIndex) => (
-                  <Accordion
-                    title={item.question}
-                    key={questionIndex}
-                    forceClose={closeAccordion}>
-                    <View style={styles.prevAnswers}>
-                      {item.subquestions.map((subquestion, subquestionIndex) => (
-                        <PrevAnswers
-                          key={subquestion.id}
-                          questionIndex={questionIndex}
-                          subquestion={subquestion}
-                          subquestionId={subquestion.id}
-                          subquestionIndex={subquestionIndex}
-                          handleSaveEdit={handleSaveEdit}
-                        />
-                      ))}
-                    </View>
-                  </Accordion>
-                ))}
-            </View>
-            <View style={styles.moveButtonContainer}>
-              <TouchableOpacity style={styles.prevButton} onPress={handlePrev}>
-                <PrevIcon />
-                <Text style={styles.prevButtonText}>Prev</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-                <Text style={styles.nextButtonText}>Next</Text>
-                <NextIcon />
-              </TouchableOpacity>
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Your previous Responses</Text>
+            <View style={styles.prevAnsweralign}>
+              <View style={styles.prevAnswerContainer}>
+                {paginatedAnswers &&
+                  paginatedAnswers.map((item, questionIndex) => (
+                    <Accordion
+                      title={item.question}
+                      key={questionIndex}
+                      forceClose={closeAccordion}>
+                      <View style={styles.prevAnswers}>
+                        {item.subquestions.map((subquestion, subquestionIndex) => (
+                          <PrevAnswers
+                            key={subquestion.id}
+                            questionIndex={questionIndex}
+                            subquestion={subquestion}
+                            subquestionId={subquestion.id}
+                            subquestionIndex={subquestionIndex}
+                            handleSaveEdit={handleSaveEdit}
+                          />
+                        ))}
+                      </View>
+                    </Accordion>
+                  ))}
+              </View>
+              <View style={styles.moveButtonContainer}>
+                <TouchableOpacity style={styles.prevButton} onPress={handlePrev}>
+                  <PrevIcon />
+                  <Text style={styles.prevButtonText}>Prev</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+                  <Text style={styles.nextButtonText}>Next</Text>
+                  <NextIcon />
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      }
     </View>
   );
 };
-const {width, height} = Dimensions.get('window');
-const calculateDp = (px: number) => {
-  return (px * width) / 320;
-};
-export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {

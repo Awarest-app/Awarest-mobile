@@ -26,7 +26,7 @@ export function Header() {
           disabled={true}
         >
           <Leaf/>
-          <Text style={styles.dataText}>채워야돼</Text>
+          <Text style={styles.dataText}>Soon</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.iconButton}
           disabled={true}
