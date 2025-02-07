@@ -27,12 +27,11 @@
 			<array>
 				<string>awarest</string>
 			</array>
-			<array>
-				<string>awarest</string>
-			</array>
 		</dict>
+	</array>
 	<key>LSApplicationQueriesSchemes</key>
-	<!-- todo 위에거 위치수정  -->
+	<array>
+		<string>awarest</string>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>

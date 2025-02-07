@@ -31,7 +31,7 @@ const test = async () => {
 
 export default function MainScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
+  console.log('MainScreen');
   return (
     <LinearGradient
       colors={[colors.green_gradientStart, colors.green_gradientEnd]} // 상단(밝은색) -> 하단(어두운색) 그라디언트

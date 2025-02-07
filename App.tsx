@@ -26,8 +26,8 @@ function App() {
     const handleDeepLink = async (event: {url: string}) => {
       // console.log('handleDeepLink', event);
       const url = event.url;
-
-      removeToken();
+      console.log('url:', url);
+      // removeToken();
       // accessToken, refreshToken, survey 파라미터 추출
       const accessTokenMatch = url.match(/accessToken=([^&]+)/);
       const refreshTokenMatch = url.match(/refreshToken=([^&]+)/);
@@ -79,7 +79,7 @@ function App() {
 
       // 토큰이 없을 경우, 로그인 스택으로 이동
       navigationRef.current?.navigate('LoginStack', {
-        screen: 'Login',
+        screen: 'Welcome',
       });
       SafariView.dismiss();
     };
