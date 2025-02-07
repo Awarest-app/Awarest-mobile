@@ -52,7 +52,7 @@ const SettingsMain = ({closeSettings, setPage}: SettingsMainProps) => {
   const handleSignOut = async () => {
     //todo axios sign outa
     try {
-      await axiosSignout();
+      axiosSignout();
       await googleLogout();
       removeToken();
       navigation.reset({
