@@ -15,12 +15,11 @@ interface DeleteModalProps {
   onSubmit: () => void;
 }
 
-const DeleteModal = ({
+export default function DeleteModal ({
   isOpen,
   onClose,
   onSubmit,
-}: DeleteModalProps ) => {
-
+}: DeleteModalProps ) {
   return (
     <Modal visible={isOpen} transparent={true} animationType="none">
       <View style={styles.modalOverlay}>
@@ -98,5 +97,3 @@ const styles = StyleSheet.create({
     color: '#F0F9F8',
   },
 });
-
-export default DeleteModal;

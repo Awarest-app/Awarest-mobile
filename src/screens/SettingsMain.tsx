@@ -24,7 +24,10 @@ interface SettingsMainProps {
   setPage: (page: settingsTypes) => void;
 }
 
-const SettingsMain = ({closeSettings, setPage}: SettingsMainProps) => {
+export default function SettingsMain({
+  closeSettings,
+  setPage,
+}: SettingsMainProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const aboutPage = () => {
     console.log('about page', ABOUT_PAGE_URL);
@@ -162,4 +165,3 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
 });
-export default SettingsMain;

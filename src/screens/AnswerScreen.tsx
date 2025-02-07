@@ -216,7 +216,6 @@ export default function AnswerScreen() {
     setIsModalOpen(true);
   };
 
-  // **핵심**: 서브질문 ID + 답변을 묶어서 객체 배열로 만들기
   const handleOnSubmit = async () => {
     try {
       if (!serverData) {
@@ -251,9 +250,6 @@ export default function AnswerScreen() {
     }
   };
 
-  // -----------------------------------------------
-  // 4. 렌더링
-  // -----------------------------------------------
   return (
     <View style={styles.container}>
       <AnswerModal
@@ -265,7 +261,6 @@ export default function AnswerScreen() {
 
       <ScrollView style={styles.contentContainer}>
         <Header />
-        {/* 메인 컨테이너 */}
         <View style={styles.mainContainer}>
           {/* 메인 질문 표시 */}
           <View style={styles.titleContainer}>

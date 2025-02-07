@@ -26,6 +26,7 @@ function App() {
   useEffect(() => {
     (async () => {
       // 토큰 가져와서 확인
+      //토큰 갱신 안돼서 터짐
       const token = await getToken();
       console.log('token:', token);
       if (token) {
