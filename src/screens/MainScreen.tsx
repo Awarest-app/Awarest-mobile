@@ -16,17 +16,13 @@ import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
 import GoogleIcon from '../assets/svg/google-icon.svg';
 import AppleIcon from '../assets/svg/apple-icon.svg';
-import {handleGoogleSignup} from '../api/safariView';
+import {handleGoogleOauth, handleAppleOauth} from '../api/safariView';
 import {removeToken} from '../api/secureStorage';
 import Logo from '../components/Logo';
 // import GoogleOauth from '../lib/googleOauth';
 
 // 화면 높이/너비 구하기 (스타일에 사용)
 const {width, height} = Dimensions.get('window');
-
-const test = async () => {
-  await removeToken();
-};
 
 export default function MainScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -71,13 +67,7 @@ export default function MainScreen() {
         <View style={styles.registerSection}>
           <TouchableOpacity
             style={styles.oauthButton}
-            // onPress={() =>
-            //   navigation.navigate('HomeStack', {
-            //     screen: 'Home', // HomeStack 내부의 Home 스크린
-            //   })
-            // }
-            onPress={() => test()}
-            //
+            onPress={() => handleAppleOauth()}
           >
             <View style={styles.oauthTextWrapper}>
               <AppleIcon />
@@ -86,7 +76,7 @@ export default function MainScreen() {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.oauthButton}
-            onPress={() => handleGoogleSignup()}
+            onPress={() => handleGoogleOauth()}
             // onPress={() => handleGoogleSignup()}
           >
             {/* <SafariViewModal /> */}
