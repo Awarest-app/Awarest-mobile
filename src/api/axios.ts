@@ -9,8 +9,10 @@ export const axiosTestJwt = async () => {
   try {
     const response = await axiosInstance.get('/test/jwt');
     console.log('서버 응답:', response.data);
+    return true;
   } catch (error) {
     console.error('서버 요청 실패:', error);
+    return false;
   }
 };
 
@@ -20,7 +22,6 @@ export const axiosSignout = async () => {
     console.log('logoutdsds');
     const response = await axiosInstance.post(axiosSignoutURL);
     console.log('signout서버 응답: ', response.data);
-
   } catch (error) {
     Alert.alert('signoutError' + error);
   }
@@ -148,6 +149,7 @@ export const axiosPostAnswers = async (answers: any, questionName: string) => {
     return response.data;
   } catch (error) {
     console.error('Error saving answers:', error);
+    return;
   }
 };
 

@@ -28,11 +28,10 @@ import {isToday} from '../components/utils/utils';
 import HomeLoading from '../components/modals/HomeLoading';
 
 //todo: 컴포넌트 쪼개기
-export default function HomeScreen(){ 
+export default function HomeScreen() {
   const [isFirst, setIsFirst] = useState<boolean>(true);
   const [answersPageIndex, setAnswerPageIndex] = useState<number>(0);
   const scrollRef = useRef<ScrollView>(null);
-  const [pageChanged, setPageChanged] = useState<boolean>(false);
   const [closeAccordion, setCloseAccordion] = useState<boolean>(false);
   const answersPerPage = 3;
   const [questions, setQuestions] = useState<Questiontypes[]>([]);
@@ -47,16 +46,16 @@ export default function HomeScreen(){
     previousAnswers.slice(
       answersPageIndex * answersPerPage,
       (answersPageIndex + 1) * answersPerPage,
-    );//0~2, 3~5, 6~8
+    ); //0~2, 3~5, 6~8
   const handlePrev = () => {
     if (answersPageIndex === 0) return;
 
     setCloseAccordion(true);
     setTimeout(() => {
       setAnswerPageIndex(answersPageIndex - 1);
-      setPageChanged(true);
       setCloseAccordion(false);
     }, 100);
+    scrollRef.current?.scrollToEnd({animated: true});
   };
   const handleNext = () => {
     if (answersPageIndex === totalPages - 1) return;
@@ -64,44 +63,48 @@ export default function HomeScreen(){
     setCloseAccordion(true);
     setTimeout(() => {
       setAnswerPageIndex(answersPageIndex + 1);
-      setPageChanged(true);
       setCloseAccordion(false);
     }, 100);
+    scrollRef.current?.scrollToEnd({animated: true});
   };
   useEffect(() => {
     fetchProfile();
-    if (pageChanged) {
-      const timer = setTimeout(() => {
-        scrollRef.current?.scrollToEnd({animated: true});
-        setPageChanged(false);
-      }, 0);
-      return () => clearTimeout(timer);
-    }
-  }, [answersPageIndex, pageChanged]);
+    console.log('useEffect homescreen 3');
+  }, []);
 
   useEffect(() => {
     console.log('useEffect homescreen ');
     handleGetQuestions();
     handleGetQuestionHistory();
     isDayStreak(isToday(profile.lastStreakDate));
-  }, [profile.totalAnswers]);
+  }, [profile.totalAnswers, isDayStreak, profile.lastStreakDate]);
 
-    //subquestionId가 달라져서 ㄱ수정
-  const editPrevAnswer = (questionIndex:number, subquestionIndex: number, newText: string) => {
-    console.log(answersPageIndex, subquestionIndex)
+  //subquestionId가 달라져서 ㄱ수정
+  const editPrevAnswer = (
+    questionIndex: number,
+    subquestionIndex: number,
+    newText: string,
+  ) => {
+    console.log(answersPageIndex, subquestionIndex);
     const prevAnswerId = answersPageIndex * answersPerPage + questionIndex;
     const updatedAnswers = [...previousAnswers]; //shallow copy
     // updatedAnswers[대질문index].subquestions[subquestions].answer = newText;
     console.log('333prevAnswer:', updatedAnswers[0]);
-      updatedAnswers[prevAnswerId].subquestions[subquestionIndex].answer = newText;
-      setPreviousAnswers(updatedAnswers);
+    updatedAnswers[prevAnswerId].subquestions[subquestionIndex].answer =
+      newText;
+    setPreviousAnswers(updatedAnswers);
   };
 
-  const handleSaveEdit = async (newText: string, questionIndex:number, subquestionId: number, subquestionIndex: number) => {
+  const handleSaveEdit = async (
+    newText: string,
+    questionIndex: number,
+    subquestionId: number,
+    subquestionIndex: number,
+  ) => {
     try {
       //이거 수정이라서 백엔드
-      await axiosUpdateAnswers(subquestionId, newText);//subquestionId로 날리고
-      editPrevAnswer(questionIndex, subquestionIndex, newText);//subquestionIndex로 변경
+      await axiosUpdateAnswers(subquestionId, newText); //subquestionId로 날리고
+      editPrevAnswer(questionIndex, subquestionIndex, newText); //subquestionIndex로 변경
       //아래 부분은 state 변경
     } catch (error) {
       console.error('handleSaveEdit answer:', error);
@@ -130,10 +133,8 @@ export default function HomeScreen(){
   return (
     <View style={styles.container}>
       <MemoGradient />
-      <HomeLoading isOpen={isFirst}
-        setIsOpen={setIsFirst}
-      />
-      {!isFirst &&
+      <HomeLoading isOpen={isFirst} setIsOpen={setIsFirst} />
+      {!isFirst && (
         <ScrollView
           contentContainerStyle={styles.contentContainer}
           ref={scrollRef}>
@@ -171,26 +172,32 @@ export default function HomeScreen(){
                       key={questionIndex}
                       forceClose={closeAccordion}>
                       <View style={styles.prevAnswers}>
-                        {item.subquestions.map((subquestion, subquestionIndex) => (
-                          <PrevAnswers
-                            key={subquestion.id}
-                            questionIndex={questionIndex}
-                            subquestion={subquestion}
-                            subquestionId={subquestion.id}
-                            subquestionIndex={subquestionIndex}
-                            handleSaveEdit={handleSaveEdit}
-                          />
-                        ))}
+                        {item.subquestions.map(
+                          (subquestion, subquestionIndex) => (
+                            <PrevAnswers
+                              key={subquestion.id}
+                              questionIndex={questionIndex}
+                              subquestion={subquestion}
+                              subquestionId={subquestion.id}
+                              subquestionIndex={subquestionIndex}
+                              handleSaveEdit={handleSaveEdit}
+                            />
+                          ),
+                        )}
                       </View>
                     </Accordion>
                   ))}
               </View>
               <View style={styles.moveButtonContainer}>
-                <TouchableOpacity style={styles.prevButton} onPress={handlePrev}>
+                <TouchableOpacity
+                  style={styles.prevButton}
+                  onPress={handlePrev}>
                   <PrevIcon />
                   <Text style={styles.prevButtonText}>Prev</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+                <TouchableOpacity
+                  style={styles.nextButton}
+                  onPress={handleNext}>
                   <Text style={styles.nextButtonText}>Next</Text>
                   <NextIcon />
                 </TouchableOpacity>
@@ -198,10 +205,10 @@ export default function HomeScreen(){
             </View>
           </View>
         </ScrollView>
-      }
+      )}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

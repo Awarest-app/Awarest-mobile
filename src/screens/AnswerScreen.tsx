@@ -270,28 +270,29 @@ export default function AnswerScreen() {
 
           {/* 서브질문 & 사용자 입력 필드 */}
           <View style={styles.answerContainer}>
-            {serverData?.subquestions.map((subQ, index) => (
-              <View style={styles.inputBlock} key={subQ.id}>
-                {/* 서브질문 텍스트 표시 */}
-                <Text style={styles.inputLabel}>{subQ.text}</Text>
-                {/* 사용자 입력 (questions.subquestions[index]) */}
-                <TextInput
-                  style={styles.input}
-                  placeholder="Start writing your thoughts..."
-                  placeholderTextColor={colors.text_hint}
-                  multiline
-                  value={questions.responses[index] ?? ''}
-                  onChangeText={text => {
-                    if (text.length > 1000) return;
-                    setQuestions(prev => {
-                      const updated = [...prev.responses];
-                      updated[index] = text;
-                      return {...prev, responses: updated};
-                    });
-                  }}
-                />
-              </View>
-            ))}
+            {serverData &&
+              serverData?.subquestions.map((subQ, index) => (
+                <View style={styles.inputBlock} key={subQ.id}>
+                  {/* 서브질문 텍스트 표시 */}
+                  <Text style={styles.inputLabel}>{subQ.text}</Text>
+                  {/* 사용자 입력 (questions.subquestions[index]) */}
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Start writing your thoughts..."
+                    placeholderTextColor={colors.text_hint}
+                    multiline
+                    value={questions.responses[index] ?? ''}
+                    onChangeText={text => {
+                      if (text.length > 1000) return;
+                      setQuestions(prev => {
+                        const updated = [...prev.responses];
+                        updated[index] = text;
+                        return {...prev, responses: updated};
+                      });
+                    }}
+                  />
+                </View>
+              ))}
           </View>
 
           {/* Draft / Submit 버튼 */}
