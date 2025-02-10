@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { AnswerTypes, SubquestionTypes } from '../../type/answer.type';
+import { SubquestionTypes } from '../../type/answer.type';
 import EditIcon from '../../assets/svg/edit-icon.svg';
 import colors from '../../styles/colors';
 import { fonts } from '../../styles/fonts';
-import EditModal from '../modals/EditModal'; // ✅ EditModal 추가
+import EditModal from '../modals/EditModal';
 
 interface PrevAnswersProps {
   subquestion: SubquestionTypes;
   subquestionId: number;
   questionIndex: number;
   subquestionIndex: number;
-  handleSaveEdit: (newText: string, questionIndex:number, subquestionId:number ,subquestionIndex: number) => void; // ✅ 수정 완료 후 저장하는 함수
+  handleSaveEdit: (
+    newText: string,
+    questionIndex:number,
+    subquestionId:number,
+    subquestionIndex: number
+  ) => void;
 }
 
 const PrevAnswers = ({
@@ -21,13 +26,11 @@ const PrevAnswers = ({
   subquestionIndex,
   handleSaveEdit,
 }: PrevAnswersProps) => {
-  // ✅ EditModal 상태 관리
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editAnswer, setEditAnswer] = useState<string>(subquestion.answer);
   const parseDate = (dateString: string) => {
     const date = new Date(dateString);
     
-    // 로케일을 명시적으로 지정하고 하이픈 처리
     const formatter = new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: '2-digit',
@@ -37,15 +40,13 @@ const PrevAnswers = ({
       hour12: true
     });
   
-    // 포매팅 후 문자열 가공
     return formatter.format(date)
-      .replace(/\//g, '-') // 슬래시 → 하이픈
-      .replace(', ', ' '); // 날짜/시간 구분자 제거
+      .replace(/\//g, '-')
+      .replace(', ', ' ');
   };
   const parsedDate = parseDate(subquestion.date);
   return (
     <View style={styles.prevAnswers}>
-      {/* ✅ EditModal 추가 */}
       <EditModal
         isOpen={isEditModalOpen}
         currentValue={editAnswer}

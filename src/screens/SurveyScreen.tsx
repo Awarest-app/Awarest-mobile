@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -9,19 +9,16 @@ import {
   Switch,
   Alert,
   Platform,
-  BackHandler,
 } from 'react-native';
 import MemoGradient from '../components/Hooks/MemoGradient';
 import {questions} from '../constant/questions';
 import {axiosPermissonSubmit, axiosSurveySumbit} from '../api/axios';
-import {UserServey, PermissionTypes} from '../type/survey.type';
-// Permissions
+import {UserServey} from '../type/survey.type';
 import {
   checkNotifications,
   requestNotifications,
   RESULTS,
 } from 'react-native-permissions';
-
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
 import {CustomDefaultAlert} from '../components/utils/CustomAlert';
@@ -33,11 +30,9 @@ import Logo from '../components/Logo';
 export default function SurveyScreen() {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<UserServey>({});
-  // 알림 모달?
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [isEnabled, setIsEnabled] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
-
   const questionKeys = ['ageRange', 'goal', 'job', 'how_hear'];
 
   const handleOptionSelect = (option: string) => {
@@ -52,13 +47,10 @@ export default function SurveyScreen() {
     if (questionIndex < questions.length) {
       setQuestionIndex(questionIndex + 1);
     } else {
-      console.log('All questions answered: ', updatedAnswers);
-      // 모든 설문 완료 후 처리 로직
     }
   };
   const platformCheck = (): boolean => {
     return Platform.OS === 'ios';
-    // Platform.OS === 'android';
   };
 
   const navigationHome = (): void => {
@@ -75,7 +67,6 @@ export default function SurveyScreen() {
       ],
     });
   };
-  //notification on/off 함수
   const requestNotificationPermission = async () => {
     const {status} = await requestNotifications(['alert', 'sound', 'badge']);
     if (status === RESULTS.GRANTED) {
@@ -86,77 +77,58 @@ export default function SurveyScreen() {
   };
   const handleNoti = async () => {
     if (!platformCheck()) return;
-    setIsEnabled(!isEnabled); // toggle 모양
+    setIsEnabled(!isEnabled);
     setIsDisabled(true);
     const {status} = await checkNotifications();
     const notificationStatus = status === RESULTS.GRANTED;
     switch (status) {
-      case RESULTS.GRANTED:
-        // navigationHome();
-        break;
       case RESULTS.DENIED:
         await requestNotificationPermission();
         break;
       case RESULTS.BLOCKED:
-        // navigationHome();
         CustomDefaultAlert({
           mainText: 'Permission Blocked',
           subText: 'Notifications are blocked. Please enable them in settings.',
         });
         break;
       case RESULTS.UNAVAILABLE:
-        // navigationHome();
         CustomDefaultAlert({
           mainText: 'Permission Unavailable',
           subText: 'Notifications are not available on this device.',
         });
         break;
-      default:
-        console.log('Unknown permission status:', status);
     }
-    let p = await getToken();
-    console.log('getToken', p);
-
+    await getToken();
     await surveySubmit();
     await permissonSubmit(notificationStatus);
     navigationHome();
   };
-  // 뒤로가기 버튼 클릭 시 이전 질문으로 돌아가는 함수
   const handleBack = () => {
     if (questionIndex > 0) {
       const keyToRemove = questionKeys[
         questionIndex
       ] as keyof typeof userAnswers;
-
       setUserAnswers(prevAnswers => {
         const updatedAnswers = {...prevAnswers};
         delete updatedAnswers[keyToRemove];
-        // console.log('뒤로가기 버튼 후', updatedAnswers);
         return updatedAnswers;
       });
-
       setQuestionIndex(questionIndex - 1);
     }
   };
 
   const surveySubmit = async () => {
     try {
-      const response = await axiosSurveySumbit({
+        await axiosSurveySumbit({
         ...userAnswers,
       });
-      console.log(response);
     } catch (error: unknown) {
-      console.error('survey submit Error response:');
     }
   };
   const permissonSubmit = async (permisson: boolean) => {
-    //notification status axios
     try {
-      const response = await axiosPermissonSubmit(permisson);
-      console.log(response);
+      await axiosPermissonSubmit(permisson);
     } catch (error: unknown) {
-      // const {status, data} = error.response;
-      console.error('survey submit Error response:');
     }
   };
 
@@ -164,11 +136,9 @@ export default function SurveyScreen() {
     <View style={styles.container}>
       <MemoGradient />
       <View style={styles.contentContainer}>
-        {/* 상단 로고/타이틀 영역 */}
         <View style={styles.logoSection}>
           <Logo />
         </View>
-        {/* 현재 질문 표시 */}
         <View style={styles.surveySection}>
           <View style={styles.questionSection}>
             <Text style={styles.questionOrder}>{questionIndex + 1}/5</Text>
@@ -177,7 +147,6 @@ export default function SurveyScreen() {
               {questionIndex == 4 && 'We need permisson for some features'}
             </Text>
           </View>
-
           {questionIndex < 4 ? (
             <ScrollView
               style={styles.scrollContainer}
@@ -186,14 +155,12 @@ export default function SurveyScreen() {
                 const currentKey = questionKeys[
                   questionIndex
                 ] as keyof typeof userAnswers;
-
                 const selectedValue = userAnswers[currentKey];
                 return (
                   <TouchableOpacity
                     key={index}
                     style={[
                       styles.option,
-                      // 선택된 값과 일치하면 배경 스타일 적용
                       selectedValue === item ? styles.selectedOption : null,
                     ]}
                     onPress={() => handleOptionSelect(item)}>
@@ -238,7 +205,7 @@ export default function SurveyScreen() {
   );
 }
 
-const {width, height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 const calculateDp = (px: number) => {
   return (px * width) / 320;
 };
@@ -299,7 +266,6 @@ const styles = StyleSheet.create({
     height: '30%',
     marginTop: 40,
     borderRadius: 8,
-    // boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)',
   },
   notificationButton: {
     flexDirection: 'row',

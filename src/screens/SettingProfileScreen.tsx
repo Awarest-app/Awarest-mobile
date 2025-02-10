@@ -21,21 +21,19 @@ import PrevIcon from '../assets/svg/setting-prev.svg';
 import {checkNotifications, RESULTS} from 'react-native-permissions';
 import {useProfileStore} from '../zustand/useProfileStore';
 import {axiosPermissonSubmit, axiosUpdateUsername} from '../api/axios';
-const {width, height} = Dimensions.get('window');
+const {height} = Dimensions.get('window');
 interface SettingProfileScreenProps {
   closeSettings?: () => void;
   setPage: (page: settingsTypes) => void;
 }
 
 export default function SettingProfileScreen({
-  closeSettings,
   setPage,
 }: SettingProfileScreenProps) {
-  // 시간, XP 등의 데이터를 실제 로직에 맞게 받아오거나 계산해서 표시할 수 있습니다.
-  const {updateProfile, fetchProfile, profile} = useProfileStore();
+  const {updateProfile, profile} = useProfileStore();
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [editable, setEditable] = useState<boolean>(true);
-  const [name, setName] = useState<string>(profile.userName); //todo axios로 받아온 사용자 이름
+  const [name, setName] = useState<string>(profile.userName);
   const [isNoti, setIsNoti] = useState(profile.noti);
 
   const handleDelete = () => {
@@ -62,10 +60,8 @@ export default function SettingProfileScreen({
   };
   useEffect(() => {
     if (profile.noti === isNoti) return;
-    console.log('isNoti:', isNoti, 'profile.noti:', profile.noti);
     axiosPermissonSubmit(isNoti);
     updateProfile({ noti: isNoti });
-    //todo 잘한거같은데 나중에 백엔드랑 통신 확인
   }, [isNoti]);
 
   useFocusEffect(
@@ -75,17 +71,16 @@ export default function SettingProfileScreen({
   );
 
   const handleSubmit = async () => {
-    setEditable(false); // 입력 비활성화
-    console.log('submit');
+    setEditable(false);
     try {
       await axiosUpdateUsername(name);
       updateProfile({ userName: name });
       setTimeout(() => {
-        setEditable(true); // 입력 다시 활성화
+        setEditable(true);
       }, 1000);
     } catch (error) {
       Alert.alert("Error", "An error occurred while updating username.");
-      setEditable(true); // 오류 발생 시 입력 다시 활성화
+      setEditable(true);
     }
   };
 
@@ -116,7 +111,7 @@ export default function SettingProfileScreen({
                   value={name}
                   onChangeText={handleName}
                   editable={editable}
-                  onSubmitEditing={handleSubmit} //enter키 눌렀을 때
+                  onSubmitEditing={handleSubmit}
                   returnKeyType="done"
                 />
               </View>
@@ -171,7 +166,6 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     zIndex: 1,
-    // padding: 8,
   },
   headerTitle: {
     fontFamily: fonts.roboto_semibold,
@@ -192,7 +186,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderWidth: 2,
     borderColor: colors.primary,
-    backgroundColor: '#cccccc', // 회색 배경(임시)
+    backgroundColor: '#cccccc',
   },
   editImg: {
     fontFamily: fonts.roboto_medium,

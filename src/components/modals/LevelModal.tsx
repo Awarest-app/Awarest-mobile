@@ -1,9 +1,8 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useRef} from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   Modal,
   TouchableWithoutFeedback,
   Animated,
@@ -34,7 +33,6 @@ const LevelModal = ({
   const animatedWidth = useRef(new Animated.Value(0)).current;
 
   if (isOpen) {
-    console.log('Progress:', progress); 
     animatedWidth.stopAnimation();
     animatedWidth.setValue(0);
     Animated.timing(animatedWidth, {
@@ -54,7 +52,6 @@ const LevelModal = ({
                 You need {levelXP - totalXP} XP to reach Level {level + 1}
               </Text>
               <View style={styles.expBar}>
-                {/* 경험치 바 */}
                 <View style={styles.barBackground}>
                   <Animated.View
                     style={[
@@ -62,18 +59,17 @@ const LevelModal = ({
                       {
                         width: animatedWidth.interpolate({
                           inputRange: [0, 100],
-                          outputRange: ['0%', '100%'], // '90%'로 바 전체 너비와 일치하게 설정
+                          outputRange: ['0%', '100%'],
                         }),
                         overflow: 'hidden',
-                        // backgroundColor: 'red',
                       },
                     ]}
                   >
                     <LinearGradient
-                      colors={['#0D9488', '#3ED2C4']} // 그라데이션 색상
-                      start={{x: 0, y: 0}} // 시작 좌표
-                      end={{x: 1, y: 0}} // 끝 좌표
-                      style={{flex: 1}} // 그라데이션 스타일
+                      colors={['#0D9488', '#3ED2C4']}
+                      start={{x: 0, y: 0}}
+                      end={{x: 1, y: 0}}
+                      style={{flex: 1}}
                     />
                   </Animated.View>
                 </View>
@@ -129,10 +125,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   barBackground: {
-    width: '90%', // 바의 전체 너비
-    height: 25, // 바의 높이
-    borderRadius: 20, // 둥근 모서리
-    backgroundColor: '#e0e0e0', // 회색 배경
+    width: '90%',
+    height: 25,
+    borderRadius: 20,
+    backgroundColor: '#e0e0e0',
     overflow: 'hidden',
   },
   barProgress: {

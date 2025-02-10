@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -18,7 +18,12 @@ interface EditModalProps {
   subquestionId: number;
   subquestionIndex: number;
   onClose: () => void;
-  handleSaveEdit: (newText: string, questionIndex:number, subquestionId:number ,subquestionIndex: number) => void; // ✅ 수정 완료 후 저장하는 함수
+  handleSaveEdit: (
+    newText: string,
+    questionIndex:number,
+    subquestionId:number,
+    subquestionIndex: number
+  ) => void;
 }
 
 export default function  EditModal ({
@@ -32,7 +37,6 @@ export default function  EditModal ({
   handleSaveEdit,
 }: EditModalProps) {
   const [text, setText] = useState<string>(currentValue);
-  
 
   return (
     <Modal visible={isOpen} transparent={true} animationType="fade">
@@ -78,7 +82,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    paddingBottom: 60,//위치 조정
+    paddingBottom: 60,
   },
   modalContent: {
     width: '80%',

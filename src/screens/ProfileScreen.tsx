@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   View,
@@ -19,7 +19,6 @@ import {Modalize} from 'react-native-modalize';
 import Settings from '../components/Hooks/SettingsModal';
 import LevelModal from '../components/modals/LevelModal';
 import { useProfileStore } from '../zustand/useProfileStore'
-// 샘플용 임시 프로필 이미지(회색 원을 Image 대신 View로 표현할 수도 있음)
 
 export default function ProfileScreesn() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,14 +37,13 @@ export default function ProfileScreesn() {
   };
   
   const formatDate = (dateString: string) => {
-    const [year, month, day] = dateString.split('-'); // 문자열을 '-' 기준으로 분할
+    const [year, month, day] = dateString.split('-');
   
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const monthAbbr = monthNames[parseInt(month, 10) - 1];
     return `${monthAbbr} ${day}, ${year}`;
   };
   const memberSince = formatDate(datas.memberSince);
-  // useFocusEffect를 사용하여 화면에 집중될 때마다 fetchProfile 실행
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <LevelModal
@@ -72,9 +70,6 @@ export default function ProfileScreesn() {
                   style={styles.profileImage}
                 />
                 </View>
-                {/* <TouchableOpacity style={styles.shareButton}>
-                  <ShareIcon />
-                </TouchableOpacity> */}
                 <View style={styles.nameContainer}>
                   <Text style={styles.userName}>{datas.userName}</Text>
                   <Text style={styles.userMemberSince}>
@@ -125,7 +120,6 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
-    // justifyContent: 'center',
   },
   logo: {
     fontFamily: fonts.logo,
@@ -176,8 +170,6 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    // borderWidth: 2,
-    // borderColor: colors.primary,
   },
   profileImage: {
     width: 100,
@@ -200,7 +192,6 @@ const styles = StyleSheet.create({
   },
   nameContainer: {
     alignItems: 'center',
-    // gap: 2,
   },
   userName: {
     fontFamily: fonts.roboto_semibold,
