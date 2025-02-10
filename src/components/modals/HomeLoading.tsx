@@ -4,28 +4,21 @@ import {
   StyleSheet,
   Modal,
 } from 'react-native';
-import MemoGradient from '../Hooks/MemoGradient';
 import Logo from '../Logo';
-
+import colors from '../../styles/colors';
 interface HomeLoadingProps {
   isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
 }
 
 export default function HomeLoading({
   isOpen,
-  setIsOpen,
 }: HomeLoadingProps) {
-  setTimeout(() => {
-    setIsOpen(false);
-  }, 1000);
   return (
     <Modal
     visible={isOpen}
     animationType="none"
     style={styles.background}
     >
-      <MemoGradient />
       <View style={styles.background}>
         <Logo />
       </View>
@@ -38,5 +31,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: colors.green_gradientStart
   }
 });

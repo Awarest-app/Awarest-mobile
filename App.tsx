@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginStack from './src/screens/stacks/LoginStack';
@@ -16,7 +16,7 @@ import {
   stateInitLoginScreen,
 } from './src/route/navigation';
 import Logo from './src/components/Logo';
-import MemoGradient from './src/components/Hooks/MemoGradient';
+import colors from './src/styles/colors';
 
 const RootStack = createNativeStackNavigator();
 
@@ -95,9 +95,9 @@ function App() {
       <View style={{
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: colors.green_gradientStart,
         }}>
-        <MemoGradient />
         <Logo />
       </View>
     )
