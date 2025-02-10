@@ -35,7 +35,7 @@ export const axiosAccountDelete = async () => {
     Alert.alert('Success', 'your account has been deleted');
   } catch (error) {
     // 실패 시 Alert 표시
-    Alert.alert('signoutError' + error);
+    Alert.alert('delete Error' + error);
   }
 };
 
