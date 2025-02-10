@@ -20,7 +20,6 @@ interface ReportScreenProps {
 }
 
 export default function ReportScreen({
-  closeSettings,
   setPage,
 }: ReportScreenProps) {
   const [contact, setContact] = React.useState<string>('');
@@ -28,7 +27,7 @@ export default function ReportScreen({
   const sendMail = () => {
     Mailer.mail({
         subject: 'Issue Report in App',
-        recipients: ['team@getawarest.com'], // 실제 받는 이메일 주소로 교체하세요.
+        recipients: ['team@getawarest.com'],
         body: `Contact: ${contact}\n\nMessage:\n${message}`,
         isHTML: false,
       },
@@ -60,7 +59,6 @@ export default function ReportScreen({
     if (contact.length > 40) return;
     if (!isValidMessage(message)) return;
     sendMail();
-    //todo axios contact, message
   };
   const isValidMessage = (message: string): boolean => {
     if (message.length > 1500) {
@@ -80,7 +78,6 @@ export default function ReportScreen({
           <View style={styles.header}>
             <TouchableOpacity style={styles.prevIcon}
               onPress={() => {
-                console.log('reportprevIcon');
                 setPage('main')
               }}
             >
@@ -153,7 +150,6 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     zIndex: 1,
-    // padding: 8,
   },
   headerTitle: {
     fontFamily: fonts.roboto_semibold,

@@ -4,7 +4,6 @@ export const fonts = {
   poppins_semiBold: 'Poppins-SemiBold',
   poppins_bold: 'Poppins-Bold',
 
-  // 로고 폰트 Alkatra-Regular
   logo: 'Alkatra-SemiBold',
 
   lato_regular: 'Lato-Regular',
@@ -16,7 +15,4 @@ export const fonts = {
   roboto_bold: 'Roboto-Bold',
 
   inter_semibold: 'Inter-SemiBold',
-  // 폰트
-  // title 폰트
-  // title_font: 'Roboto-SemiBold',
 };

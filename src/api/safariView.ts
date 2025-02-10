@@ -10,18 +10,15 @@ export const handleGoogleOauth = async () => {
           fromBottom: true,
         });
       })
-      .catch(error => {
-        console.error('SafariView not available:', error);
+      .catch(() => {
         Linking.openURL(`${API_URL}/api/auth/google?prompt=select_account`);
       });
   } catch (error) {
-    console.error('Failed to open Google OAuth:', error);
   }
 };
 
 export const handleAppleOauth = async () => {
   try {
-    console.log('Oauthtest', API_URL);
     SafariView.isAvailable()
       .then(() => {
         SafariView.show({
@@ -29,11 +26,9 @@ export const handleAppleOauth = async () => {
           fromBottom: true,
         });
       })
-      .catch(error => {
-        console.error('SafariView not available:', error);
+      .catch(() => {
         Linking.openURL(`${API_URL}/api/auth/apple?prompt=select_account`);
       });
   } catch (error) {
-    console.error('Failed to open Google OAuth:', error);
   }
 };

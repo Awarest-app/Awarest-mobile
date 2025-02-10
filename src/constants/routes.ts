@@ -1,4 +1,3 @@
-// routes.ts
 export const ROUTES = {
   BOTTOM_STACK: 'BottomStack',
   HOME_STACK: 'HomeStack',

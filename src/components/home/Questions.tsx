@@ -17,7 +17,6 @@ const Questions = ({questionId, content}: QuestionsProps) => {
     <TouchableOpacity
       style={styles.questionBox}
       onPress={() => {
-        //todo: question_id 확인
         navigation.navigate('Answer', {question_id: questionId});
       }}>
       <Text style={styles.questionText}>{content}</Text>
