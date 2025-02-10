@@ -40,6 +40,7 @@ export default function AnswerScreen() {
   const question_id = route.params.question_id;
   // 서버에서 받은 데이터
   const [serverData, setServerData] = useState<ServerResponse | null>(null);
+  const subquestions = serverData?.subquestions || [];
   // 사용자 입력 상태
   const [questions, setQuestions] = useState<AnswerSubquestionTypes>({
     question: '',
@@ -90,7 +91,10 @@ export default function AnswerScreen() {
       };
       setQuestions(initialState);
       // AsyncStorage에서 기존에 임시 저장된 답변이 있다면 불러오기
-      await loadAnswersFromStorage(data.subquestions.length, data.question);
+      console.log('data.subq', data.subquestions);
+      // console.log('data.subq', data.subquestions.length);
+
+      await loadAnswersFromStorage(data.question);
     } catch (err) {
       console.error('Failed to fetch subquestions:', err);
     }
@@ -180,7 +184,7 @@ export default function AnswerScreen() {
     }
   };
   const loadAnswersFromStorage = async (
-    count: number,
+    // count: number,
     mainQuestion: string,
   ) => {
     try {
@@ -189,8 +193,8 @@ export default function AnswerScreen() {
         const parsed: AnswerSubquestionTypes = JSON.parse(saved);
         // 메인 질문/배열 길이가 일치하면 로드
         if (
-          parsed.question === mainQuestion &&
-          parsed.responses.length === count
+          parsed.question === mainQuestion
+          // &&parsed.responses.length === count
         ) {
           setQuestions(parsed);
           return;
@@ -223,13 +227,15 @@ export default function AnswerScreen() {
         return;
       }
       // 1) subquestions (문자열들)과 serverData.subquestions (id 정보)를 매핑
-      const payload = questions.responses.map((answer, index) => {
-        const subquestionId = serverData.subquestions[index].id;
-        return {
-          subquestionId,
-          answer,
-        };
-      });
+      const payload =
+        questions.responses.length > 0 &&
+        questions.responses.map((answer, index) => {
+          const subquestionId = serverData.subquestions[index].id;
+          return {
+            subquestionId,
+            answer,
+          };
+        });
       // 2) 이 payload를 백엔드로 전송
       // => BE는 createAnswers([{ subQuestionId, answer }, ...]) 로 받을 수 있음
       // TODO, question이 아닌 question id를 넘겨주기
@@ -270,8 +276,8 @@ export default function AnswerScreen() {
 
           {/* 서브질문 & 사용자 입력 필드 */}
           <View style={styles.answerContainer}>
-            {serverData &&
-              serverData?.subquestions.map((subQ, index) => (
+            {subquestions.length > 0 &&
+              subquestions.map((subQ, index) => (
                 <View style={styles.inputBlock} key={subQ.id}>
                   {/* 서브질문 텍스트 표시 */}
                   <Text style={styles.inputLabel}>{subQ.text}</Text>

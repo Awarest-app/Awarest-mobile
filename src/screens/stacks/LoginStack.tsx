@@ -9,7 +9,7 @@ const Stack = createNativeStackNavigator();
 
 export default function LoginStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="Welcome">
       {/* 첫 화면: MainScreen (로그인/회원가입 버튼 있는 화면) */}
       <Stack.Screen
         name="Welcome"

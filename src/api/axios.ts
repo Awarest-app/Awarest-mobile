@@ -40,7 +40,6 @@ export const axiosAccountDelete = async () => {
 };
 
 const axiosSurveySumbitURL = '/api/survey/save';
-// const axiosSurveySumbitURL = '/api/survey/save-survey';
 export const axiosSurveySumbit = async (answers: UserServey) => {
   try {
     console.log('answers', answers);
@@ -48,6 +47,25 @@ export const axiosSurveySumbit = async (answers: UserServey) => {
     console.log('Survey submitted:', response.data);
   } catch (error) {
     console.error('Error submitting survey:', error);
+  }
+};
+
+const axiosGetUserSurveyURL = '/api/survey/user';
+export const axiosGetUserSurvey = async () => {
+  try {
+    const response = await axiosInstance.get(axiosGetUserSurveyURL);
+    // 응답 데이터가 있는지 확인
+    console.log('response.data', response.data);
+    // console.log('response.data.length', response.data.length);
+
+    if (response.data && response.data.hasSurvey === true) {
+      return true;
+    }
+    return false; // 데이터가 비어있으면 false 반환
+  } catch (error) {
+    // console.error('Error getting user survey:', error);
+    // return false;
+    throw error; // 에러를 다시 던져서 외부 try/catch에서 처리하도록 함
   }
 };
 
@@ -182,8 +200,8 @@ export const axiosGetSubquestions = async (questionId: number) => {
     console.log('Subquestions:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error getting subquestions:', error);
-    return [];
+    console.error('Error getting subquestions: sub', error);
+    // return [];
   }
 };
 
@@ -194,7 +212,7 @@ export const axiosGetResult = async () => {
     console.log('result:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error getting subquestions:', error);
+    console.error('Error getting subquestions: res', error);
     return [];
   }
 };

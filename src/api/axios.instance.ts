@@ -1,15 +1,8 @@
 // Axios 인스턴스 설정
-import axios, {
-  AxiosError,
-  AxiosHeaders,
-  AxiosResponse,
-  InternalAxiosRequestConfig,
-} from 'axios';
-import {getToken, storeRefreshToken, storeToken} from './secureStorage';
+import axios, {AxiosHeaders, InternalAxiosRequestConfig} from 'axios';
+import {getRefreshToken, getToken, storeToken} from './secureStorage';
 import {API_URL} from '@env';
-import {Alert} from 'react-native';
-import {navigate} from '../route/navigation';
-// import {navigate} from '../route/navigation';
+import {resetRoot} from '../route/navigation';
 
 export const axiosInstance = axios.create({
   baseURL: API_URL, // 기본 URL 설정
@@ -26,16 +19,8 @@ axiosInstance.interceptors.request.use(
     // 헤더 초기화 (필수)
     config.headers = config.headers || new AxiosHeaders();
 
-    // Skip-Auth 처리
-    if (config.headers.has('Skip-Auth')) {
-      config.headers.delete('Authorization');
-      config.headers.delete('Skip-Auth');
-      return config;
-    }
-
     // 토큰 주입
     const token = await getToken();
-    // console.log('token', token);
     if (token) {
       config.headers.set('Authorization', `Bearer ${token}`); // ✅ 올바른 방식
     }
@@ -45,123 +30,73 @@ axiosInstance.interceptors.request.use(
   error => Promise.reject(error),
 );
 
+// 응답 인터셉터: access token 만료 시 refresh endpoint 호출하여 재시도
 axiosInstance.interceptors.response.use(
-  async (response: AxiosResponse) => {
-    // 헤더 접근 방식 개선 (타입 안전)
-    // const newRefreshToken = response.headers.get('x-refresh-token');
-    const newRefreshToken = response.headers['x-refresh-token'];
-    const newAccessToken = response.headers['x-access-token'];
-
-    if (newRefreshToken) {
-      await storeRefreshToken(newRefreshToken.toString());
-    }
-
-    if (newAccessToken) {
-      // console.log('newAccessToken', newAccessToken);
-      // 헤더 초기화 및 설정
-      await storeToken(newAccessToken.toString());
-    }
-    return response;
-  },
-
-  async (error: AxiosError) => {
+  response => response,
+  async error => {
+    const originalRequest = error.config;
     if (error.response) {
       const {status, data} = error.response;
       console.log('error.response:', data.message);
-      console.log('error.response:', 'token expired. Please log in again.');
-      console.log(
-        'error.response:',
-        data.message === 'token expired. Please log in again.',
-      );
-      console.log('error.response:', status);
+      console.log('error.response status:', status);
 
-      // 401 에러 발생 시, 토큰 만료 메시지가 있으면 로그아웃 처리
       if (
         status === 401 &&
-        data.message === 'token expired. Please log in again.'
+        data.message === 'Access token expired. Please refresh token.' &&
+        !originalRequest._retry
       ) {
-        // 예: 로그인 페이지로 이동 및 alert 표시
-        // resetRoot('Welcome');
-        navigate('LoginStack', {screen: 'Welcome'});
-        Alert.alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-        return Promise.reject(new Error('TokenExpired'));
+        originalRequest._retry = true;
+        try {
+          // refresh endpoint 호출; refresh token은 SecureStore에서 읽어서 헤더로 전송
+          const refreshToken = await getRefreshToken();
+          // 예를 들어, refresh token을 별도의 헤더 'x-refresh-token'에 담아 전송
+
+          const refreshResponse = await axiosInstance.post(
+            '/api/auth/refreshtoken',
+            {},
+            {headers: {'x-refresh-token': refreshToken}},
+          );
+
+          // BE가 응답 헤더 Authorization에 새 access token을 담아 반환했다고 가정
+          let newAccessToken =
+            refreshResponse.headers['authorization'] ||
+            refreshResponse.headers.Authorization;
+
+          // Bearer 접두어가 있다면 제거
+          if (newAccessToken?.startsWith('Bearer ')) {
+            newAccessToken = newAccessToken.substring(7);
+          }
+
+          if (newAccessToken) {
+            await storeToken(newAccessToken);
+            // originalRequest.headers.Authorization = `${newAccessToken}`;
+            originalRequest.headers =
+              originalRequest.headers || new AxiosHeaders();
+            originalRequest.headers.set(
+              'Authorization',
+              `Bearer ${newAccessToken}`,
+            );
+
+            return axiosInstance(originalRequest);
+          } else {
+            // 새 토큰이 없는 경우 에러 처리
+            throw new Error('New access token not found in response headers.');
+          }
+        } catch (refreshError) {
+          // 토큰 갱신 실패 시 로그인 화면으로 이동 또는 재로그인 처리
+          // resetRoot('Welcome');
+          await new Promise<void>(resolve => {
+            console.log('리프레쉬없음 login이동\n');
+            resetRoot('LoginStack');
+            // 네비게이션이 완료되길 기다림
+            setTimeout(resolve, 100);
+          });
+          console.error('Token refresh failed:', refreshError);
+
+          return Promise.reject(refreshError);
+        }
       }
     }
-
     return Promise.reject(error);
   },
-
-  // async (error: AxiosError) => {
-  //   // 타입 명시 강화
-  //   // const navigation = useNavigation<NavigationProp<LoginStackParamList>>();
-  //   const originalRequest = error.config as InternalAxiosRequestConfig & {
-  //     _retry?: boolean;
-  //     headers: AxiosHeaders;
-  //   };
-
-  //   if (error.response?.status === 401 && !originalRequest?._retry) {
-  //     originalRequest._retry = true;
-
-  //     try {
-  //       const refreshToken = await getRefreshToken();
-  //       if (!refreshToken) resetRoot('Login');
-  //       // if (!refreshToken) throw new Error('No refresh token available');
-
-  //       // // 리프레시 요청 헤더 타입 수정
-  //       // const response = await axios.post<{
-  //       //   accessToken: string;
-  //       //   refreshToken: string;
-  //       // }>(
-  //       //   `${API_URL}/api/auth/refresh`,
-  //       //   {refreshToken},
-  //       //   {
-  //       //     headers: new AxiosHeaders().set('Content-Type', 'application/json'),
-  //       //   },
-  //       // );
-
-  //       // // 헤더 초기화 및 설정
-  //       // originalRequest.headers = originalRequest.headers || new AxiosHeaders();
-  //       // originalRequest.headers.set(
-  //       //   'Authorization',
-  //       //   `Bearer ${response.data.accessToken}`,
-  //       // );
-  //       // return axiosInstance(originalRequest);
-  //     } catch (refreshError) {
-  //       await Promise.all([removeToken(), removeRefreshToken()]);
-  //       return Promise.reject(refreshError);
-  //     }
-  //   }
-
-  //   return Promise.reject(error);
-  // },
 );
-
-// 응답 인터셉터: 에러 처리
-// 새로운 쿠리를 발급받았을때 처리 과정
-// axiosInstance.interceptors.response.use(
-//   response => {
-//     return response;
-//   },
-//   error => {
-//     // TODO -> 나중에 jwt token logic 추가
-//     // removeToken();
-
-//     console.error('Axios error:', error.response?.data || error.message);
-//     return Promise.reject(error);
-//   },
-// );
-
-// 응답 인터셉터: 새로운 토큰이 헤더에 있을 경우 저장
-// axiosInstance.interceptors.response.use(
-//   async response => {
-//     const newToken = response.headers['x-refresh-token'];
-//     console.log('newToken', newToken);
-//     if (newToken) {
-//       await removeToken();
-//       await storeToken(newToken);
-//       // 필요에 따라 추가적인 로직 (예: 사용자에게 알림)
-//     }
-//     return response;
-//   },
-//   error => Promise.reject(error),
-// );
