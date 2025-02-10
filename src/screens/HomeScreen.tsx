@@ -162,7 +162,7 @@ export default function HomeScreen() {
           </View>
 
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>Your previous Responses</Text>
+            <Text style={styles.cardTitle}>Your previous Answers</Text>
             <View style={styles.prevAnsweralign}>
               <View style={styles.prevAnswerContainer}>
                 {paginatedAnswers &&

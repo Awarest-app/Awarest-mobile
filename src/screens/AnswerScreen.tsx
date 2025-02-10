@@ -329,6 +329,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingVertical: 16,
     paddingHorizontal: 20,
+    marginBottom: 60,
   },
   mainContainer: {
     flex: 1,

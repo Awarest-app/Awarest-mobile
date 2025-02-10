@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, version} from 'react';
 import {
   View,
   Text,
@@ -14,7 +14,12 @@ import colors from '../styles/colors';
 import XIcon from '../assets/svg/x-icon.svg';
 import {settingsTypes} from '../type/settings.type';
 import InAppReview from 'react-native-in-app-review';
-import {ABOUT_PAGE_URL} from '@env';
+import {
+  ABOUT_PAGE_URL,
+  PRIVACY_POLICY_URL,
+  TERMS_URL,
+  VERSION,
+} from '@env';
 import {RootStackParamList} from '../type/route.type';
 import {googleLogout} from '../api/logoutSafariView';
 import SafariView from 'react-native-safari-view';
@@ -29,16 +34,15 @@ export default function SettingsMain({
   setPage,
 }: SettingsMainProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const aboutPage = () => {
-    console.log('about page', ABOUT_PAGE_URL);
+  const clickLink = (url: string) => {
     SafariView.isAvailable()
       .then(() => {
         SafariView.show({
-          url: `${ABOUT_PAGE_URL}`,
+          url: url,
           fromBottom: true,
         });
       })
-  };
+  }
   const handleLeaveReview = () => {
     if (!InAppReview.isAvailable()) return;
     InAppReview.RequestInAppReview()
@@ -98,7 +102,9 @@ export default function SettingsMain({
 
         <View style={styles.settingGroups}>
           <Text style={styles.settingOptionTitle}>Help</Text>
-          <TouchableOpacity style={styles.settingButton} onPress={aboutPage}>
+          <TouchableOpacity style={styles.settingButton}
+            onPress={() => clickLink(ABOUT_PAGE_URL)}
+          >
             <Text style={styles.settingOption}>
               {/* todo 배포한 웹페이지로 가게하기 */}
               About us
@@ -123,8 +129,26 @@ export default function SettingsMain({
             onPress={handleSignOut}>
             <Text style={styles.settingOption}>Sign Out</Text>
           </TouchableOpacity>
-          {/* todo terms, privacy policy */}
         </View>
+      </View>
+      <View style={styles.settingsFooter}>
+        <View style={styles.footerLinks}>
+          <TouchableOpacity
+            onPress={() => clickLink(PRIVACY_POLICY_URL)}
+          >
+            <Text>
+              privacy
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => clickLink(TERMS_URL)}
+          >
+            <Text>
+              terms
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.version}>{VERSION}</Text>
       </View>
     </View>
   );
@@ -163,5 +187,22 @@ const styles = StyleSheet.create({
     fontFamily: fonts.lato_regular,
     fontSize: 20,
     color: colors.black,
+  },
+  settingsFooter: {
+    width: '100%',
+    marginTop: 100,
+    alignItems: 'center',
+    flexDirection: 'column',
+    gap: 10,
+  },
+  footerLinks: {
+    fontFamily: fonts.roboto_regular,
+    fontSize: 14,
+    flexDirection: 'row',
+    gap: 25,
+  },
+  version: {
+    fontFamily: fonts.roboto_regular,
+    fontSize: 14,
   },
 });

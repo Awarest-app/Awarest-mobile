@@ -76,8 +76,8 @@ export default function DeleteScreen({
           </View>
           <View style={styles.deleteInfo}>
             <Text style={styles.deleteHelp}>
-              By proceeding, you will delete your account Once the process is
-              complete, it cannot be undone.
+              By proceeding, your account will be permanently deleted.
+              This action cannot be undone
             </Text>
             <TouchableOpacity
               style={styles.button}
