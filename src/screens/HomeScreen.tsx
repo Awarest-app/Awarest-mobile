@@ -112,11 +112,12 @@ export default function HomeScreen() {
     } catch (error) {
     }
   };
-
   return (
     <View style={styles.container}>
+      {isFirst && (
+        <HomeLoading isOpen={isFirst} setIsOpen={setIsFirst} />
+      )}
       <MemoGradient />
-      <HomeLoading isOpen={isFirst} setIsOpen={setIsFirst} />
       {!isFirst && (
         <ScrollView
           contentContainerStyle={styles.contentContainer}
