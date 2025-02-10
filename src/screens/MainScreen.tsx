@@ -7,17 +7,15 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  PixelRatio,
 } from 'react-native';
 // 아래 import는 react-native 프로젝트 환경에 따라 교체 가능
 import LinearGradient from 'react-native-linear-gradient';
-import {HomeStackParamList, RootStackParamList} from '../type/route.type';
+import {RootStackParamList} from '../type/route.type';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
 import GoogleIcon from '../assets/svg/google-icon.svg';
 import AppleIcon from '../assets/svg/apple-icon.svg';
 import {handleGoogleOauth, handleAppleOauth} from '../api/safariView';
-import {removeToken} from '../api/secureStorage';
 import Logo from '../components/Logo';
 // import GoogleOauth from '../lib/googleOauth';
 
@@ -38,23 +36,6 @@ export default function MainScreen() {
         <View style={styles.logoSection}>
           <Logo />
         </View>
-
-        <TouchableOpacity
-          style={{
-            width: 100,
-            height: 50,
-            backgroundColor: 'skyblue',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          onPress={() =>
-            navigation.navigate('BottomStack', {
-              screen: 'HomeStack',
-              params: {screen: 'Home'},
-            })
-          }>
-          <Text>go home</Text>
-        </TouchableOpacity>
         <View style={styles.sloganSection}>
           <Text style={styles.mainSlogan}>
             Take a moment each day to find your path in life
@@ -142,12 +123,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  // divider: {
-  //   width: width * 0.6,
-  //   height: 1,
-  //   backgroundColor: '#999',
-  //   marginVertical: 24,
-  // },
   oauthButton: {
     backgroundColor: colors.white_75,
     width: calculateDp(260),

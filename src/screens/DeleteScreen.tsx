@@ -35,7 +35,6 @@ export default function DeleteScreen({
     //axios 삭제
     try {
       await axiosAccountDelete();
-      // Linking.openURL('https://accounts.google.com/logout');
       await googleLogout();
       removeToken();
       setIsModalOpen(false);
