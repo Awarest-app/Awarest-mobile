@@ -9,7 +9,7 @@ interface CustomInputProps extends TextInputProps {
   onChangeText: (text: string) => void;
   secureTextEntry?: boolean;
   errorMessage?: string;
-  multiline?: boolean; // 멀티라인 여부
+  multiline?: boolean;
   containerStyle?: object;
   inputStyle?: object;
 }
@@ -21,14 +21,13 @@ const CustomInput = ({
   onChangeText,
   secureTextEntry,
   errorMessage,
-  multiline, // 여러 줄 입력 가능 여부
+  multiline,
   containerStyle,
   inputStyle,
   ...props
 }: CustomInputProps) => {
   return (
     <View style={[styles.container, containerStyle]}>
-      {/* 라벨이 존재하면 표시 */}
       {label ? <Text style={styles.label}>{label}</Text> : null}
 
       <TextInput
@@ -46,8 +45,6 @@ const CustomInput = ({
         placeholderTextColor={colors.input_ph}
         {...props}
       />
-
-      {/* 에러 메시지가 있으면 표시 */}
       {errorMessage ? (
         <Text style={styles.errorText}>{errorMessage}</Text>
       ) : null}
@@ -65,7 +62,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   input: {
-    // maxWidth: '80%',
+   
     width: '100%',
     backgroundColor: '#FFF',
     borderRadius: 8,
@@ -84,7 +81,7 @@ const styles = StyleSheet.create({
   },
   multiline: {
     minHeight: 80,
-    textAlignVertical: 'top', // 안드로이드에서 위쪽 정렬
+    textAlignVertical: 'top',
   },
 });
 

@@ -34,18 +34,13 @@ const AccordionTitle = memo(({title, onPress}: AccordionTitleProps) => (
 
 const Accordion = memo(
   ({collapseOnStart = true, title, forceClose, children}: AccordionProps) => {
-    // 접힘/펼침 상태
     const [collapsed, setCollapsed] = useState(collapseOnStart);
     const [contentHeight, setContentHeight] = useState(0);
     const contentHeightRef = useRef(0);
     const contentContainerPadding = 20;
-
-    // 하나의 Animated.Value로 높이 / 투명도
     const animeValue = useRef(
       new Animated.Value(collapseOnStart ? 0 : 1),
     ).current;
-
-    // 접힘/펼침 상태가 바뀔 때마다 애니메이션 실행
     useEffect(() => {
       if (forceClose && !collapsed) {
         setCollapsed(true);
@@ -57,36 +52,28 @@ const Accordion = memo(
         toValue: collapsed ? 0 : 1,
         duration: 150,
         easing: Easing.ease,
-        useNativeDriver: false, // 높이 애니메이션은 native driver 불가
+        useNativeDriver: false,
       }).start();
     }, [collapsed, animeValue]);
 
     const MemoizedContent = memo(({children}: MemoizedContentProps) => (
       <View style={styles.contentContainer}>{children}</View>
     ));
-
-    // 높이 애니메이션
     const height = animeValue.interpolate({
       inputRange: [0, 1],
       outputRange: [0, contentContainerPadding + contentHeight],
     });
-
-    // 투명도 애니메이션
     const opacity = animeValue.interpolate({
       inputRange: [0, 1],
       outputRange: [0, 1],
     });
-
-    // 실제 컨텐츠 높이 측정 (onLayout)
     const handleContentLayout = useCallback((e: any) => {
       const newHeight = e.nativeEvent.layout.height;
-      // 1px 이하 차이도 모두 반영하도록 단순 비교
       if (contentHeightRef.current !== newHeight) {
         contentHeightRef.current = newHeight;
         setContentHeight(newHeight);
       }
     }, []);
-    // 토글 함수
     const toggleAccordion = useCallback(() => {
       setCollapsed(prev => !prev);
     }, []);
@@ -147,7 +134,7 @@ const styles = StyleSheet.create({
     right: 0,
     opacity: 0,
     borderRadius: 10,
-    paddingHorizontal: 16, //contentContainerPadding이랑 같아야됨
+    paddingHorizontal: 16,
   },
   animateContainer: {
     overflow: 'hidden',

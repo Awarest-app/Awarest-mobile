@@ -18,13 +18,9 @@ export type LoginStackParamList = {
 
 export type HomeStackParamList = {
   Home: undefined;
-  // Answer: {mainQuestion?: string};
   Answer: {question_id: number};
 
   Result: {question_xp: number};
-  // Profile: undefined;
-  // Setting: undefined;
-  // Report: undefined;
   SettingProfile: undefined;
   Delete: undefined;
 };

@@ -3,11 +3,8 @@ import {
   SafeAreaView,
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
-  Switch,
-  Linking,
 } from 'react-native';
 import {useState} from 'react';
 import {removeToken} from '../api/secureStorage';
@@ -15,9 +12,8 @@ import {axiosAccountDelete} from '../api/axios';
 import colors from '../styles/colors';
 import {fonts} from '../styles/fonts';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {HomeStackParamList, RootStackParamList} from '../type/route.type';
+import {RootStackParamList} from '../type/route.type';
 import PrevIcon from '../assets/svg/setting-prev.svg';
-
 import DeleteModal from '../components/modals/DeleteModal';
 import { googleLogout } from '../api/logoutSafariView';
 
@@ -28,11 +24,9 @@ interface DeleteScreenProps {
 export default function DeleteScreen({
   setIsDelete,
 }: DeleteScreenProps) {
-  // 시간, XP 등의 데이터를 실제 로직에 맞게 받아오거나 계산해서 표시할 수 있습니다.
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const handleOnSubmit = async () => {
-    //axios 삭제
     try {
       await axiosAccountDelete();
       await googleLogout();
@@ -50,7 +44,6 @@ export default function DeleteScreen({
         ],
       });
     } catch (error) {
-      console.log(error);
     }
   };
   return (
@@ -66,7 +59,6 @@ export default function DeleteScreen({
             <TouchableOpacity
               style={styles.prevIcon}
               onPress={() => {
-                console.log('profileprevIcon');
                 setIsDelete(false);
               }}>
               <PrevIcon />
@@ -148,7 +140,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderWidth: 2,
     borderColor: colors.primary,
-    backgroundColor: '#cccccc', // 회색 배경(임시)
+    backgroundColor: '#cccccc',
   },
   editImg: {
     fontFamily: fonts.roboto_medium,

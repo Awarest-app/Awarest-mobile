@@ -9,7 +9,6 @@ import {
 import colors from '../styles/colors';
 import {fonts} from '../styles/fonts';
 import CheckIcon from '../assets/svg/check-icon.svg';
-import {globalStyle} from '../styles/global';
 import {Header} from '../components/Header';
 import MemoGradient from '../components/Hooks/MemoGradient';
 import {
@@ -29,17 +28,11 @@ export default function ResultScreen() {
   const xp = route.params.question_xp;
   const {fetchProfile, isDayStreak, profile} = useProfileStore();
   const datas = profile;
-  // 시간, XP 등의 데이터를 실제 로직에 맞게 받아오거나 계산해서 표시할 수 있습니다.
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
-  // const xpEarned = 50;
-
   const handleContinue = () => {
-    // ‘Continue’ 버튼 클릭 시 동작(예: 홈 화면으로 이동 등)
-    console.log('Continue clicked');
     navigation.dispatch(StackActions.pop(2));
   };
   useEffect(() => {
-    console.log('ResultScreen useEffect');
     fetchProfile();
     isDayStreak(isToday(datas.lastStreakDate));
   }, []);
@@ -49,12 +42,8 @@ export default function ResultScreen() {
       <View style={styles.contentContainer}>
         <Header />
         <SafeAreaView style={styles.safeArea}>
-          {/* 상단 상태 표시 영역 */}
-          {/* 가운데 메인 카드(파란색 테두리 박스) */}
           <View style={styles.cardContainer}>
             <Text style={styles.cardTitle}>Response complete !</Text>
-
-            {/* 체크 아이콘 예시(단순 텍스트 이모지 사용) */}
             <View style={styles.resultContainer}>
               <View style={styles.checkIconContainer}>
                 <CheckIcon />
@@ -63,9 +52,6 @@ export default function ResultScreen() {
               <Text style={styles.subMessage}>You've earned</Text>
               <Text style={styles.gainXp}>+ {xp} XP</Text>
               <Text style={styles.subMessage}></Text>
-              {/* <Text style={styles.subMessage}>Time spent: {timeSpent}</Text> */}
-
-              {/* Continue 버튼 */}
               <TouchableOpacity
                 style={styles.continueButton}
                 onPress={handleContinue}>
@@ -92,16 +78,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  /* -----------------------
-     상단 상태 표시 영역 
-  ------------------------*/
   cardContainer: {
     width: '100%',
     height: '75%',
     paddingHorizontal: 24,
     paddingVertical: 40,
     borderWidth: 1,
-    borderColor: colors.card_border, // 파란 테두리
+    borderColor: colors.card_border,
     borderRadius: 10,
     backgroundColor: colors.white,
     alignItems: 'center',
@@ -157,7 +140,4 @@ const styles = StyleSheet.create({
     color: colors.green_button_text,
     fontSize: 18,
   },
-  /* -----------------------
-     하단 탭바
-  ------------------------*/
 });
