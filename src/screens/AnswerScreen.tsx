@@ -118,7 +118,7 @@ export default function AnswerScreen() {
       if (!keysArray.includes(newKey)) {
         keysArray.push(newKey);
         await AsyncStorage.setItem(ANSWER_ALL_KEYS, JSON.stringify(keysArray));
-        const storedKeys = await AsyncStorage.getItem(ANSWER_ALL_KEYS);
+        await AsyncStorage.getItem(ANSWER_ALL_KEYS);
       }
     } catch (error) {
     }
