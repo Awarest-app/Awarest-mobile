@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {
   useRoute,
@@ -205,6 +206,7 @@ export default function AnswerScreen() {
       />
       <MemoGradient />
 
+      <KeyboardAvoidingView behavior='padding'>
       <ScrollView style={styles.contentContainer}>
         <Header />
         <View style={styles.mainContainer}>
@@ -248,10 +250,10 @@ export default function AnswerScreen() {
           </View>
         </View>
       </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -260,7 +262,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingVertical: 16,
     paddingHorizontal: 20,
-    marginBottom: 60,
   },
   mainContainer: {
     flex: 1,
@@ -270,7 +271,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: colors.white_80,
     opacity: 0.9,
-    marginBottom: 40,
+    marginBottom: 100,
   },
   titleContainer: {
     gap: 6,
