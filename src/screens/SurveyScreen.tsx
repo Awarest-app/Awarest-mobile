@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -25,6 +25,7 @@ import {CustomDefaultAlert} from '../components/utils/CustomAlert';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../type/route.type';
 import {getToken} from '../api/secureStorage';
+import { requestTrackingPermission } from 'react-native-tracking-transparency'
 import Logo from '../components/Logo';
 
 export default function SurveyScreen() {
@@ -35,6 +36,9 @@ export default function SurveyScreen() {
   const [isDisabled, setIsDisabled] = useState(false);
   const questionKeys = ['ageRange', 'goal', 'job', 'how_hear'];
 
+  async function requestTracking() {
+    await requestTrackingPermission();
+  }
   const handleOptionSelect = (option: string) => {
     const key = questionKeys[questionIndex];
     const updatedAnswers = {
@@ -131,7 +135,9 @@ export default function SurveyScreen() {
     } catch (error: unknown) {
     }
   };
-
+  useEffect(() => {
+    requestTracking();
+  }, []);
   return (
     <View style={styles.container}>
       <MemoGradient />
