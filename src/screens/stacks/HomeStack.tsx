@@ -20,7 +20,7 @@ export function HomeStack() {
       <Stack.Screen
         name="Answer"
         component={AnswerScreen}
-        options={{headerShown: false, gestureEnabled: false}}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Profile"

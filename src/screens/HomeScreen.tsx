@@ -102,6 +102,7 @@ export default function HomeScreen() {
     try {
       const response: any = await axiosGetQuestions();
       setQuestions(response.data);
+      setIsFirst(false);
     } catch (error) {
     }
   };
@@ -112,11 +113,12 @@ export default function HomeScreen() {
     } catch (error) {
     }
   };
-
   return (
     <View style={styles.container}>
+      {isFirst && (
+        <HomeLoading isOpen={isFirst}/>
+      )}
       <MemoGradient />
-      <HomeLoading isOpen={isFirst} setIsOpen={setIsFirst} />
       {!isFirst && (
         <ScrollView
           contentContainerStyle={styles.contentContainer}

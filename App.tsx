@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginStack from './src/screens/stacks/LoginStack';
@@ -14,6 +15,8 @@ import {
   stateInitHomeScreen,
   stateInitLoginScreen,
 } from './src/route/navigation';
+import Logo from './src/components/Logo';
+import colors from './src/styles/colors';
 
 const RootStack = createNativeStackNavigator();
 
@@ -88,7 +91,16 @@ function App() {
   }, []);
 
   if (isLoading) {
-    return null;
+    return (
+      <View style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: colors.green_gradientStart,
+        }}>
+        <Logo />
+      </View>
+    )
   }
 
   return (
