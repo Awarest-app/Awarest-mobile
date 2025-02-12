@@ -16,7 +16,7 @@ import {settingsTypes} from '../../type/settings.type';
 import SettingProfileScreen from '../../screens/SettingProfileScreen';
 import {RootStackParamList} from '../../type/route.type';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-const {width, height} = Dimensions.get('window');
+const {height} = Dimensions.get('window');
 
 const SettingsModal = forwardRef<Modalize, {}>((props, ref) => {
   const modalizeRef = ref as React.MutableRefObject<Modalize | null>;
