@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import colors from '../styles/colors';
 import {fonts} from '../styles/fonts';
@@ -63,13 +63,6 @@ export default function BottomStack() {
 }
 
 const styles = StyleSheet.create({
-  tabBarStyle: {
-    height: 74,
-    borderTopWidth: 1,
-    borderTopColor: colors.card_border,
-    backgroundColor: 'rgba(237, 237, 237, 0.75)',
-    position: 'absolute',
-  },
   hiddenTabBarStyle: {
     display: 'none',
   },
