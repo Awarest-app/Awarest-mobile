@@ -44,6 +44,7 @@ export default function ProfileScreesn() {
     return `${monthAbbr} ${day}, ${year}`;
   };
   const memberSince = formatDate(datas.memberSince);
+  const username = datas.userName.length > 12 ? datas.userName.slice(0, 10) + '...' : datas.userName;
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <LevelModal
@@ -57,12 +58,12 @@ export default function ProfileScreesn() {
           <Header />
           <SafeAreaView style={styles.safeArea}>
             <View style={styles.profileContainer}>
-              <TouchableOpacity
-                style={styles.settingButton}
-                onPress={openSettings}>
-                <SettingIcon />
-              </TouchableOpacity>
               <View style={styles.imgContainer}>
+                <TouchableOpacity
+                  style={styles.settingButton}
+                  onPress={openSettings}>
+                  <SettingIcon />
+                </TouchableOpacity>
                 <ProfileGradient />
                 <View style={styles.profilePlaceholder}>
                 <Image
@@ -71,7 +72,7 @@ export default function ProfileScreesn() {
                 />
                 </View>
                 <View style={styles.nameContainer}>
-                  <Text style={styles.userName}>{datas.userName}</Text>
+                  <Text style={styles.userName}>{username}</Text>
                   <Text style={styles.userMemberSince}>
                     Member since {memberSince}
                   </Text>
@@ -141,11 +142,11 @@ const styles = StyleSheet.create({
     padding: 16,
     marginTop: 10,
     marginRight: 10,
+    zIndex: 1,
     boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
   },
   profileContainer: {
     gap: 24,
-    paddingTop: 80,
     backgroundColor: colors.white,
     alignItems: 'center',
     paddingHorizontal: 18,

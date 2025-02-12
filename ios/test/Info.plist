@@ -46,14 +46,8 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-	<key>NSFaceIDUsageDescription</key>
-	<string>[REASON]</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>[REASON]</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>[REASON]</string>
+	<string>This identifier will be used to deliver personalized ads tailored to your interests.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Lato-Black.ttf</string>

@@ -1,11 +1,14 @@
 import {StyleSheet} from 'react-native';
+import {Dimensions} from 'react-native';
 import colors from './colors';
 import {fonts} from './fonts';
+
+const {height} = Dimensions.get('window');
 
 export const globalStyle = StyleSheet.create({
   
   defaultTabBarStyle: {
-    height: 74,
+    height: height * 0.088,
     borderTopWidth: 1,
     borderTopColor: colors.card_border,
     backgroundColor: 'rgba(237, 237, 237, 0.75)',
