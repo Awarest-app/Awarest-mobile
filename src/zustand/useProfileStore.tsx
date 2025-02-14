@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import { axiosGetProfile } from '../api/axios';
 import { ProfileTypes } from '../type/profile.type';
 
-// ✅ Zustand 스토어 정의
 interface ProfileState {
   profile: ProfileTypes;
   is_first_response: boolean;
@@ -27,10 +26,9 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
     totalAnswers: 0,
     lastStreakDate: '',
   },
-  is_first_response: false,//last streakDate보고 오늘이면 true
+  is_first_response: false,
   loading: true,
 
-  // ✅ 초기 프로필 로드
   isDayStreak: (value) => {
     set((state) => ({ ...state, is_first_response: value }));
   },
@@ -41,21 +39,15 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
       const response = await axiosGetProfile();
       set({ profile: response, loading: false });
     } catch (error) {
-      console.error('Error fetching profile:', error);
       set({ loading: false });
     }
   },
 
-  // ✅ 클라이언트에서 상태 직접 업데이트 (사용자 동작 기반)
   updateProfile: (updates) => {
     set((state) => ({
       profile: { ...state.profile, ...updates },
     }));
   },
-  //  const { updateProfile } = useProfileStore();
-  //  updateProfile({ userName: "Alice" }); 
-
-  // ✅ 필요할 때 백엔드와 동기화 (예: 앱 재시작 시)
   syncProfileWithBackend: async () => {
     const latestProfile = get().profile;
     if (!latestProfile) return;
@@ -64,7 +56,6 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
       const response = await axiosGetProfile();
       set({ profile: response });
     } catch (error) {
-      console.error('Error syncing profile:', error);
     }
   },
 }));

@@ -1,4 +1,4 @@
-import React, {useState, version} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -46,18 +46,9 @@ export default function SettingsMain({
   const handleLeaveReview = () => {
     if (!InAppReview.isAvailable()) return;
     InAppReview.RequestInAppReview()
-      .then(hasFlowFinishedSuccessfully => {
-        console.log(
-          'In-app review flow finished:',
-          hasFlowFinishedSuccessfully,
-        );
-      })
-      .catch(error => {
-        console.log('In-app review error:', error);
-      });
+      .catch();
   };
   const handleSignOut = async () => {
-    //todo axios sign outa
     try {
       axiosSignout();
       await googleLogout();
@@ -74,7 +65,6 @@ export default function SettingsMain({
         ],
       });
     } catch (error) {
-      console.log('logout error', error);
     }
   };
   return (
@@ -106,7 +96,6 @@ export default function SettingsMain({
             onPress={() => clickLink(ABOUT_PAGE_URL)}
           >
             <Text style={styles.settingOption}>
-              {/* todo 배포한 웹페이지로 가게하기 */}
               About us
             </Text>
           </TouchableOpacity>

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   View,
@@ -19,7 +19,6 @@ import {Modalize} from 'react-native-modalize';
 import Settings from '../components/Hooks/SettingsModal';
 import LevelModal from '../components/modals/LevelModal';
 import { useProfileStore } from '../zustand/useProfileStore'
-// 샘플용 임시 프로필 이미지(회색 원을 Image 대신 View로 표현할 수도 있음)
 
 export default function ProfileScreesn() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,14 +37,14 @@ export default function ProfileScreesn() {
   };
   
   const formatDate = (dateString: string) => {
-    const [year, month, day] = dateString.split('-'); // 문자열을 '-' 기준으로 분할
+    const [year, month, day] = dateString.split('-');
   
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const monthAbbr = monthNames[parseInt(month, 10) - 1];
     return `${monthAbbr} ${day}, ${year}`;
   };
   const memberSince = formatDate(datas.memberSince);
-  // useFocusEffect를 사용하여 화면에 집중될 때마다 fetchProfile 실행
+  const username = datas.userName.length > 12 ? datas.userName.slice(0, 10) + '...' : datas.userName;
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <LevelModal
@@ -59,12 +58,12 @@ export default function ProfileScreesn() {
           <Header />
           <SafeAreaView style={styles.safeArea}>
             <View style={styles.profileContainer}>
-              <TouchableOpacity
-                style={styles.settingButton}
-                onPress={openSettings}>
-                <SettingIcon />
-              </TouchableOpacity>
               <View style={styles.imgContainer}>
+                <TouchableOpacity
+                  style={styles.settingButton}
+                  onPress={openSettings}>
+                  <SettingIcon />
+                </TouchableOpacity>
                 <ProfileGradient />
                 <View style={styles.profilePlaceholder}>
                 <Image
@@ -72,11 +71,8 @@ export default function ProfileScreesn() {
                   style={styles.profileImage}
                 />
                 </View>
-                {/* <TouchableOpacity style={styles.shareButton}>
-                  <ShareIcon />
-                </TouchableOpacity> */}
                 <View style={styles.nameContainer}>
-                  <Text style={styles.userName}>{datas.userName}</Text>
+                  <Text style={styles.userName}>{username}</Text>
                   <Text style={styles.userMemberSince}>
                     Member since {memberSince}
                   </Text>
@@ -125,7 +121,6 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
-    // justifyContent: 'center',
   },
   logo: {
     fontFamily: fonts.logo,
@@ -147,11 +142,11 @@ const styles = StyleSheet.create({
     padding: 16,
     marginTop: 10,
     marginRight: 10,
+    zIndex: 1,
     boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
   },
   profileContainer: {
     gap: 24,
-    paddingTop: 80,
     backgroundColor: colors.white,
     alignItems: 'center',
     paddingHorizontal: 18,
@@ -176,8 +171,6 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    // borderWidth: 2,
-    // borderColor: colors.primary,
   },
   profileImage: {
     width: 100,
@@ -200,7 +193,6 @@ const styles = StyleSheet.create({
   },
   nameContainer: {
     alignItems: 'center',
-    // gap: 2,
   },
   userName: {
     fontFamily: fonts.roboto_semibold,

@@ -1,6 +1,4 @@
-// WelcomeScreen.tsx
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -8,31 +6,33 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-// 아래 import는 react-native 프로젝트 환경에 따라 교체 가능
 import LinearGradient from 'react-native-linear-gradient';
-import {RootStackParamList} from '../type/route.type';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
 import GoogleIcon from '../assets/svg/google-icon.svg';
 import AppleIcon from '../assets/svg/apple-icon.svg';
 import {handleGoogleOauth, handleAppleOauth} from '../api/safariView';
 import Logo from '../components/Logo';
-// import GoogleOauth from '../lib/googleOauth';
-
-// 화면 높이/너비 구하기 (스타일에 사용)
-const {width, height} = Dimensions.get('window');
+import { requestTrackingPermission, getTrackingStatus } from 'react-native-tracking-transparency'
+const {width} = Dimensions.get('window');
 
 export default function MainScreen() {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  console.log('MainScreen');
+  async function requestTracking() {
+    const status = await getTrackingStatus();
+    if (status === 'not-determined') {
+      await requestTrackingPermission();
+    }
+  }
+  useEffect(() => {
+    requestTracking();
+  }, []);
   return (
     <LinearGradient
-      colors={[colors.green_gradientStart, colors.green_gradientEnd]} // 상단(밝은색) -> 하단(어두운색) 그라디언트
-      start={{x: 0, y: 0.4}} // 왼쪽 위
-      end={{x: 0, y: 1}} // 오른쪽
+      colors={[colors.green_gradientStart, colors.green_gradientEnd]}
+      start={{x: 0, y: 0.4}}
+      end={{x: 0, y: 1}}
       style={styles.gradientContainer}>
       <View style={styles.container}>
-        {/* 로고 영역 */}
         <View style={styles.logoSection}>
           <Logo />
         </View>
@@ -58,9 +58,7 @@ export default function MainScreen() {
           <TouchableOpacity
             style={styles.oauthButton}
             onPress={() => handleGoogleOauth()}
-            // onPress={() => handleGoogleSignup()}
           >
-            {/* <SafariViewModal /> */}
             <View style={styles.oauthTextWrapper}>
               <GoogleIcon />
               <Text style={styles.oauthButtonText}>Sign in with Google</Text>
@@ -78,12 +76,11 @@ const calculateDp = (px: number) => {
 
 const styles = StyleSheet.create({
   gradientContainer: {
-    flex: 1, // 전체 화면을 그라디언트로
+    flex: 1,
   },
   container: {
     flex: 1,
     alignItems: 'center',
-    // justifyContent: 'center',
     padding: 24,
   },
   logoSection: {
@@ -137,6 +134,6 @@ const styles = StyleSheet.create({
   oauthButtonText: {
     fontFamily: fonts.roboto_medium,
     fontSize: calculateDp(14),
-    color: '#000000',
+    color: colors.black,
   },
 });

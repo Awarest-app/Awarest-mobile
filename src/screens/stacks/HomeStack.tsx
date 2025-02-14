@@ -10,7 +10,7 @@ const Stack = createNativeStackNavigator();
 export function HomeStack() {
   return (
     <Stack.Navigator
-      initialRouteName="Home" // <-- 초기 화면 설정
+      initialRouteName="Home"
     >
       <Stack.Screen
         name="Home"
@@ -20,7 +20,7 @@ export function HomeStack() {
       <Stack.Screen
         name="Answer"
         component={AnswerScreen}
-        options={{headerShown: false, gestureEnabled: false}}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Profile"

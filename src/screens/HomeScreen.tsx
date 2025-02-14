@@ -5,7 +5,6 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Dimensions,
 } from 'react-native';
 import {Header} from '../components/Header';
 import MemoGradient from '../components/Hooks/MemoGradient';
@@ -27,7 +26,6 @@ import {useProfileStore} from '../zustand/useProfileStore';
 import {isToday} from '../components/utils/utils';
 import HomeLoading from '../components/modals/HomeLoading';
 
-//todo: 컴포넌트 쪼개기
 export default function HomeScreen() {
   const [isFirst, setIsFirst] = useState<boolean>(true);
   const [answersPageIndex, setAnswerPageIndex] = useState<number>(0);
@@ -39,14 +37,12 @@ export default function HomeScreen() {
   const totalPages = Math.ceil(previousAnswers.length / answersPerPage);
   const {fetchProfile, isDayStreak, profile} = useProfileStore();
 
-  //todo : 이거 axios 날릴때 남은건냅두고 처음에 6개, 그뒤에 6개씩추가
-  // TODO : page 로 나중에 6개씩 날리기
   const paginatedAnswers =
     previousAnswers &&
     previousAnswers.slice(
       answersPageIndex * answersPerPage,
       (answersPageIndex + 1) * answersPerPage,
-    ); //0~2, 3~5, 6~8
+    );
   const handlePrev = () => {
     if (answersPageIndex === 0) return;
 
@@ -69,27 +65,21 @@ export default function HomeScreen() {
   };
   useEffect(() => {
     fetchProfile();
-    console.log('useEffect homescreen 3');
   }, []);
 
   useEffect(() => {
-    console.log('useEffect homescreen ');
     handleGetQuestions();
     handleGetQuestionHistory();
     isDayStreak(isToday(profile.lastStreakDate));
   }, [profile.totalAnswers, isDayStreak, profile.lastStreakDate]);
 
-  //subquestionId가 달라져서 ㄱ수정
   const editPrevAnswer = (
     questionIndex: number,
     subquestionIndex: number,
     newText: string,
   ) => {
-    console.log(answersPageIndex, subquestionIndex);
     const prevAnswerId = answersPageIndex * answersPerPage + questionIndex;
-    const updatedAnswers = [...previousAnswers]; //shallow copy
-    // updatedAnswers[대질문index].subquestions[subquestions].answer = newText;
-    console.log('333prevAnswer:', updatedAnswers[0]);
+    const updatedAnswers = [...previousAnswers];
     updatedAnswers[prevAnswerId].subquestions[subquestionIndex].answer =
       newText;
     setPreviousAnswers(updatedAnswers);
@@ -102,12 +92,9 @@ export default function HomeScreen() {
     subquestionIndex: number,
   ) => {
     try {
-      //이거 수정이라서 백엔드
-      await axiosUpdateAnswers(subquestionId, newText); //subquestionId로 날리고
-      editPrevAnswer(questionIndex, subquestionIndex, newText); //subquestionIndex로 변경
-      //아래 부분은 state 변경
+      await axiosUpdateAnswers(subquestionId, newText);
+      editPrevAnswer(questionIndex, subquestionIndex, newText);
     } catch (error) {
-      console.error('handleSaveEdit answer:', error);
     }
   };
 
@@ -115,25 +102,23 @@ export default function HomeScreen() {
     try {
       const response: any = await axiosGetQuestions();
       setQuestions(response.data);
-      // setIsFirst(false);
+      setIsFirst(false);
     } catch (error) {
-      console.error('Error getting questions:', error);
     }
   };
-  //previous questions 요청axios
   const handleGetQuestionHistory = async () => {
     try {
       const response = await axiosGetAnswers();
       setPreviousAnswers(response);
     } catch (error) {
-      console.error('Error getting questions:', error);
     }
   };
-
   return (
     <View style={styles.container}>
+      {isFirst && (
+        <HomeLoading isOpen={isFirst}/>
+      )}
       <MemoGradient />
-      <HomeLoading isOpen={isFirst} setIsOpen={setIsFirst} />
       {!isFirst && (
         <ScrollView
           contentContainerStyle={styles.contentContainer}
@@ -143,7 +128,7 @@ export default function HomeScreen() {
             <View>
               <Text style={styles.cardTitle}>Today's Questions</Text>
             </View>
-            {questions && questions.length > 0 ? ( //타입에러?
+            {questions && questions.length > 0 ? (
               questions.map(question => (
                 <Questions
                   key={question.questionId}
