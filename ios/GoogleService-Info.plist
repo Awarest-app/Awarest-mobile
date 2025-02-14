@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyAB5R-VBOzKNk7wMrR-SILaxcngMDmwyO8</string>
+	<string>AIzaSyDcn5wQRygEnk_D3rTPS8NeBWaRvrtKq_I</string>
 	<key>GCM_SENDER_ID</key>
-	<string>242384036613</string>
+	<string>548113782027</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.awarest.awarest</string>
 	<key>PROJECT_ID</key>
-	<string>awarest-utm</string>
+	<string>awarest-fcm</string>
 	<key>STORAGE_BUCKET</key>
-	<string>awarest-utm.firebasestorage.app</string>
+	<string>awarest-fcm.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:242384036613:ios:9d16d4cb3c72e01d518d6c</string>
+	<string>1:548113782027:ios:c600bf7b6c8c6b78413e0e</string>
 </dict>
 </plist>

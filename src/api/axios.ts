@@ -175,4 +175,13 @@ export const axiosGetResult = async () => {
   }
 };
 
-const axiosNotificationURL = 'api/notifications/send';
+const axiosNotificationPermissonURL = 'api/notifications/send';
+export const axiosNotificationPermisson = async (token: string) => {
+  try {
+    await axiosInstance.post(axiosNotificationPermissonURL, {
+      token
+    });
+  } catch (error) {
+    console.error('notificationError' + error);
+  }
+};

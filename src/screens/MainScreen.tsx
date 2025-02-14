@@ -15,13 +15,8 @@ import AppleIcon from '../assets/svg/apple-icon.svg';
 import {handleGoogleOauth, handleAppleOauth} from '../api/safariView';
 import Logo from '../components/Logo';
 import { requestTrackingPermission, getTrackingStatus } from 'react-native-tracking-transparency'
-import {getApp} from '@react-native-firebase/app';
-import { getAnalytics, logEvent } from '@react-native-firebase/analytics';
 
 const {width} = Dimensions.get('window');
-
-const app = getApp();
-const analytics = getAnalytics(app);
 
 export default function MainScreen() {
   async function requestTracking() {
@@ -31,32 +26,8 @@ export default function MainScreen() {
     }
   }
   useEffect(() => {
-    const logTestEvent = async () => {
-      try {
-        await logEvent(analytics, 'screen_vies', {
-          screen_name: 'TestScreen',
-          screen_class: 'App',
-        });
-        console.log('✅ Firebase Analytics: ScreenView Logged');
-      } catch (error) {
-        console.error('❌ Firebase Analytics Error:', error);
-      }
-    };
     requestTracking();
-    logTestEvent();
   }, []);
-  const triggerTestEvent = async () => {
-    try {
-      await logEvent(analytics, 'test_event', {
-        item: 'test_item',
-        value: 123,
-      });
-      console.log('✅ Firebase Analytics: Event Logged');
-    } catch (error) {
-      console.error('❌ Firebase Analytics Error:', error);
-    }
-  };
-  
 
   return (
     <LinearGradient
@@ -76,7 +47,6 @@ export default function MainScreen() {
             Discover yourself in Your own time
           </Text>
         </View>
-        <Button title="Test Event" onPress={triggerTestEvent} />
         <View style={styles.registerSection}>
           <TouchableOpacity
             style={styles.oauthButton}
