@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -13,10 +13,19 @@ import GoogleIcon from '../assets/svg/google-icon.svg';
 import AppleIcon from '../assets/svg/apple-icon.svg';
 import {handleGoogleOauth, handleAppleOauth} from '../api/safariView';
 import Logo from '../components/Logo';
-
+import { requestTrackingPermission, getTrackingStatus } from 'react-native-tracking-transparency'
 const {width} = Dimensions.get('window');
 
 export default function MainScreen() {
+  async function requestTracking() {
+    const status = await getTrackingStatus();
+    if (status === 'not-determined') {
+      await requestTrackingPermission();
+    }
+  }
+  useEffect(() => {
+    requestTracking();
+  }, []);
   return (
     <LinearGradient
       colors={[colors.green_gradientStart, colors.green_gradientEnd]}

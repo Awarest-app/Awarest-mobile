@@ -25,7 +25,7 @@ import {CustomDefaultAlert} from '../components/utils/CustomAlert';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../type/route.type';
 import {getToken} from '../api/secureStorage';
-import { requestTrackingPermission } from 'react-native-tracking-transparency'
+
 import Logo from '../components/Logo';
 
 export default function SurveyScreen() {
@@ -36,9 +36,6 @@ export default function SurveyScreen() {
   const [isDisabled, setIsDisabled] = useState(false);
   const questionKeys = ['ageRange', 'goal', 'job', 'how_hear'];
 
-  async function requestTracking() {
-    await requestTrackingPermission();
-  }
   const handleOptionSelect = (option: string) => {
     const key = questionKeys[questionIndex];
     const updatedAnswers = {
@@ -135,9 +132,7 @@ export default function SurveyScreen() {
     } catch (error: unknown) {
     }
   };
-  useEffect(() => {
-    requestTracking();
-  }, []);
+
   return (
     <View style={styles.container}>
       <MemoGradient />
@@ -211,7 +206,7 @@ export default function SurveyScreen() {
   );
 }
 
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 const calculateDp = (px: number) => {
   return (px * width) / 320;
 };
@@ -228,7 +223,7 @@ const styles = StyleSheet.create({
   },
   logoSection: {
     alignItems: 'center',
-    marginTop: calculateDp(60),
+    marginTop: height * 0.06,
     marginBottom: calculateDp(24),
   },
   surveySection: {},
@@ -308,7 +303,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
-    bottom: calculateDp(60),
+    bottom: height * 0.04,
     paddingHorizontal: 20,
     paddingVertical: 10,
     backgroundColor: colors.primary,
