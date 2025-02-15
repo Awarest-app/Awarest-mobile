@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import {Header} from '../components/Header';
 import MemoGradient from '../components/Hooks/MemoGradient';
@@ -73,8 +74,20 @@ export default function HomeScreen() {
     }
   }
   useEffect(() => {
-    handleNotification();
-    fetchProfile();
+    const initializeFCM = async () => {
+      await handleNotification();
+      const unsubscribe = messaging().onMessage(async (remoteMessage: any) => {
+        Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+        console.log('FCM Message:', remoteMessage);
+      });
+      await fetchProfile();
+
+      return unsubscribe;
+    }
+    const unsubscribePromise = initializeFCM();
+    return () => {
+      unsubscribePromise.then(unsub => unsub && unsub());
+    };
   }, []);
 
   useEffect(() => {
