@@ -76,7 +76,7 @@ export default function HomeScreen() {
   useEffect(() => {
     const initializeFCM = async () => {
       await handleNotification();
-      const unsubscribe = messaging().onMessage(async (remoteMessage: any) => {
+      const unsubscribe = messaging.onMessage(async (remoteMessage: any) => {
         Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
         console.log('FCM Message:', remoteMessage);
       });
