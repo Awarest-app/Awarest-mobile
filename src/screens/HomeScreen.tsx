@@ -5,7 +5,6 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import {Header} from '../components/Header';
 import MemoGradient from '../components/Hooks/MemoGradient';
@@ -28,6 +27,8 @@ import {useProfileStore} from '../zustand/useProfileStore';
 import {isToday} from '../components/utils/utils';
 import HomeLoading from '../components/modals/HomeLoading';
 import {messaging} from '../firebase/setting'
+import { useFocusEffect } from '@react-navigation/native';
+import { analytics } from '../firebase/setting';
 
 export default function HomeScreen() {
   const [isFirst, setIsFirst] = useState<boolean>(true);
@@ -73,21 +74,13 @@ export default function HomeScreen() {
       axiosNotificationPermisson(token);
     }
   }
-  useEffect(() => {
-    const initializeFCM = async () => {
-      await handleNotification();
-      const unsubscribe = messaging.onMessage(async (remoteMessage: any) => {
-        Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-        console.log('FCM Message:', remoteMessage);
-      });
-      await fetchProfile();
+  useFocusEffect(() => {
+    analytics.logScreenView({screen_name: 'Home', screen_class: 'HomeScreen'});
+  });
 
-      return unsubscribe;
-    }
-    const unsubscribePromise = initializeFCM();
-    return () => {
-      unsubscribePromise.then(unsub => unsub && unsub());
-    };
+  useEffect(() => {
+    handleNotification();
+    fetchProfile();
   }, []);
 
   useEffect(() => {

@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  Button,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {fonts} from '../styles/fonts';
@@ -15,7 +14,8 @@ import AppleIcon from '../assets/svg/apple-icon.svg';
 import {handleGoogleOauth, handleAppleOauth} from '../api/safariView';
 import Logo from '../components/Logo';
 import { requestTrackingPermission, getTrackingStatus } from 'react-native-tracking-transparency'
-
+import { useFocusEffect } from '@react-navigation/native';
+import { analytics } from '../firebase/setting';
 const {width} = Dimensions.get('window');
 
 export default function MainScreen() {
@@ -28,7 +28,9 @@ export default function MainScreen() {
   useEffect(() => {
     requestTracking();
   }, []);
-
+  useFocusEffect(() => {
+    analytics.logScreenView({screen_name: 'Login', screen_class: 'MainScreen'});
+  });
   return (
     <LinearGradient
       colors={[colors.green_gradientStart, colors.green_gradientEnd]}

@@ -1,5 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {View} from 'react-native';
+import React, {useEffect, useState, useRef} from 'react';
+import {
+  View,
+  AppState,
+} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginStack from './src/screens/stacks/LoginStack';
@@ -17,12 +20,32 @@ import {
 } from './src/route/navigation';
 import Logo from './src/components/Logo';
 import colors from './src/styles/colors';
+import { analytics } from './src/firebase/setting';
 
 const RootStack = createNativeStackNavigator();
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [initialState, setInitialState] = useState<any>(null);
+  const sessionStartTime = useRef<number | null>(null);
+ 
+  useEffect(() => {
+    const handleAppStateChange = async (state: string) => {
+      const now = Date.now();
+      if (state === 'active') {
+        sessionStartTime.current = now;
+        await analytics.logEvent('custom_session_start');
+      } else if (state === 'background' && sessionStartTime.current) {
+        const sessionDuration = (now - sessionStartTime.current) / 1000;
+        await analytics.logEvent('custom_session_end', {
+          duration_seconds: sessionDuration,
+        });
+      }
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+    return () => subscription.remove();
+  }, []);
 
   useEffect(() => {
     (async () => {

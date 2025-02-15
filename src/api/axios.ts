@@ -105,8 +105,7 @@ export const axiosGetQuestions = async () => {
   }
 };
 
-const axiosGetAnswersURL = 'api/answers/me';
-// const axiosGetAnswersURL = 'api/questions/history';
+const axiosGetAnswersURL = 'api/questions/history';
 export const axiosGetAnswers = async () => {
   try {
     const response = await axiosInstance.get(axiosGetAnswersURL);
@@ -182,6 +181,5 @@ export const axiosNotificationPermisson = async (token: string) => {
       token
     });
   } catch (error) {
-    console.error('notificationError' + error);
   }
 };
