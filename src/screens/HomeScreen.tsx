@@ -17,6 +17,7 @@ import {
   axiosGetAnswers,
   axiosGetQuestions,
   axiosUpdateAnswers,
+  axiosNotificationPermisson,
 } from '../api/axios';
 import {Questiontypes} from '../type/question.type';
 import {AnswerTypes} from '../type/answer.type';
@@ -25,6 +26,9 @@ import Questions from '../components/home/Questions';
 import {useProfileStore} from '../zustand/useProfileStore';
 import {isToday} from '../components/utils/utils';
 import HomeLoading from '../components/modals/HomeLoading';
+import {messaging} from '../firebase/setting'
+import { useFocusEffect } from '@react-navigation/native';
+import { analytics } from '../firebase/setting';
 
 export default function HomeScreen() {
   const [isFirst, setIsFirst] = useState<boolean>(true);
@@ -63,7 +67,19 @@ export default function HomeScreen() {
     }, 100);
     scrollRef.current?.scrollToEnd({animated: true});
   };
+  const handleNotification = async () => {
+    const status = await messaging.requestPermission();
+    if (status == 1 || status == 2) {
+      const token = await messaging.getToken();
+      axiosNotificationPermisson(token);
+    }
+  }
+  useFocusEffect(() => {
+    analytics.logScreenView({screen_name: 'Home', screen_class: 'HomeScreen'});
+  });
+
   useEffect(() => {
+    handleNotification();
     fetchProfile();
   }, []);
 

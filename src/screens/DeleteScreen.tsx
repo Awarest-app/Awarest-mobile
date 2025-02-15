@@ -67,8 +67,11 @@ export default function DeleteScreen({
           </View>
           <View style={styles.deleteInfo}>
             <Text style={styles.deleteHelp}>
-              By proceeding, your account will be permanently deleted.
-              This action cannot be undone
+                Your account will be deleted in 7 days.
+                If you wish to keep your account, simply sign in again within 7 days.
+            </Text>
+            <Text style={styles.deleteHelp}>
+              Thank you, and we hope to see you again!
             </Text>
             <TouchableOpacity
               style={styles.button}
@@ -123,7 +126,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   deleteHelp: {
-    fontFamily: fonts.lato_regular,
+    fontFamily: fonts.lato_bold,
     fontSize: 18,
     color: colors.black,
     marginBottom: 20,

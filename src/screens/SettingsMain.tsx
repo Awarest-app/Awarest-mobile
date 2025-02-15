@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  Image,
 } from 'react-native';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {axiosSignout} from '../api/axios';
@@ -19,10 +20,13 @@ import {
   PRIVACY_POLICY_URL,
   TERMS_URL,
   VERSION,
+  INSTAGRAM_URL,
 } from '@env';
 import {RootStackParamList} from '../type/route.type';
 import {googleLogout} from '../api/logoutSafariView';
 import SafariView from 'react-native-safari-view';
+import { useFocusEffect } from '@react-navigation/native';
+import { analytics } from '../firebase/setting';
 
 interface SettingsMainProps {
   closeSettings: () => void;
@@ -34,6 +38,7 @@ export default function SettingsMain({
   setPage,
 }: SettingsMainProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const instaicon = require('../assets/images/insta-icon.png');
   const clickLink = (url: string) => {
     SafariView.isAvailable()
       .then(() => {
@@ -43,10 +48,13 @@ export default function SettingsMain({
         });
       })
   }
+  useFocusEffect(() => {
+    analytics.logScreenView({screen_name: 'Setting', screen_class: 'SettingsMain'});
+  });
   const handleLeaveReview = () => {
     if (!InAppReview.isAvailable()) return;
     InAppReview.RequestInAppReview()
-      .catch();
+    .catch();
   };
   const handleSignOut = async () => {
     try {
@@ -102,7 +110,7 @@ export default function SettingsMain({
           <TouchableOpacity
             style={styles.settingButton}
             onPress={() => setPage('report')}>
-            <Text style={styles.settingOption}>Report a bug</Text>
+            <Text style={styles.settingOption}>Send Feedback</Text>
           </TouchableOpacity>
         </View>
 
@@ -121,6 +129,14 @@ export default function SettingsMain({
         </View>
       </View>
       <View style={styles.settingsFooter}>
+        <TouchableOpacity style={styles.settingButton}
+          onPress={() => clickLink(INSTAGRAM_URL)}
+        >
+          <Image
+            source={instaicon}
+            style={styles.instaIcon}
+          />
+        </TouchableOpacity>
         <View style={styles.footerLinks}>
           <TouchableOpacity
             onPress={() => clickLink(PRIVACY_POLICY_URL)}
@@ -193,5 +209,9 @@ const styles = StyleSheet.create({
   version: {
     fontFamily: fonts.roboto_regular,
     fontSize: 14,
+  },
+  instaIcon: {
+    width: 30,
+    height: 30,
   },
 });

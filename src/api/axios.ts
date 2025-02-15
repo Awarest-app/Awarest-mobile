@@ -105,7 +105,7 @@ export const axiosGetQuestions = async () => {
   }
 };
 
-const axiosGetAnswersURL = 'api/answers/me';
+const axiosGetAnswersURL = 'api/questions/history';
 export const axiosGetAnswers = async () => {
   try {
     const response = await axiosInstance.get(axiosGetAnswersURL);
@@ -171,5 +171,15 @@ export const axiosGetResult = async () => {
     return response.data;
   } catch (error) {
     return [];
+  }
+};
+
+const axiosNotificationPermissonURL = 'api/notifications/send';
+export const axiosNotificationPermisson = async (token: string) => {
+  try {
+    await axiosInstance.post(axiosNotificationPermissonURL, {
+      token
+    });
+  } catch (error) {
   }
 };

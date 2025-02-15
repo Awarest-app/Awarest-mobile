@@ -24,6 +24,8 @@ import MemoGradient from '../components/Hooks/MemoGradient';
 import {Header} from '../components/Header';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
+import { useFocusEffect } from '@react-navigation/native';
+import { analytics } from '../firebase/setting';
 type AnswerScreenRouteProp = RouteProp<HomeStackParamList, 'Answer'>;
 type AnswerScreenNavProp = NavigationProp<HomeStackParamList, 'Answer'>;
 
@@ -41,6 +43,10 @@ export default function AnswerScreen() {
   const ANSWER_ALL_KEYS = 'answer_all_keys';
   const ANSWER_STORAGE_KEY = `userAnswers_${question_id}`;
   const ANSWER_EXPIRATION_KEY = `answersExpiration_${question_id}`;
+
+  useFocusEffect(() => {
+    analytics.logScreenView({screen_name: 'Answer', screen_class: 'AnswerScreen'});
+  });
   const removeKeyFromAnswerAllKeys = async (keyToRemove: string) => {
     try {
       const existingKeys = await AsyncStorage.getItem(ANSWER_ALL_KEYS);
