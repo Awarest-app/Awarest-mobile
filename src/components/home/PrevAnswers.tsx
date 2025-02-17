@@ -29,9 +29,7 @@ const PrevAnswers = ({
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editAnswer, setEditAnswer] = useState<string>(subquestion.answer);
   const parseDate = (dateString: string) => {
-    const nyDate = dateString.replace('T', ' ').replace('Z', '').replace(" ", "T") + "-05:00";
-    const date = new Date(nyDate);
-    
+    const date = new Date(dateString);
     const formatter = new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: '2-digit',

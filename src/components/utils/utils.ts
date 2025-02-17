@@ -1,10 +1,10 @@
 export const isToday = (dateString: string) => {
   const givenUTCDate = new Date(dateString);
-  const nowUTCDate = new Date();
+  const nowDate = new Date();
 
   return (
-    givenUTCDate.getUTCFullYear() === nowUTCDate.getUTCFullYear() &&
-    givenUTCDate.getUTCMonth() === nowUTCDate.getUTCMonth() &&
-    givenUTCDate.getUTCDate() === nowUTCDate.getUTCDate()
+    givenUTCDate.getUTCFullYear() === nowDate.getUTCFullYear() &&
+    givenUTCDate.getUTCMonth() === nowDate.getUTCMonth() &&
+    givenUTCDate.getUTCDate() === nowDate.getUTCDate()
   );
 };

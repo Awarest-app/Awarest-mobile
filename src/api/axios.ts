@@ -183,3 +183,13 @@ export const axiosNotificationPermisson = async (token: string) => {
   } catch (error) {
   }
 };
+
+const axiosUsersTimezoneURL = 'api/users/time';
+export const axiosUsersTimezone = async (localTime: number) => {
+  try {
+    await axiosInstance.post(axiosUsersTimezoneURL, {
+      localTime
+    });
+  } catch (error) {
+  }
+};
