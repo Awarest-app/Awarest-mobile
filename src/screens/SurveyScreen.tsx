@@ -7,7 +7,6 @@ import {
   ScrollView,
   Dimensions,
   Switch,
-  Alert,
   Platform,
 } from 'react-native';
 import MemoGradient from '../components/Hooks/MemoGradient';
@@ -24,7 +23,7 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../type/route.type';
 import {getToken} from '../api/secureStorage';
 import Logo from '../components/Logo';
-import {messaging} from '../firebase/setting'
+import {analytics, messaging} from '../firebase/setting'
 
 export default function SurveyScreen() {
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -79,6 +78,7 @@ export default function SurveyScreen() {
     await getToken();
     await surveySubmit();
     await permissonSubmit(status);
+    await analytics.logEvent('sign_up');
     navigationHome();
   };
 

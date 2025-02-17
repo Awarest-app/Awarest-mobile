@@ -18,6 +18,7 @@ import {
   axiosGetQuestions,
   axiosUpdateAnswers,
   axiosNotificationPermisson,
+  axiosUsersTimezone,
 } from '../api/axios';
 import {Questiontypes} from '../type/question.type';
 import {AnswerTypes} from '../type/answer.type';
@@ -77,8 +78,12 @@ export default function HomeScreen() {
   useFocusEffect(() => {
     analytics.logScreenView({screen_name: 'Home', screen_class: 'HomeScreen'});
   });
-
+  const handleTimezone = async () => {
+    const timeoffset= new Date().getTimezoneOffset() / 60;
+    axiosUsersTimezone(-timeoffset);
+  }
   useEffect(() => {
+    handleTimezone();
     handleNotification();
     fetchProfile();
   }, []);
