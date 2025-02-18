@@ -30,7 +30,6 @@ const PrevAnswers = ({
   const [editAnswer, setEditAnswer] = useState<string>(subquestion.answer);
   const parseDate = (dateString: string) => {
     const date = new Date(dateString);
-    
     const formatter = new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: '2-digit',

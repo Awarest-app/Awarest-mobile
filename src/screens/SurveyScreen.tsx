@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -7,26 +7,23 @@ import {
   ScrollView,
   Dimensions,
   Switch,
-  Alert,
   Platform,
 } from 'react-native';
 import MemoGradient from '../components/Hooks/MemoGradient';
 import {questions} from '../constant/questions';
-import {axiosPermissonSubmit, axiosSurveySumbit} from '../api/axios';
-import {UserServey} from '../type/survey.type';
 import {
-  checkNotifications,
-  requestNotifications,
-  RESULTS,
-} from 'react-native-permissions';
+  axiosPermissonSubmit,
+  axiosSurveySumbit,
+  axiosNotificationPermisson,
+} from '../api/axios';
+import {UserServey} from '../type/survey.type';
 import {fonts} from '../styles/fonts';
 import colors from '../styles/colors';
-import {CustomDefaultAlert} from '../components/utils/CustomAlert';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../type/route.type';
 import {getToken} from '../api/secureStorage';
-
 import Logo from '../components/Logo';
+import {analytics, messaging} from '../firebase/setting'
 
 export default function SurveyScreen() {
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -68,42 +65,23 @@ export default function SurveyScreen() {
       ],
     });
   };
-  const requestNotificationPermission = async () => {
-    const {status} = await requestNotifications(['alert', 'sound', 'badge']);
-    if (status === RESULTS.GRANTED) {
-      Alert.alert('Permission Granted', 'Notifications have been enabled.');
-    } else {
-      Alert.alert('Permission Denied', 'Notifications are not enabled.');
-    }
-  };
+
   const handleNoti = async () => {
     if (!platformCheck()) return;
     setIsEnabled(!isEnabled);
     setIsDisabled(true);
-    const {status} = await checkNotifications();
-    const notificationStatus = status === RESULTS.GRANTED;
-    switch (status) {
-      case RESULTS.DENIED:
-        await requestNotificationPermission();
-        break;
-      case RESULTS.BLOCKED:
-        CustomDefaultAlert({
-          mainText: 'Permission Blocked',
-          subText: 'Notifications are blocked. Please enable them in settings.',
-        });
-        break;
-      case RESULTS.UNAVAILABLE:
-        CustomDefaultAlert({
-          mainText: 'Permission Unavailable',
-          subText: 'Notifications are not available on this device.',
-        });
-        break;
+    const status = await messaging.requestPermission();
+    if (status == 1 || status == 2) {
+      const token = await messaging.getToken();
+      axiosNotificationPermisson(token);
     }
     await getToken();
     await surveySubmit();
-    await permissonSubmit(notificationStatus);
+    await permissonSubmit(status);
+    await analytics.logEvent('sign_up');
     navigationHome();
   };
+
   const handleBack = () => {
     if (questionIndex > 0) {
       const keyToRemove = questionKeys[
@@ -126,9 +104,13 @@ export default function SurveyScreen() {
     } catch (error: unknown) {
     }
   };
-  const permissonSubmit = async (permisson: boolean) => {
+  const permissonSubmit = async (permisson: number) => {
+    const DENIED = 0;
+    const NOT_DETERMINED = -1;
+    const status = !(permisson === DENIED || permisson === NOT_DETERMINED);
+  
     try {
-      await axiosPermissonSubmit(permisson);
+      await axiosPermissonSubmit(status);
     } catch (error: unknown) {
     }
   };

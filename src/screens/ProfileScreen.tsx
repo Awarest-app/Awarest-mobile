@@ -19,6 +19,8 @@ import {Modalize} from 'react-native-modalize';
 import Settings from '../components/Hooks/SettingsModal';
 import LevelModal from '../components/modals/LevelModal';
 import { useProfileStore } from '../zustand/useProfileStore'
+import { useFocusEffect } from '@react-navigation/native';
+import { analytics } from '../firebase/setting';
 
 export default function ProfileScreesn() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,6 +47,10 @@ export default function ProfileScreesn() {
   };
   const memberSince = formatDate(datas.memberSince);
   const username = datas.userName.length > 12 ? datas.userName.slice(0, 10) + '...' : datas.userName;
+
+  useFocusEffect(() => {
+    analytics.logScreenView({screen_name: 'Profile', screen_class: 'ProfileScreen'});
+  });
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <LevelModal

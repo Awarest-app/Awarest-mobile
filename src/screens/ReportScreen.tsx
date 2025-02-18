@@ -84,7 +84,7 @@ export default function ReportScreen({
               <PrevIcon/>
             </TouchableOpacity>
             <Text style={styles.headerTitle}>
-              Report
+              Feedback
             </Text>
           </View>
           <View style={styles.contactContainer}>
@@ -105,7 +105,7 @@ export default function ReportScreen({
             </Text>
             <TextInput
               style={styles.messageInput}
-              placeholder="report bug or issue"
+              placeholder="Tell us anything on your mind!"
               placeholderTextColor={colors.text_hint}
               value={message}
               onChangeText={handleMessage}
@@ -116,7 +116,7 @@ export default function ReportScreen({
           <TouchableOpacity style={styles.button}
             onPress={handleSend}
           >
-            <Text style={styles.buttonText}>Send Report</Text>
+            <Text style={styles.buttonText}>Send</Text>
           </TouchableOpacity>
         </SafeAreaView>
         </View>
