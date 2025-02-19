@@ -78,7 +78,9 @@ export default function SurveyScreen() {
     await getToken();
     await surveySubmit();
     await permissonSubmit(status);
-    await analytics.logEvent('sign_up');
+    await analytics.logEvent('sign_up', {
+      survey: userAnswers.how_hear,
+    });
     navigationHome();
   };
 

@@ -193,3 +193,14 @@ export const axiosUsersTimezone = async (localTime: number) => {
   } catch (error) {
   }
 };
+
+const axiosGetUsersIdURL = 'api/users/userId';
+export const axiosGetUsersId = async () => {
+  try {
+    const id: number = await axiosInstance.get(axiosGetUsersIdURL);
+    return id.toString();
+  } catch (error) {
+    console.log('axiosGetId' + error);
+    return '';
+  }
+};
